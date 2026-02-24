@@ -1,0 +1,42 @@
+{
+  "name": "charon",
+  "version": "1.0.0",
+  "description": "CHARON — Catalog Harvester & Automated Ripper for Organized Navidrome",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.aether.charon",
+    "productName": "CHARON",
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "extraResources": [
+      {
+        "from": "python/",
+        "to": "python/"
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "ripper.html",
+      "icon.ico"
+    ]
+  },
+  "keywords": ["tidal", "ripper", "navidrome", "music", "downloader", "aether"],
+  "author": "EmperorBadussy",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  }
+}

@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHARON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   CHARON — PHANTOM Design System
+   OLED-black + monochromatic purple + glassmorphism
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg-void: #000000;
+  --bg-surface: #09090F;
+  --bg-raised: #0F0F1A;
+  --bg-elevated: #141425;
+  --bg-hover: #1a1a2e;
+  --purple-dim: #2A1B3D;
+  --purple-muted: #4A2D6B;
+  --purple-core: #7B2FBE;
+  --purple-bright: #9D4EDD;
+  --purple-vivid: #B76EFF;
+  --purple-hot: #D4A0FF;
+  --purple-white: #EED4FF;
+  --cyan-dim: #0a3d4e;
+  --cyan-core: #06b6d4;
+  --cyan-bright: #22d3ee;
+  --red-core: #ef4444;
+  --green-core: #22c55e;
+  --amber-core: #f59e0b;
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --glow-subtle: 0 0 10px rgba(123,47,190,0.15);
+  --glow-medium: 0 0 20px rgba(123,47,190,0.25), 0 0 40px rgba(123,47,190,0.1);
+  --glow-intense: 0 0 30px rgba(157,78,221,0.4), 0 0 60px rgba(123,47,190,0.2);
+  --glow-neon: 0 0 10px rgba(183,110,255,0.6), 0 0 30px rgba(157,78,221,0.4), 0 0 60px rgba(123,47,190,0.3), 0 0 100px rgba(123,47,190,0.15);
+  --glass-bg: rgba(15,15,26,0.7);
+  --glass-border: rgba(123,47,190,0.15);
+  --glass-blur: blur(20px) saturate(1.2);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --sidebar-width: 240px;
+  --titlebar-height: 38px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--purple-muted); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--purple-core); }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-void);
+  color: var(--purple-white);
+  overflow: hidden;
+  height: 100vh;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── TITLEBAR ── */
+.titlebar {
+  height: var(--titlebar-height);
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  -webkit-app-region: drag;
+  border-bottom: 1px solid rgba(123,47,190,0.1);
+  position: relative;
+  z-index: 1000;
+}
+.titlebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 4px;
+}
+.titlebar-logo {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--purple-bright);
+  text-shadow: 0 0 15px rgba(157,78,221,0.5);
+}
+.titlebar-version {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--purple-muted);
+  letter-spacing: 1px;
+}
+.titlebar-controls {
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+.titlebar-btn {
+  width: 38px;
+  height: var(--titlebar-height);
+  background: none;
+  border: none;
+  color: var(--purple-hot);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.titlebar-btn:hover { background: rgba(123,47,190,0.15); }
+.titlebar-btn.close-btn:hover { background: var(--red-core); color: #fff; }
+.titlebar-btn svg { width: 14px; height: 14px; }
+
+/* ── LAYOUT ── */
+.app-layout {
+  display: flex;
+  height: calc(100vh - var(--titlebar-height));
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--bg-surface);
+  border-right: 1px solid rgba(123,47,190,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 20px 16px 12px;
+  border-bottom: 1px solid rgba(123,47,190,0.08);
+}
+.sidebar-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--purple-vivid), var(--purple-hot));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+.sidebar-subtitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--purple-muted);
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+.nav-section-label {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--purple-muted);
+  padding: 16px 16px 6px;
+  text-transform: uppercase;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 2px solid transparent;
+  position: relative;
+}
+.nav-item:hover {
+  background: rgba(123,47,190,0.08);
+  border-left-color: var(--purple-muted);
+}
+.nav-item.active {
+  background: rgba(123,47,190,0.12);
+  border-left-color: var(--purple-bright);
+}
+.nav-item.active .nav-label { color: var(--purple-hot); }
+.nav-item svg {
+  width: 18px;
+  height: 18px;
+  color: var(--purple-muted);
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.nav-item:hover svg { color: var(--purple-bright); }
+.nav-item.active svg { color: var(--purple-vivid); }
+.nav-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--purple-hot);
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.nav-badge {
+  margin-left: auto;
+  background: var(--purple-core);
+  color: var(--purple-white);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Sidebar footer — auth status */
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(123,47,190,0.08);
+}
+.auth-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--bg-raised);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(123,47,190,0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.auth-status:hover {
+  border-color: var(--purple-muted);
+  box-shadow: var(--glow-subtle);
+}
+.auth-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red-core);
+  box-shadow: 0 0 6px rgba(239,68,68,0.4);
+  transition: all 0.3s;
+}
+.auth-dot.connected {
+  background: var(--green-core);
+  box-shadow: 0 0 6px rgba(34,197,94,0.4);
+}
+.auth-label {
+  font-size: 11px;
+  color: var(--purple-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-void);
+}
+
+/* ── SEARCH BAR ── */
+.search-bar-container {
+  padding: 12px 20px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid rgba(123,47,190,0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-input-wrap {
+  flex: 1;
+  position: relative;
+}
+.search-input-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--purple-muted);
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  background: var(--bg-raised);
+  border: 1px solid rgba(123,47,190,0.12);
+  border-radius: var(--radius-md);
+  padding: 9px 14px 9px 38px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--purple-white);
+  outline: none;
+  transition: all 0.2s;
+}
+.search-input::placeholder { color: var(--purple-muted); }
+.search-input:focus {
+  border-color: var(--purple-core);
+  box-shadow: var(--glow-subtle);
+}
+.search-type-select {
+  background: var(--bg-raised);
+  border: 1px solid rgba(123,47,190,0.12);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--purple-hot);
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+}
+.search-type-select:focus { border-color: var(--purple-core); }
+.search-type-select option { background: var(--bg-raised); color: var(--purple-white); }
+
+/* ── DYNAMIC CONTENT AREA ── */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+/* ── VIEW CONTAINERS ── */
+.view { display: none; padding: 24px; }
+.view.active { display: block; }
+
+/* ── WELCOME / HOME VIEW ── */
+.welcome-hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+}
+.welcome-logo {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  background: linear-gradient(135deg, var(--purple-bright), var(--purple-vivid), var(--purple-hot));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(157,78,221,0.3)); }
+  50% { filter: drop-shadow(0 0 40px rgba(183,110,255,0.5)); }
+}
+.welcome-tagline {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--purple-muted);
+  letter-spacing: 2px;
+  font-weight: 300;
+}
+.welcome-subtitle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--purple-dim);
+  letter-spacing: 4px;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+.welcome-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 20px 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.welcome-card {
+  background: var(--bg-raised);
+  border: 1px solid rgba(123,47,190,0.1);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.welcome-card:hover {
+  border-color: var(--purple-muted);
+  box-shadow: var(--glow-medium);
+  transform: translateY(-2px);
+}
+.welcome-card svg {
+  width: 32px; height: 32px;
+  color: var(--purple-bright);
+  margin-bottom: 12px;
+}
+.welcome-card h3 {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--purple-hot);
+  margin-bottom: 6px;
+}
+.welcome-card p {
+  font-size: 12px;
+  color: var(--purple-muted);
+  line-height: 1.4;
+}
+
+/* ── STATUS BAR (bottom of sidebar) ── */
+.dep-status {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px solid rgba(123,47,190,0.06);
+}
+.dep-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.dep-badge.ok { background: rgba(34,197,94,0.15); color: var(--green-core); }
+.dep-badge.missing { background: rgba(239,68,68,0.15); color: var(--red-core); }
+
+/* ── SEARCH RESULTS ── */
+.results-header {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--purple-muted);
+  padding: 16px 24px 8px;
+  text-transform: uppercase;
+}
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  padding: 8px 24px 24px;
+}
+
+/* ── CARDS (track, album, artist) ── */
+.card {
+  background: var(--bg-raised);
+  border: 1px solid rgba(123,47,190,0.08);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+}
+.card:hover {
+  border-color: var(--purple-muted);
+  box-shadow: var(--glow-medium);
+  transform: translateY(-3px);
+}
+.card-art {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--bg-elevated);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card-art-placeholder {
+  color: var(--purple-dim);
+}
+.card-art-placeholder svg { width: 40px; height: 40px; }
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.card:hover .card-overlay { opacity: 1; }
+.card-play-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--purple-core);
+  border: none;
+  color: var(--purple-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--glow-intense);
+  transition: all 0.2s;
+}
+.card-play-btn:hover { background: var(--purple-bright); transform: scale(1.1); }
+.card-play-btn svg { width: 18px; height: 18px; }
+.card-info {
+  padding: 10px 12px;
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--purple-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-sub {
+  font-size: 11px;
+  color: var(--purple-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.card-quality {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--cyan-core);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ── TRACK LIST (album view, queue) ── */
+.track-list {
+  padding: 0 24px;
+}
+.track-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  border-bottom: 1px solid rgba(123,47,190,0.04);
+}
+.track-row:hover { background: rgba(123,47,190,0.06); }
+.track-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--purple-dim);
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.track-art-sm {
+  width: 36px; height: 36px;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.track-art-sm img { width: 100%; height: 100%; object-fit: cover; }
+.track-info-col {
+  flex: 1;
+  min-width: 0;
+}
+.track-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--purple-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-artist-name {
+  font-size: 11px;
+  color: var(--purple-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-duration {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--purple-dim);
+  flex-shrink: 0;
+}
+.track-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.track-row:hover .track-actions { opacity: 1; }
+.track-action-btn {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: none;
+  border: 1px solid rgba(123,47,190,0.15);
+  color: var(--purple-hot);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.track-action-btn:hover {
+  background: var(--purple-core);
+  border-color: var(--purple-core);
+  box-shadow: var(--glow-subtle);
+}
+.track-action-btn svg { width: 14px; height: 14px; }
+
+/* ── ALBUM / ARTIST HERO ── */
+.detail-hero {
+  position: relative;
+  padding: 40px 30px 30px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  background: linear-gradient(180deg, rgba(123,47,190,0.08) 0%, transparent 100%);
+}
+.detail-art {
+  width: 200px; height: 200px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: var(--glow-medium);
+  border: 1px solid rgba(123,47,190,0.15);
+}
+.detail-art img { width: 100%; height: 100%; object-fit: cover; }
+.detail-meta { flex: 1; min-width: 0; }
+.detail-type {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--purple-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.detail-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--purple-white);
+  letter-spacing: 1px;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.detail-subtitle {
+  font-size: 15px;
+  color: var(--purple-muted);
+  margin-bottom: 12px;
+}
+.detail-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.detail-stat {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--purple-dim);
+  letter-spacing: 0.5px;
+}
+.detail-stat span { color: var(--purple-bright); }
+.detail-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s;
+}
+.btn svg { width: 16px; height: 16px; }
+.btn-primary {
+  background: var(--purple-core);
+  color: var(--purple-white);
+  border-color: var(--purple-core);
+}
+.btn-primary:hover {
+  background: var(--purple-bright);
+  box-shadow: var(--glow-intense);
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--purple-hot);
+  border-color: rgba(123,47,190,0.2);
+}
+.btn-ghost:hover {
+  background: rgba(123,47,190,0.1);
+  border-color: var(--purple-muted);
+}
+.btn-sm {
+  font-size: 11px;
+  padding: 6px 14px;
+}
+
+/* ── QUEUE VIEW ── */
+.queue-section-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--purple-muted);
+  padding: 20px 24px 8px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.queue-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--purple-dim);
+}
+.queue-empty svg { width: 48px; height: 48px; margin-bottom: 12px; }
+.queue-empty p { font-size: 14px; }
+
+/* Download progress bar */
+.progress-bar-wrap {
+  width: 120px;
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple-core), var(--cyan-core));
+  border-radius: 2px;
+  transition: width 0.3s;
+  box-shadow: 0 0 8px rgba(6,182,212,0.3);
+}
+
+/* Status badges */
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.status-badge.queued { background: rgba(123,47,190,0.15); color: var(--purple-bright); }
+.status-badge.downloading { background: rgba(6,182,212,0.15); color: var(--cyan-core); }
+.status-badge.completed { background: rgba(34,197,94,0.15); color: var(--green-core); }
+.status-badge.error { background: rgba(239,68,68,0.15); color: var(--red-core); }
+
+/* ── SETTINGS VIEW ── */
+.settings-group {
+  background: var(--bg-raised);
+  border: 1px solid rgba(123,47,190,0.08);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.settings-group-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--purple-bright);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(123,47,190,0.04);
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-label {
+  font-size: 13px;
+  color: var(--purple-hot);
+}
+.setting-desc {
+  font-size: 11px;
+  color: var(--purple-dim);
+  margin-top: 2px;
+}
+.setting-input {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(123,47,190,0.12);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--purple-white);
+  outline: none;
+  transition: all 0.2s;
+  width: 240px;
+}
+.setting-input:focus {
+  border-color: var(--purple-core);
+  box-shadow: var(--glow-subtle);
+}
+.setting-select {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(123,47,190,0.12);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--purple-white);
+  outline: none;
+  cursor: pointer;
+}
+.setting-select option { background: var(--bg-raised); }
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  cursor: pointer;
+}
+.toggle input { display: none; }
+.toggle-track {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid rgba(123,47,190,0.15);
+  border-radius: 11px;
+  transition: all 0.25s;
+}
+.toggle input:checked + .toggle-track {
+  background: var(--purple-core);
+  border-color: var(--purple-bright);
+  box-shadow: var(--glow-subtle);
+}
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--purple-muted);
+  border-radius: 50%;
+  transition: all 0.25s;
+}
+.toggle input:checked ~ .toggle-thumb {
+  left: 21px;
+  background: var(--purple-white);
+}
+
+/* ── HELP VIEW ── */
+.help-section {
+  background: var(--bg-raised);
+  border: 1px solid rgba(123,47,190,0.08);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.help-section h3 {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--purple-bright);
+  margin-bottom: 12px;
+}
+.help-section p, .help-section li {
+  font-size: 13px;
+  color: var(--purple-hot);
+  line-height: 1.6;
+}
+.help-section ul { padding-left: 20px; }
+.help-section li { margin-bottom: 4px; }
+.help-section code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--cyan-core);
+}
+.help-link {
+  color: var(--purple-vivid);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.help-link:hover { color: var(--purple-hot); }
+
+/* ── TOAST NOTIFICATIONS ── */
+.toast-container {
+  position: fixed;
+  top: calc(var(--titlebar-height) + 12px);
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  min-width: 280px;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--glow-medium);
+  animation: toastIn 0.3s ease-out;
+  transition: all 0.3s;
+}
+.toast.toast-out { opacity: 0; transform: translateX(100%); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(100%); } }
+.toast-icon { flex-shrink: 0; }
+.toast-icon svg { width: 18px; height: 18px; }
+.toast-icon.success svg { color: var(--green-core); }
+.toast-icon.error svg { color: var(--red-core); }
+.toast-icon.info svg { color: var(--cyan-core); }
+.toast-text {
+  flex: 1;
+  font-size: 12px;
+  color: var(--purple-hot);
+  line-height: 1.3;
+}
+
+/* ── LOADING SKELETON ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-raised) 25%, var(--bg-elevated) 50%, var(--bg-raised) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── EMPTY STATES ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+.empty-state svg {
+  width: 56px; height: 56px;
+  color: var(--purple-dim);
+  margin-bottom: 16px;
+}
+.empty-state h3 {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--purple-muted);
+  margin-bottom: 8px;
+}
+.empty-state p {
+  font-size: 13px;
+  color: var(--purple-dim);
+  max-width: 300px;
+}
+
+/* ── QUALITY BADGE ── */
+.quality-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.quality-badge.master { background: rgba(212,160,255,0.15); color: var(--purple-hot); }
+.quality-badge.hifi { background: rgba(6,182,212,0.15); color: var(--cyan-core); }
+.quality-badge.high { background: rgba(34,197,94,0.15); color: var(--green-core); }
+.quality-badge.normal { background: rgba(123,47,190,0.1); color: var(--purple-muted); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+  .sidebar { width: 56px; min-width: 56px; }
+  .nav-label, .nav-section-label, .sidebar-header,
+  .sidebar-footer, .nav-badge { display: none; }
+  .nav-item { justify-content: center; padding: 12px; }
+  .nav-item svg { width: 20px; height: 20px; }
+  .detail-hero { flex-direction: column; align-items: center; text-align: center; }
+  .detail-art { width: 160px; height: 160px; }
+  .detail-stats { justify-content: center; }
+  .detail-actions { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TITLEBAR ═══════════ -->
+<div class="titlebar">
+  <div class="titlebar-brand">
+    <span class="titlebar-logo">CHARON</span>
+    <span class="titlebar-version">v1.0.0</span>
+  </div>
+  <div class="titlebar-controls">
+    <button class="titlebar-btn" onclick="window.charon.minimize()" title="Minimize">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="titlebar-btn" onclick="window.charon.maximize()" title="Maximize">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="1"/></svg>
+    </button>
+    <button class="titlebar-btn close-btn" onclick="window.charon.close()" title="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════ APP LAYOUT ═══════════ -->
+<div class="app-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">CHARON</div>
+      <div class="sidebar-subtitle">TIDAL HARVESTER</div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Navigate</div>
+
+      <div class="nav-item active" data-view="home" onclick="switchView('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Home</span>
+      </div>
+
+      <div class="nav-item" data-view="search" onclick="switchView('search')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="nav-label">Search</span>
+      </div>
+
+      <div class="nav-section-label">Downloads</div>
+
+      <div class="nav-item" data-view="queue" onclick="switchView('queue')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="nav-label">Queue</span>
+        <span class="nav-badge" id="queueBadge" style="display:none">0</span>
+      </div>
+
+      <div class="nav-item" data-view="history" onclick="switchView('history')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="nav-label">History</span>
+      </div>
+
+      <div class="nav-section-label">System</div>
+
+      <div class="nav-item" data-view="settings" onclick="switchView('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="nav-label">Settings</span>
+      </div>
+
+      <div class="nav-item" data-view="help" onclick="switchView('help')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span class="nav-label">Help</span>
+      </div>
+    </div>
+
+    <div class="dep-status" id="depStatus"></div>
+
+    <div class="sidebar-footer">
+      <div class="auth-status" id="authStatus" onclick="handleAuthClick()">
+        <div class="auth-dot" id="authDot"></div>
+        <span class="auth-label" id="authLabel">NOT CONNECTED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="main-content">
+    <!-- Search Bar -->
+    <div class="search-bar-container">
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search Tidal catalog..." onkeydown="if(event.key==='Enter')doSearch()">
+      </div>
+      <select class="search-type-select" id="searchType">
+        <option value="track">Tracks</option>
+        <option value="album">Albums</option>
+        <option value="artist">Artists</option>
+      </select>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area" id="contentArea">
+
+      <!-- HOME VIEW -->
+      <div class="view active" id="viewHome">
+        <div class="welcome-hero">
+          <div class="welcome-logo">CHARON</div>
+          <div class="welcome-tagline">The Ferryman of Music</div>
+          <div class="welcome-subtitle">Catalog Harvester & Automated Ripper for Organized Navidrome</div>
+        </div>
+        <div class="welcome-cards">
+          <div class="welcome-card" onclick="switchView('search')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h3>SEARCH</h3>
+            <p>Browse the Tidal catalog. Find tracks, albums, and artists.</p>
+          </div>
+          <div class="welcome-card" onclick="switchView('queue')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <h3>QUEUE</h3>
+            <p>Manage your download queue. Up to 3 concurrent downloads.</p>
+          </div>
+          <div class="welcome-card" onclick="switchView('settings')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <h3>SETTINGS</h3>
+            <p>Configure download path, quality, Navidrome, and more.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEARCH VIEW -->
+      <div class="view" id="viewSearch">
+        <div id="searchResults">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h3>SEARCH TIDAL</h3>
+            <p>Enter a query above to search for tracks, albums, or artists in the Tidal catalog.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETAIL VIEW (artist / album) -->
+      <div class="view" id="viewDetail">
+        <div id="detailContent"></div>
+      </div>
+
+      <!-- QUEUE VIEW -->
+      <div class="view" id="viewQueue">
+        <div id="queueContent">
+          <div class="queue-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <p>Queue is empty. Search for music to start downloading.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY VIEW -->
+      <div class="view" id="viewHistory">
+        <div id="historyContent">
+          <div class="queue-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <p>No download history yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS VIEW -->
+      <div class="view" id="viewSettings">
+        <div style="max-width:640px;">
+          <div class="settings-group">
+            <div class="settings-group-title">Download</div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Download Directory</div>
+                <div class="setting-desc">Where downloaded music is saved</div>
+              </div>
+              <input type="text" class="setting-input" id="settingDownloadDir" value="E:\Music" onchange="saveSetting('downloadDir', this.value)">
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Audio Quality</div>
+                <div class="setting-desc">Preferred download quality</div>
+              </div>
+              <select class="setting-select" id="settingQuality" onchange="saveSetting('quality', this.value)">
+                <option value="MAX">MAX (MQA / HI_RES)</option>
+                <option value="LOSSLESS">LOSSLESS (FLAC 16-bit)</option>
+                <option value="HIGH">HIGH (AAC 320)</option>
+                <option value="NORMAL">NORMAL (AAC 96)</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Concurrent Downloads</div>
+                <div class="setting-desc">Max simultaneous downloads</div>
+              </div>
+              <select class="setting-select" id="settingConcurrent" onchange="saveSetting('concurrent', this.value)">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">File Naming</div>
+                <div class="setting-desc">Track file naming pattern</div>
+              </div>
+              <input type="text" class="setting-input" id="settingNaming" value="{artist}/{album}/{number}. {title}" onchange="saveSetting('naming', this.value)">
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-group-title">Navidrome</div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Server URL</div>
+                <div class="setting-desc">Navidrome/Subsonic server address</div>
+              </div>
+              <input type="text" class="setting-input" id="settingNaviUrl" value="http://localhost:4533" onchange="saveSetting('navidromeUrl', this.value)">
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Username</div>
+              </div>
+              <input type="text" class="setting-input" id="settingNaviUser" value="phantom" onchange="saveSetting('navidromeUser', this.value)">
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Password</div>
+              </div>
+              <input type="password" class="setting-input" id="settingNaviPass" value="phantom" onchange="saveSetting('navidromePass', this.value)">
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Auto-Scan After Download</div>
+                <div class="setting-desc">Trigger Navidrome library scan after each download completes</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="settingAutoScan" checked onchange="saveSetting('autoScan', this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+            <div style="padding-top:12px;">
+              <button class="btn btn-ghost btn-sm" onclick="manualScan()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Scan Library Now
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-group-title">Interface</div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Notifications</div>
+                <div class="setting-desc">Show toast notifications for downloads</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="settingNotifications" checked onchange="saveSetting('notifications', this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HELP VIEW -->
+      <div class="view" id="viewHelp">
+        <div style="max-width:640px;">
+          <div class="help-section">
+            <h3>WHAT IS CHARON?</h3>
+            <p>CHARON is the companion app to <strong>AETHER</strong> — your premium desktop music player. CHARON downloads music from Tidal and delivers it straight to your Navidrome library, where AETHER picks it up and plays it with stunning visualizers and binaural audio.</p>
+            <p style="margin-top:8px;"><strong>The Pipeline:</strong> Search Tidal → Download with CHARON → Navidrome scans → Play in AETHER</p>
+          </div>
+
+          <div class="help-section">
+            <h3>GETTING STARTED</h3>
+            <ul>
+              <li>Install <code>Python 3.8+</code> and ensure it's in your PATH</li>
+              <li>Install tiddl: <code>pip install tiddl</code></li>
+              <li>Install tidalapi: <code>pip install tidalapi</code></li>
+              <li>Install ffmpeg and ensure it's in your PATH</li>
+              <li>Run <code>tiddl</code> once to authenticate with Tidal</li>
+              <li>Click the auth status indicator to check your connection</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>HOW DOWNLOADING WORKS</h3>
+            <p>CHARON uses <code>tiddl</code> (a Python CLI tool) to download from Tidal. Tracks are saved to your configured download directory (default: <code>E:\Music</code>). After each download, CHARON can auto-trigger a Navidrome library scan so your new music appears immediately in AETHER.</p>
+          </div>
+
+          <div class="help-section">
+            <h3>QUALITY TIERS</h3>
+            <ul>
+              <li><strong>MAX</strong> — MQA / HI_RES_LOSSLESS (up to 24-bit/192kHz)</li>
+              <li><strong>LOSSLESS</strong> — FLAC 16-bit/44.1kHz (CD quality)</li>
+              <li><strong>HIGH</strong> — AAC 320kbps</li>
+              <li><strong>NORMAL</strong> — AAC 96kbps</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>KEYBOARD SHORTCUTS</h3>
+            <ul>
+              <li><code>Ctrl+F</code> — Focus search</li>
+              <li><code>Escape</code> — Go home</li>
+              <li><code>F12</code> — Toggle DevTools</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>MYTHOLOGICAL NOTE</h3>
+            <p>In Greek mythology, <strong>Charon</strong> is the ferryman who carries souls across the River Styx. Here, CHARON carries music across the digital divide — from Tidal's shores to your AETHER realm.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════════════ -->
+<script>
+/*
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  CHARON — Renderer Process                                      ║
+  ║  Search, browse, queue, download, settings                      ║
+  ╚══════════════════════════════════════════════════════════════════╝
+*/
+
+// ============ STATE ============
+let currentView = 'home';
+let settings = {};
+let searchResults = [];
+let downloadQueue = [];
+let downloadHistory = [];
+let isAuthenticated = false;
+let navigationStack = []; // for back navigation
+
+// SVG icon helpers
+const ICONS = {
+  download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+  folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+  music: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+  disc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>',
+};
+
+// ============ VIEW SWITCHING ============
+function switchView(view) {
+  if (view !== currentView) {
+    navigationStack.push(currentView);
+  }
+  currentView = view;
+
+  // Update nav items
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.view === view);
+  });
+
+  // Update views
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const viewEl = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
+  if (viewEl) viewEl.classList.add('active');
+
+  // Focus search input when switching to search
+  if (view === 'search') {
+    setTimeout(() => document.getElementById('searchInput')?.focus(), 100);
+  }
+}
+
+function goBack() {
+  if (navigationStack.length > 0) {
+    const prev = navigationStack.pop();
+    currentView = prev;
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.view === prev);
+    });
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const viewEl = document.getElementById('view' + prev.charAt(0).toUpperCase() + prev.slice(1));
+    if (viewEl) viewEl.classList.add('active');
+  }
+}
+
+// ============ SEARCH ============
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) return;
+
+  const type = document.getElementById('searchType').value;
+  switchView('search');
+
+  const container = document.getElementById('searchResults');
+  container.innerHTML = renderSkeletonGrid(8);
+
+  try {
+    const result = await window.charon.search(query, type, 50);
+    if (result.status === 'error') {
+      container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>SEARCH FAILED</h3><p>${escHtml(result.error)}</p></div>`;
+      return;
+    }
+    const items = result.data?.results || [];
+    if (items.length === 0) {
+      container.innerHTML = `<div class="empty-state"><div>${ICONS.info}</div><h3>NO RESULTS</h3><p>No ${type}s found for "${escHtml(query)}"</p></div>`;
+      return;
+    }
+    searchResults = items;
+    container.innerHTML = `<div class="results-header">${items.length} ${type.toUpperCase()}S FOUND</div>` + renderResultsGrid(items, type);
+  } catch (e) {
+    container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>BRIDGE ERROR</h3><p>${escHtml(e.message)}</p><p style="margin-top:8px;font-size:11px;color:var(--purple-dim);">Make sure Python bridge is running and tiddl/tidalapi are installed.</p></div>`;
+  }
+}
+
+function renderResultsGrid(items, type) {
+  if (type === 'track') return renderTrackList(items);
+
+  let html = '<div class="results-grid">';
+  for (const item of items) {
+    const artUrl = item.image_url || '';
+    const artHtml = artUrl
+      ? `<img src="${escHtml(artUrl)}" loading="lazy" alt="">`
+      : `<div class="card-art-placeholder">${type === 'artist' ? ICONS.user : ICONS.disc}</div>`;
+
+    html += `<div class="card" onclick="${type === 'artist' ? `loadArtist('${item.id}')` : `loadAlbum('${item.id}')`}">
+      <div class="card-art">${artHtml}<div class="card-overlay">
+        <button class="card-play-btn" onclick="event.stopPropagation();${type === 'album' ? `downloadAlbum('${item.id}','${escAttr(item.title || item.name)}')` : `loadArtist('${item.id}')`}">
+          ${type === 'album' ? ICONS.download : ICONS.play}
+        </button>
+      </div></div>
+      <div class="card-info">
+        <div class="card-title">${escHtml(item.title || item.name)}</div>
+        ${item.artist ? `<div class="card-sub">${escHtml(item.artist)}</div>` : ''}
+        ${item.year ? `<div class="card-sub">${item.year}</div>` : ''}
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderTrackList(tracks) {
+  let html = '<div class="track-list">';
+  for (let i = 0; i < tracks.length; i++) {
+    const t = tracks[i];
+    const dur = formatDuration(t.duration || 0);
+    const artUrl = t.image_url || '';
+    const artHtml = artUrl
+      ? `<img src="${escHtml(artUrl)}" loading="lazy" alt="">`
+      : '';
+
+    html += `<div class="track-row">
+      <span class="track-num">${i + 1}</span>
+      <div class="track-art-sm">${artHtml}</div>
+      <div class="track-info-col">
+        <div class="track-name">${escHtml(t.title || t.name)}</div>
+        <div class="track-artist-name">${escHtml(t.artist || '')}</div>
+      </div>
+      ${t.quality ? `<span class="quality-badge ${getQualityClass(t.quality)}">${escHtml(t.quality)}</span>` : ''}
+      <span class="track-duration">${dur}</span>
+      <div class="track-actions">
+        <button class="track-action-btn" title="Download" onclick="downloadTrack('${t.id}','${escAttr(t.title || t.name)}','${escAttr(t.artist || '')}')">
+          ${ICONS.download}
+        </button>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+// ============ ARTIST / ALBUM DETAIL ============
+async function loadArtist(artistId) {
+  switchView('detail');
+  const container = document.getElementById('detailContent');
+  container.innerHTML = renderDetailSkeleton();
+
+  try {
+    const [artistResult, albumsResult, topTracksResult] = await Promise.all([
+      window.charon.getArtist(artistId),
+      window.charon.getArtistAlbums(artistId),
+      window.charon.getArtistTopTracks(artistId)
+    ]);
+
+    const artist = artistResult.data || {};
+    const albums = albumsResult.data?.albums || [];
+    const topTracks = topTracksResult.data?.tracks || [];
+
+    const artUrl = artist.image_url || '';
+    const artHtml = artUrl ? `<img src="${escHtml(artUrl)}" alt="">` : '';
+
+    let html = `<div class="detail-hero">
+      <div class="detail-art">${artHtml}</div>
+      <div class="detail-meta">
+        <div class="detail-type">ARTIST</div>
+        <div class="detail-title">${escHtml(artist.name || 'Unknown')}</div>
+        <div class="detail-actions">
+          <button class="btn btn-primary" onclick="downloadArtist('${artistId}','${escAttr(artist.name || '')}')">
+            ${ICONS.download} Download All
+          </button>
+          <button class="btn btn-ghost" onclick="goBack()">
+            ${ICONS.back} Back
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+    if (topTracks.length > 0) {
+      html += `<div class="results-header">TOP TRACKS</div>`;
+      html += renderTrackList(topTracks);
+    }
+
+    if (albums.length > 0) {
+      html += `<div class="results-header" style="margin-top:24px">DISCOGRAPHY — ${albums.length} ALBUMS</div>`;
+      html += '<div class="results-grid">';
+      for (const album of albums) {
+        const albumArt = album.image_url || '';
+        html += `<div class="card" onclick="loadAlbum('${album.id}')">
+          <div class="card-art">${albumArt ? `<img src="${escHtml(albumArt)}" loading="lazy" alt="">` : `<div class="card-art-placeholder">${ICONS.disc}</div>`}
+            <div class="card-overlay">
+              <button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum('${album.id}','${escAttr(album.title || '')}')">
+                ${ICONS.download}
+              </button>
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">${escHtml(album.title || '')}</div>
+            <div class="card-sub">${album.year || ''} ${album.num_tracks ? '· ' + album.num_tracks + ' tracks' : ''}</div>
+          </div>
+        </div>`;
+      }
+      html += '</div>';
+    }
+
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>FAILED TO LOAD ARTIST</h3><p>${escHtml(e.message)}</p></div>`;
+  }
+}
+
+async function loadAlbum(albumId) {
+  switchView('detail');
+  const container = document.getElementById('detailContent');
+  container.innerHTML = renderDetailSkeleton();
+
+  try {
+    const result = await window.charon.getAlbum(albumId);
+    const album = result.data || {};
+    const tracks = album.tracks || [];
+
+    const artUrl = album.image_url || '';
+    const artHtml = artUrl ? `<img src="${escHtml(artUrl)}" alt="">` : '';
+    const totalDur = tracks.reduce((sum, t) => sum + (t.duration || 0), 0);
+
+    let html = `<div class="detail-hero">
+      <div class="detail-art">${artHtml}</div>
+      <div class="detail-meta">
+        <div class="detail-type">ALBUM</div>
+        <div class="detail-title">${escHtml(album.title || 'Unknown')}</div>
+        <div class="detail-subtitle">${escHtml(album.artist || '')}</div>
+        <div class="detail-stats">
+          ${album.year ? `<span class="detail-stat"><span>${album.year}</span></span>` : ''}
+          <span class="detail-stat"><span>${tracks.length}</span> tracks</span>
+          <span class="detail-stat"><span>${formatDuration(totalDur)}</span></span>
+          ${album.quality ? `<span class="quality-badge ${getQualityClass(album.quality)}">${escHtml(album.quality)}</span>` : ''}
+        </div>
+        <div class="detail-actions">
+          <button class="btn btn-primary" onclick="downloadAlbum('${albumId}','${escAttr(album.title || '')}')">
+            ${ICONS.download} Download Album
+          </button>
+          ${album.artist_id ? `<button class="btn btn-ghost" onclick="loadArtist('${album.artist_id}')">View Artist</button>` : ''}
+          <button class="btn btn-ghost" onclick="goBack()">
+            ${ICONS.back} Back
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+    if (tracks.length > 0) {
+      html += `<div class="results-header">${tracks.length} TRACKS</div>`;
+      let trackHtml = '<div class="track-list">';
+      for (let i = 0; i < tracks.length; i++) {
+        const t = tracks[i];
+        trackHtml += `<div class="track-row">
+          <span class="track-num">${t.track_number || i + 1}</span>
+          <div class="track-info-col">
+            <div class="track-name">${escHtml(t.title || t.name)}</div>
+            <div class="track-artist-name">${escHtml(t.artist || album.artist || '')}</div>
+          </div>
+          ${t.quality ? `<span class="quality-badge ${getQualityClass(t.quality)}">${escHtml(t.quality)}</span>` : ''}
+          <span class="track-duration">${formatDuration(t.duration || 0)}</span>
+          <div class="track-actions">
+            <button class="track-action-btn" title="Download" onclick="downloadTrack('${t.id}','${escAttr(t.title || t.name)}','${escAttr(t.artist || album.artist || '')}')">
+              ${ICONS.download}
+            </button>
+          </div>
+        </div>`;
+      }
+      trackHtml += '</div>';
+      html += trackHtml;
+    }
+
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>FAILED TO LOAD ALBUM</h3><p>${escHtml(e.message)}</p></div>`;
+  }
+}
+
+// ============ DOWNLOAD ACTIONS ============
+async function downloadTrack(trackId, title, artist) {
+  const tidalUrl = `https://tidal.com/browse/track/${trackId}`;
+  try {
+    await window.charon.queueAdd({
+      tidalUrl,
+      title: title || 'Unknown Track',
+      artist: artist || '',
+      type: 'track',
+      quality: settings.quality || 'MAX'
+    });
+    showToast('success', `Queued: ${title}`);
+  } catch (e) {
+    showToast('error', `Failed to queue: ${e.message}`);
+  }
+}
+
+async function downloadAlbum(albumId, title) {
+  const tidalUrl = `https://tidal.com/browse/album/${albumId}`;
+  try {
+    await window.charon.queueAdd({
+      tidalUrl,
+      title: title || 'Unknown Album',
+      type: 'album',
+      quality: settings.quality || 'MAX'
+    });
+    showToast('success', `Queued album: ${title}`);
+  } catch (e) {
+    showToast('error', `Failed to queue: ${e.message}`);
+  }
+}
+
+async function downloadArtist(artistId, name) {
+  showToast('info', `Fetching discography for ${name}...`);
+  try {
+    const result = await window.charon.getArtistAlbums(artistId);
+    const albums = result.data?.albums || [];
+    for (const album of albums) {
+      await window.charon.queueAdd({
+        tidalUrl: `https://tidal.com/browse/album/${album.id}`,
+        title: album.title || 'Unknown Album',
+        artist: name,
+        type: 'album',
+        quality: settings.quality || 'MAX'
+      });
+    }
+    showToast('success', `Queued ${albums.length} albums from ${name}`);
+  } catch (e) {
+    showToast('error', `Failed: ${e.message}`);
+  }
+}
+
+// ============ QUEUE RENDERING ============
+function renderQueue(data) {
+  downloadQueue = data.queue || [];
+  downloadHistory = data.history || [];
+
+  // Update badge
+  const badge = document.getElementById('queueBadge');
+  if (downloadQueue.length > 0) {
+    badge.textContent = downloadQueue.length;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+
+  // Only re-render if queue view is active
+  if (currentView === 'queue') renderQueueView();
+  if (currentView === 'history') renderHistoryView();
+}
+
+function renderQueueView() {
+  const container = document.getElementById('queueContent');
+  if (downloadQueue.length === 0) {
+    container.innerHTML = `<div class="queue-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px;color:var(--purple-dim);margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <p>Queue is empty. Search for music to start downloading.</p>
+    </div>`;
+    return;
+  }
+
+  let html = `<div class="queue-section-label">ACTIVE QUEUE — ${downloadQueue.length} ITEMS</div>`;
+  html += '<div class="track-list">';
+  for (const item of downloadQueue) {
+    const progress = item.progress || 0;
+    html += `<div class="track-row">
+      <div class="track-info-col">
+        <div class="track-name">${escHtml(item.title || 'Unknown')}</div>
+        <div class="track-artist-name">${escHtml(item.artist || '')} ${item.type ? '· ' + item.type : ''}</div>
+      </div>
+      <span class="status-badge ${item.status}">${item.status.toUpperCase()}</span>
+      ${item.status === 'downloading' ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progress}%"></div></div>` : ''}
+      <div class="track-actions" style="opacity:1">
+        ${item.status === 'queued' ? `<button class="track-action-btn" title="Remove" onclick="removeFromQueue('${item.id}')">${ICONS.x}</button>` : ''}
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderHistoryView() {
+  const container = document.getElementById('historyContent');
+  if (downloadHistory.length === 0) {
+    container.innerHTML = `<div class="queue-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px;color:var(--purple-dim);margin-bottom:12px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <p>No download history yet.</p>
+    </div>`;
+    return;
+  }
+
+  let html = `<div class="queue-section-label">
+    DOWNLOAD HISTORY — ${downloadHistory.length} ITEMS
+    <button class="btn btn-ghost btn-sm" onclick="clearHistory()">Clear</button>
+  </div>`;
+  html += '<div class="track-list">';
+  for (const item of downloadHistory) {
+    const time = item.completedAt ? new Date(item.completedAt).toLocaleString() : '';
+    html += `<div class="track-row">
+      <div class="track-info-col">
+        <div class="track-name">${escHtml(item.title || 'Unknown')}</div>
+        <div class="track-artist-name">${escHtml(item.artist || '')} ${time ? '· ' + time : ''}</div>
+      </div>
+      <span class="status-badge ${item.status}">${(item.status || 'completed').toUpperCase()}</span>
+      ${item.filePath ? `<div class="track-actions" style="opacity:1">
+        <button class="track-action-btn" title="Show in folder" onclick="window.charon.openFolder('${escAttr(item.filePath)}')">${ICONS.folder}</button>
+      </div>` : ''}
+    </div>`;
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+async function removeFromQueue(itemId) {
+  try {
+    await window.charon.queueRemove(itemId);
+  } catch (e) {
+    showToast('error', 'Failed to remove: ' + e.message);
+  }
+}
+
+async function clearHistory() {
+  try {
+    await window.charon.queueClearCompleted();
+    showToast('info', 'History cleared');
+  } catch (e) {
+    showToast('error', e.message);
+  }
+}
+
+// ============ SETTINGS ============
+async function loadSettings() {
+  try {
+    settings = await window.charon.getSettings() || {};
+    // Apply to UI
+    if (settings.downloadDir) document.getElementById('settingDownloadDir').value = settings.downloadDir;
+    if (settings.quality) document.getElementById('settingQuality').value = settings.quality;
+    if (settings.concurrent) document.getElementById('settingConcurrent').value = settings.concurrent;
+    if (settings.naming) document.getElementById('settingNaming').value = settings.naming;
+    if (settings.navidromeUrl) document.getElementById('settingNaviUrl').value = settings.navidromeUrl;
+    if (settings.navidromeUser) document.getElementById('settingNaviUser').value = settings.navidromeUser;
+    if (settings.navidromePass) document.getElementById('settingNaviPass').value = settings.navidromePass;
+    if (settings.autoScan !== undefined) document.getElementById('settingAutoScan').checked = settings.autoScan;
+    if (settings.notifications !== undefined) document.getElementById('settingNotifications').checked = settings.notifications;
+  } catch (e) {
+    console.error('Failed to load settings:', e);
+  }
+}
+
+async function saveSetting(key, value) {
+  settings[key] = value;
+  try {
+    await window.charon.setSettings(settings);
+  } catch (e) {
+    showToast('error', 'Failed to save settings');
+  }
+}
+
+// ============ AUTH ============
+async function checkAuth() {
+  try {
+    const result = await window.charon.authStatus();
+    isAuthenticated = result.data?.authenticated === true;
+    updateAuthUI();
+  } catch (e) {
+    isAuthenticated = false;
+    updateAuthUI();
+  }
+}
+
+function updateAuthUI() {
+  const dot = document.getElementById('authDot');
+  const label = document.getElementById('authLabel');
+  if (isAuthenticated) {
+    dot.classList.add('connected');
+    label.textContent = 'TIDAL CONNECTED';
+  } else {
+    dot.classList.remove('connected');
+    label.textContent = 'NOT CONNECTED';
+  }
+}
+
+async function handleAuthClick() {
+  if (isAuthenticated) {
+    showToast('info', 'Already connected to Tidal');
+    return;
+  }
+  showToast('info', 'Checking Tidal connection...');
+  await checkAuth();
+  if (!isAuthenticated) {
+    showToast('error', 'Not authenticated. Run "tiddl" in terminal to log in to Tidal first.');
+  } else {
+    showToast('success', 'Connected to Tidal!');
+  }
+}
+
+// ============ DEPENDENCIES CHECK ============
+async function checkDependencies() {
+  const container = document.getElementById('depStatus');
+  try {
+    const deps = await window.charon.checkDeps();
+    let html = '';
+    html += `<span class="dep-badge ${deps.python ? 'ok' : 'missing'}">PY</span>`;
+    html += `<span class="dep-badge ${deps.tiddl ? 'ok' : 'missing'}">TIDDL</span>`;
+    html += `<span class="dep-badge ${deps.ffmpeg ? 'ok' : 'missing'}">FF</span>`;
+    container.innerHTML = html;
+
+    if (!deps.python) showToast('error', 'Python not found. Install Python 3.8+ and add to PATH.');
+    else if (!deps.tiddl) showToast('error', 'tiddl not found. Run: pip install tiddl');
+    else if (!deps.ffmpeg) showToast('info', 'ffmpeg not found. Some formats may not convert properly.');
+  } catch (e) {
+    container.innerHTML = '<span class="dep-badge missing">ERR</span>';
+  }
+}
+
+// ============ NAVIDROME SCAN ============
+async function manualScan() {
+  showToast('info', 'Triggering Navidrome library scan...');
+  try {
+    await window.charon.navidromeScan();
+    showToast('success', 'Navidrome scan triggered');
+  } catch (e) {
+    showToast('error', 'Scan failed: ' + e.message);
+  }
+}
+
+// ============ TOAST NOTIFICATIONS ============
+function showToast(type, message) {
+  if (settings.notifications === false && type !== 'error') return;
+
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+
+  const iconSvg = type === 'success' ? ICONS.check : type === 'error' ? ICONS.alert : ICONS.info;
+  toast.innerHTML = `<div class="toast-icon ${type}">${iconSvg}</div><div class="toast-text">${escHtml(message)}</div>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('toast-out');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// ============ SKELETON LOADERS ============
+function renderSkeletonGrid(count) {
+  let html = '<div class="results-grid">';
+  for (let i = 0; i < count; i++) {
+    html += `<div class="card" style="pointer-events:none">
+      <div class="card-art"><div class="skeleton" style="width:100%;height:100%"></div></div>
+      <div class="card-info">
+        <div class="skeleton" style="width:80%;height:14px;margin-bottom:6px"></div>
+        <div class="skeleton" style="width:50%;height:11px"></div>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderDetailSkeleton() {
+  return `<div class="detail-hero">
+    <div class="detail-art"><div class="skeleton" style="width:100%;height:100%"></div></div>
+    <div class="detail-meta">
+      <div class="skeleton" style="width:60px;height:10px;margin-bottom:10px"></div>
+      <div class="skeleton" style="width:250px;height:28px;margin-bottom:10px"></div>
+      <div class="skeleton" style="width:180px;height:14px;margin-bottom:16px"></div>
+      <div class="skeleton" style="width:140px;height:36px;border-radius:var(--radius-sm)"></div>
+    </div>
+  </div>
+  <div style="padding:24px">${Array(5).fill('<div class="skeleton" style="width:100%;height:44px;margin-bottom:8px"></div>').join('')}</div>`;
+}
+
+// ============ UTILITIES ============
+function escHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+function escAttr(str) {
+  return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+function formatDuration(seconds) {
+  if (!seconds || seconds <= 0) return '0:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+function getQualityClass(q) {
+  if (!q) return 'normal';
+  const ql = q.toLowerCase();
+  if (ql.includes('master') || ql.includes('hi_res') || ql.includes('mqa')) return 'master';
+  if (ql.includes('lossless') || ql.includes('flac')) return 'hifi';
+  if (ql.includes('high') || ql.includes('320')) return 'high';
+  return 'normal';
+}
+
+// ============ EVENT LISTENERS ============
+// Queue updates from main process
+window.charon.onQueueUpdate((data) => renderQueue(data));
+window.charon.onDownloadProgress((data) => {
+  // Update progress for specific item in queue
+  const item = downloadQueue.find(q => q.id === data.item_id);
+  if (item) {
+    item.progress = data.progress || 0;
+    if (currentView === 'queue') renderQueueView();
+  }
+});
+window.charon.onDownloadComplete((item) => {
+  showToast('success', `Downloaded: ${item.title || 'Unknown'}`);
+});
+window.charon.onNavidromeScanResult((data) => {
+  if (data.success) {
+    showToast('success', 'Navidrome library scan complete');
+  }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'f') {
+    e.preventDefault();
+    switchView('search');
+  }
+  if (e.key === 'Escape') {
+    switchView('home');
+  }
+});
+
+// ============ INIT ============
+async function init() {
+  await loadSettings();
+  checkDependencies();
+  checkAuth();
+  // Load initial queue state
+  try {
+    const queueData = await window.charon.queueGet();
+    renderQueue(queueData);
+  } catch (e) {}
+}
+
+init();
+</script>
+</body>
+</html>

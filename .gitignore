@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+build/
+release/
+*.exe
+*.msi
+.DS_Store
+Thumbs.db
+.env
+*.log
+*.tmp
+*.bak
