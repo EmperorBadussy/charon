@@ -8,38 +8,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════════
-   CHARON — PHANTOM Design System
-   OLED-black + monochromatic purple + glassmorphism
+   CHARON — STYX CYAN Design System
+   OLED-black + monochromatic cyan/teal + glassmorphism
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
   --bg-void: #000000;
-  --bg-surface: #09090F;
-  --bg-raised: #0F0F1A;
-  --bg-elevated: #141425;
-  --bg-hover: #1a1a2e;
-  --purple-dim: #2A1B3D;
-  --purple-muted: #4A2D6B;
-  --purple-core: #7B2FBE;
-  --purple-bright: #9D4EDD;
-  --purple-vivid: #B76EFF;
-  --purple-hot: #D4A0FF;
-  --purple-white: #EED4FF;
-  --cyan-dim: #0a3d4e;
-  --cyan-core: #06b6d4;
-  --cyan-bright: #22d3ee;
+  --bg-surface: #060B0F;
+  --bg-raised: #0A1419;
+  --bg-elevated: #0C1820;
+  --bg-hover: #0F2030;
+  --purple-dim: #0D2B36;
+  --purple-muted: #0E4D64;
+  --purple-core: #06B6D4;
+  --purple-bright: #22D3EE;
+  --purple-vivid: #67E8F9;
+  --purple-hot: #A5F3FC;
+  --purple-white: #ECFEFF;
+  --cyan-dim: #0D2B36;
+  --cyan-core: #06B6D4;
+  --cyan-bright: #22D3EE;
   --red-core: #ef4444;
   --green-core: #22c55e;
   --amber-core: #f59e0b;
   --font-display: 'Orbitron', sans-serif;
   --font-body: 'Rajdhani', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --glow-subtle: 0 0 10px rgba(123,47,190,0.15);
-  --glow-medium: 0 0 20px rgba(123,47,190,0.25), 0 0 40px rgba(123,47,190,0.1);
-  --glow-intense: 0 0 30px rgba(157,78,221,0.4), 0 0 60px rgba(123,47,190,0.2);
-  --glow-neon: 0 0 10px rgba(183,110,255,0.6), 0 0 30px rgba(157,78,221,0.4), 0 0 60px rgba(123,47,190,0.3), 0 0 100px rgba(123,47,190,0.15);
-  --glass-bg: rgba(15,15,26,0.7);
-  --glass-border: rgba(123,47,190,0.15);
+  --glow-subtle: 0 0 10px rgba(34,211,238,0.15);
+  --glow-medium: 0 0 20px rgba(34,211,238,0.25), 0 0 40px rgba(6,182,212,0.15);
+  --glow-intense: 0 0 30px rgba(34,211,238,0.4), 0 0 60px rgba(6,182,212,0.25);
+  --glow-neon: 0 0 10px rgba(103,232,249,0.6), 0 0 30px rgba(34,211,238,0.4), 0 0 60px rgba(6,182,212,0.3), 0 0 100px rgba(6,182,212,0.15);
+  --glass-bg: rgba(10,20,25,0.7);
+  --glass-border: rgba(6,182,212,0.15);
   --glass-blur: blur(20px) saturate(1.2);
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -75,7 +75,7 @@ body {
   justify-content: space-between;
   padding: 0 8px;
   -webkit-app-region: drag;
-  border-bottom: 1px solid rgba(123,47,190,0.1);
+  border-bottom: 1px solid rgba(6,182,212,0.1);
   position: relative;
   z-index: 1000;
 }
@@ -91,7 +91,7 @@ body {
   font-weight: 700;
   letter-spacing: 3px;
   color: var(--purple-bright);
-  text-shadow: 0 0 15px rgba(157,78,221,0.5);
+  text-shadow: 0 0 15px rgba(34,211,238,0.5);
 }
 .titlebar-version {
   font-family: var(--font-mono);
@@ -115,7 +115,7 @@ body {
   justify-content: center;
   transition: all 0.15s;
 }
-.titlebar-btn:hover { background: rgba(123,47,190,0.15); }
+.titlebar-btn:hover { background: rgba(6,182,212,0.15); }
 .titlebar-btn.close-btn:hover { background: var(--red-core); color: #fff; }
 .titlebar-btn svg { width: 14px; height: 14px; }
 
@@ -123,6 +123,8 @@ body {
 .app-layout {
   display: flex;
   height: calc(100vh - var(--titlebar-height));
+  position: relative;
+  z-index: 1;
 }
 
 /* ── SIDEBAR ── */
@@ -130,14 +132,14 @@ body {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
   background: var(--bg-surface);
-  border-right: 1px solid rgba(123,47,190,0.1);
+  border-right: 1px solid rgba(6,182,212,0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 .sidebar-header {
   padding: 20px 16px 12px;
-  border-bottom: 1px solid rgba(123,47,190,0.08);
+  border-bottom: 1px solid rgba(6,182,212,0.08);
 }
 .sidebar-title {
   font-family: var(--font-display);
@@ -181,11 +183,11 @@ body {
   position: relative;
 }
 .nav-item:hover {
-  background: rgba(123,47,190,0.08);
+  background: rgba(6,182,212,0.08);
   border-left-color: var(--purple-muted);
 }
 .nav-item.active {
-  background: rgba(123,47,190,0.12);
+  background: rgba(6,182,212,0.12);
   border-left-color: var(--purple-bright);
 }
 .nav-item.active .nav-label { color: var(--purple-hot); }
@@ -220,7 +222,7 @@ body {
 /* Sidebar footer — auth status */
 .sidebar-footer {
   padding: 12px 16px;
-  border-top: 1px solid rgba(123,47,190,0.08);
+  border-top: 1px solid rgba(6,182,212,0.08);
 }
 .auth-status {
   display: flex;
@@ -229,7 +231,7 @@ body {
   padding: 8px 10px;
   background: var(--bg-raised);
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(123,47,190,0.1);
+  border: 1px solid rgba(6,182,212,0.1);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -268,7 +270,7 @@ body {
 .search-bar-container {
   padding: 12px 20px;
   background: var(--bg-surface);
-  border-bottom: 1px solid rgba(123,47,190,0.08);
+  border-bottom: 1px solid rgba(6,182,212,0.08);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -290,7 +292,7 @@ body {
 .search-input {
   width: 100%;
   background: var(--bg-raised);
-  border: 1px solid rgba(123,47,190,0.12);
+  border: 1px solid rgba(6,182,212,0.12);
   border-radius: var(--radius-md);
   padding: 9px 14px 9px 38px;
   font-family: var(--font-body);
@@ -306,7 +308,7 @@ body {
 }
 .search-type-select {
   background: var(--bg-raised);
-  border: 1px solid rgba(123,47,190,0.12);
+  border: 1px solid rgba(6,182,212,0.12);
   border-radius: var(--radius-sm);
   padding: 9px 10px;
   font-family: var(--font-body);
@@ -349,8 +351,8 @@ body {
   animation: glowPulse 3s ease-in-out infinite;
 }
 @keyframes glowPulse {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(157,78,221,0.3)); }
-  50% { filter: drop-shadow(0 0 40px rgba(183,110,255,0.5)); }
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(34,211,238,0.3)); }
+  50% { filter: drop-shadow(0 0 40px rgba(103,232,249,0.5)); }
 }
 .welcome-tagline {
   font-family: var(--font-body);
@@ -377,7 +379,7 @@ body {
 }
 .welcome-card {
   background: var(--bg-raised);
-  border: 1px solid rgba(123,47,190,0.1);
+  border: 1px solid rgba(6,182,212,0.1);
   border-radius: var(--radius-lg);
   padding: 24px 20px;
   text-align: center;
@@ -412,7 +414,7 @@ body {
   display: flex;
   gap: 8px;
   padding: 8px 16px;
-  border-top: 1px solid rgba(123,47,190,0.06);
+  border-top: 1px solid rgba(6,182,212,0.06);
 }
 .dep-badge {
   font-family: var(--font-mono);
@@ -443,7 +445,7 @@ body {
 /* ── CARDS (track, album, artist) ── */
 .card {
   background: var(--bg-raised);
-  border: 1px solid rgba(123,47,190,0.08);
+  border: 1px solid rgba(6,182,212,0.08);
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
@@ -538,9 +540,9 @@ body {
   padding: 10px 12px;
   border-radius: var(--radius-sm);
   transition: all 0.15s;
-  border-bottom: 1px solid rgba(123,47,190,0.04);
+  border-bottom: 1px solid rgba(6,182,212,0.04);
 }
-.track-row:hover { background: rgba(123,47,190,0.06); }
+.track-row:hover { background: rgba(6,182,212,0.06); }
 .track-num {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -593,7 +595,7 @@ body {
   width: 30px; height: 30px;
   border-radius: 50%;
   background: none;
-  border: 1px solid rgba(123,47,190,0.15);
+  border: 1px solid rgba(6,182,212,0.15);
   color: var(--purple-hot);
   cursor: pointer;
   display: flex;
@@ -615,7 +617,7 @@ body {
   display: flex;
   gap: 24px;
   align-items: flex-end;
-  background: linear-gradient(180deg, rgba(123,47,190,0.08) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(6,182,212,0.08) 0%, transparent 100%);
 }
 .detail-art {
   width: 200px; height: 200px;
@@ -624,7 +626,7 @@ body {
   overflow: hidden;
   flex-shrink: 0;
   box-shadow: var(--glow-medium);
-  border: 1px solid rgba(123,47,190,0.15);
+  border: 1px solid rgba(6,182,212,0.15);
 }
 .detail-art img { width: 100%; height: 100%; object-fit: cover; }
 .detail-meta { flex: 1; min-width: 0; }
@@ -697,10 +699,10 @@ body {
 .btn-ghost {
   background: transparent;
   color: var(--purple-hot);
-  border-color: rgba(123,47,190,0.2);
+  border-color: rgba(6,182,212,0.2);
 }
 .btn-ghost:hover {
-  background: rgba(123,47,190,0.1);
+  background: rgba(6,182,212,0.1);
   border-color: var(--purple-muted);
 }
 .btn-sm {
@@ -754,7 +756,7 @@ body {
   border-radius: 4px;
   flex-shrink: 0;
 }
-.status-badge.queued { background: rgba(123,47,190,0.15); color: var(--purple-bright); }
+.status-badge.queued { background: rgba(6,182,212,0.15); color: var(--purple-bright); }
 .status-badge.downloading { background: rgba(6,182,212,0.15); color: var(--cyan-core); }
 .status-badge.completed { background: rgba(34,197,94,0.15); color: var(--green-core); }
 .status-badge.error { background: rgba(239,68,68,0.15); color: var(--red-core); }
@@ -762,7 +764,7 @@ body {
 /* ── SETTINGS VIEW ── */
 .settings-group {
   background: var(--bg-raised);
-  border: 1px solid rgba(123,47,190,0.08);
+  border: 1px solid rgba(6,182,212,0.08);
   border-radius: var(--radius-lg);
   padding: 20px;
   margin-bottom: 16px;
@@ -780,7 +782,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(123,47,190,0.04);
+  border-bottom: 1px solid rgba(6,182,212,0.04);
 }
 .setting-row:last-child { border-bottom: none; }
 .setting-label {
@@ -794,7 +796,7 @@ body {
 }
 .setting-input {
   background: var(--bg-elevated);
-  border: 1px solid rgba(123,47,190,0.12);
+  border: 1px solid rgba(6,182,212,0.12);
   border-radius: var(--radius-sm);
   padding: 7px 12px;
   font-family: var(--font-mono);
@@ -810,7 +812,7 @@ body {
 }
 .setting-select {
   background: var(--bg-elevated);
-  border: 1px solid rgba(123,47,190,0.12);
+  border: 1px solid rgba(6,182,212,0.12);
   border-radius: var(--radius-sm);
   padding: 7px 12px;
   font-family: var(--font-body);
@@ -833,7 +835,7 @@ body {
   width: 100%;
   height: 100%;
   background: var(--bg-elevated);
-  border: 1px solid rgba(123,47,190,0.15);
+  border: 1px solid rgba(6,182,212,0.15);
   border-radius: 11px;
   transition: all 0.25s;
 }
@@ -860,7 +862,7 @@ body {
 /* ── HELP VIEW ── */
 .help-section {
   background: var(--bg-raised);
-  border: 1px solid rgba(123,47,190,0.08);
+  border: 1px solid rgba(6,182,212,0.08);
   border-radius: var(--radius-lg);
   padding: 20px;
   margin-bottom: 16px;
@@ -982,7 +984,193 @@ body {
 .quality-badge.master { background: rgba(212,160,255,0.15); color: var(--purple-hot); }
 .quality-badge.hifi { background: rgba(6,182,212,0.15); color: var(--cyan-core); }
 .quality-badge.high { background: rgba(34,197,94,0.15); color: var(--green-core); }
-.quality-badge.normal { background: rgba(123,47,190,0.1); color: var(--purple-muted); }
+.quality-badge.normal { background: rgba(6,182,212,0.1); color: var(--purple-muted); }
+
+/* ── SERVER VIEW ── */
+.server-status-card {
+  background: var(--bg-raised);
+  border: 1px solid rgba(6,182,212,0.1);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.server-status-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--purple-core), var(--cyan-core));
+  opacity: 0.5;
+}
+.server-status-card.running::before {
+  opacity: 1;
+  animation: serverPulse 2s ease-in-out infinite;
+}
+@keyframes serverPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.server-status-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.server-status-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--red-core);
+  box-shadow: 0 0 8px rgba(239,68,68,0.4);
+  transition: all 0.3s;
+}
+.server-status-dot.running {
+  background: var(--green-core);
+  box-shadow: 0 0 8px rgba(34,197,94,0.5);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(34,197,94,0.3); }
+  50% { box-shadow: 0 0 16px rgba(34,197,94,0.6); }
+}
+.server-status-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--purple-muted);
+}
+.server-status-text.running { color: var(--green-core); }
+.server-version {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--purple-dim);
+  margin-left: auto;
+}
+.server-url {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cyan-core);
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.server-url:hover { color: var(--cyan-bright); }
+.server-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.server-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.server-stat-box {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(6,182,212,0.06);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+}
+.server-stat-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--purple-vivid);
+}
+.server-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--purple-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+.server-config-editor {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(6,182,212,0.1);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--purple-white);
+  width: 100%;
+  min-height: 200px;
+  resize: vertical;
+  outline: none;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.server-config-editor:focus {
+  border-color: var(--purple-core);
+  box-shadow: var(--glow-subtle);
+}
+.install-wizard {
+  text-align: center;
+  padding: 40px 20px;
+}
+.install-wizard-icon {
+  width: 64px; height: 64px;
+  margin: 0 auto 16px;
+  color: var(--purple-dim);
+}
+.install-wizard-icon svg { width: 100%; height: 100%; }
+.install-wizard h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--purple-bright);
+  margin-bottom: 8px;
+}
+.install-wizard p {
+  font-size: 13px;
+  color: var(--purple-muted);
+  max-width: 400px;
+  margin: 0 auto 20px;
+  line-height: 1.5;
+}
+.install-fields {
+  max-width: 400px;
+  margin: 0 auto 20px;
+  text-align: left;
+}
+.install-field {
+  margin-bottom: 12px;
+}
+.install-field label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--purple-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.install-field input {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid rgba(6,182,212,0.12);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--purple-white);
+  outline: none;
+  transition: all 0.2s;
+}
+.install-field input:focus {
+  border-color: var(--purple-core);
+  box-shadow: var(--glow-subtle);
+}
+.install-progress {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan-core);
+  margin-top: 12px;
+  min-height: 20px;
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 800px) {
@@ -996,9 +1184,25 @@ body {
   .detail-stats { justify-content: center; }
   .detail-actions { justify-content: center; }
 }
+
+/* ── DIGITAL RAIN BACKGROUND ── */
+#digitalRain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  filter: blur(2px);
+  opacity: 0.5;
+  pointer-events: none;
+}
 </style>
 </head>
 <body>
+
+<!-- ═══════════ DIGITAL RAIN CANVAS ═══════════ -->
+<canvas id="digitalRain"></canvas>
 
 <!-- ═══════════ TITLEBAR ═══════════ -->
 <div class="titlebar">
@@ -1057,6 +1261,11 @@ body {
 
       <div class="nav-section-label">System</div>
 
+      <div class="nav-item" data-view="server" onclick="switchView('server')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        <span class="nav-label">Server</span>
+      </div>
+
       <div class="nav-item" data-view="settings" onclick="switchView('settings')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span class="nav-label">Settings</span>
@@ -1114,10 +1323,10 @@ body {
             <h3>QUEUE</h3>
             <p>Manage your download queue. Up to 3 concurrent downloads.</p>
           </div>
-          <div class="welcome-card" onclick="switchView('settings')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <h3>SETTINGS</h3>
-            <p>Configure download path, quality, Navidrome, and more.</p>
+          <div class="welcome-card" onclick="switchView('server')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            <h3>SERVER</h3>
+            <p>Manage your Navidrome server. Install, start, stop, and configure.</p>
           </div>
         </div>
       </div>
@@ -1168,7 +1377,7 @@ body {
                 <div class="setting-label">Download Directory</div>
                 <div class="setting-desc">Where downloaded music is saved</div>
               </div>
-              <input type="text" class="setting-input" id="settingDownloadDir" value="E:\Music" onchange="saveSetting('downloadDir', this.value)">
+              <input type="text" class="setting-input" id="settingDownloadDir" value="" placeholder="~/Music/CHARON" onchange="saveSetting('downloadDir', this.value)">
             </div>
             <div class="setting-row">
               <div>
@@ -1216,13 +1425,13 @@ body {
               <div>
                 <div class="setting-label">Username</div>
               </div>
-              <input type="text" class="setting-input" id="settingNaviUser" value="phantom" onchange="saveSetting('navidromeUser', this.value)">
+              <input type="text" class="setting-input" id="settingNaviUser" value="" placeholder="admin" onchange="saveSetting('navidromeUser', this.value)">
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-label">Password</div>
               </div>
-              <input type="password" class="setting-input" id="settingNaviPass" value="phantom" onchange="saveSetting('navidromePass', this.value)">
+              <input type="password" class="setting-input" id="settingNaviPass" value="" placeholder="password" onchange="saveSetting('navidromePass', this.value)">
             </div>
             <div class="setting-row">
               <div>
@@ -1260,6 +1469,19 @@ body {
         </div>
       </div>
 
+      <!-- SERVER VIEW -->
+      <div class="view" id="viewServer">
+        <div style="max-width:640px;">
+          <div id="serverContent">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              <h3>CHECKING SERVER</h3>
+              <p>Detecting Navidrome installation...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- HELP VIEW -->
       <div class="view" id="viewHelp">
         <div style="max-width:640px;">
@@ -1283,7 +1505,7 @@ body {
 
           <div class="help-section">
             <h3>HOW DOWNLOADING WORKS</h3>
-            <p>CHARON uses <code>tiddl</code> (a Python CLI tool) to download from Tidal. Tracks are saved to your configured download directory (default: <code>E:\Music</code>). After each download, CHARON can auto-trigger a Navidrome library scan so your new music appears immediately in AETHER.</p>
+            <p>CHARON uses <code>tiddl</code> (a Python CLI tool) to download from Tidal. The download command is: <code>tiddl url &lt;URL&gt; download -q master -p "&lt;your music folder&gt;"</code>. Tracks are saved to your configured download directory. After each download, CHARON can auto-trigger a Navidrome library scan so your new music appears immediately in AETHER.</p>
           </div>
 
           <div class="help-section">
@@ -1354,6 +1576,11 @@ const ICONS = {
   back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
   trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
   refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>',
+  server: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>',
+  power: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>',
+  zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
 };
 
 // ============ VIEW SWITCHING ============
@@ -1377,11 +1604,17 @@ function switchView(view) {
   if (view === 'search') {
     setTimeout(() => document.getElementById('searchInput')?.focus(), 100);
   }
+
+  // Load server view data when switching to it
+  if (view === 'server') {
+    loadServerView();
+  }
 }
 
 function goBack() {
   if (navigationStack.length > 0) {
     const prev = navigationStack.pop();
+    // Don't push to nav stack when going back (avoid infinite loop)
     currentView = prev;
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.toggle('active', item.dataset.view === prev);
@@ -1389,15 +1622,20 @@ function goBack() {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     const viewEl = document.getElementById('view' + prev.charAt(0).toUpperCase() + prev.slice(1));
     if (viewEl) viewEl.classList.add('active');
+  } else {
+    switchView('home');
   }
 }
 
 // ============ SEARCH ============
+let lastSearchId = 0;
+
 async function doSearch() {
   const query = document.getElementById('searchInput').value.trim();
   if (!query) return;
 
   const type = document.getElementById('searchType').value;
+  const searchId = ++lastSearchId;
   switchView('search');
 
   const container = document.getElementById('searchResults');
@@ -1405,6 +1643,7 @@ async function doSearch() {
 
   try {
     const result = await window.charon.search(query, type, 50);
+    if (searchId !== lastSearchId) return; // Discard stale results
     if (result.status === 'error') {
       container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>SEARCH FAILED</h3><p>${escHtml(result.error)}</p></div>`;
       return;
@@ -1822,12 +2061,29 @@ async function handleAuthClick() {
     showToast('info', 'Already connected to Tidal');
     return;
   }
+
+  // First check if already authenticated (maybe tiddl auth was done externally)
   showToast('info', 'Checking Tidal connection...');
   await checkAuth();
-  if (!isAuthenticated) {
-    showToast('error', 'Not authenticated. Run "tiddl" in terminal to log in to Tidal first.');
-  } else {
+  if (isAuthenticated) {
     showToast('success', 'Connected to Tidal!');
+    return;
+  }
+
+  // Try OAuth login via bridge
+  showToast('info', 'Starting Tidal OAuth login... A browser window will open.');
+  try {
+    const result = await window.charon.authLogin();
+    if (result.status === 'ok' && result.data?.authenticated) {
+      isAuthenticated = true;
+      updateAuthUI();
+      showToast('success', `Authenticated as ${result.data.user || 'Tidal user'}`);
+    } else if (result.status === 'error') {
+      showToast('error', result.error || 'Authentication failed');
+    }
+  } catch (e) {
+    showToast('error', 'Auth failed: ' + e.message);
+    showToast('info', 'Alternatively, run "tiddl auth login" in a terminal first.');
   }
 }
 
@@ -1839,15 +2095,360 @@ async function checkDependencies() {
     let html = '';
     html += `<span class="dep-badge ${deps.python ? 'ok' : 'missing'}">PY</span>`;
     html += `<span class="dep-badge ${deps.tiddl ? 'ok' : 'missing'}">TIDDL</span>`;
+    html += `<span class="dep-badge ${deps.tidalapi ? 'ok' : 'missing'}">API</span>`;
     html += `<span class="dep-badge ${deps.ffmpeg ? 'ok' : 'missing'}">FF</span>`;
     container.innerHTML = html;
 
     if (!deps.python) showToast('error', 'Python not found. Install Python 3.8+ and add to PATH.');
     else if (!deps.tiddl) showToast('error', 'tiddl not found. Run: pip install tiddl');
+    else if (!deps.tidalapi) showToast('error', 'tidalapi not found. Run: pip install tidalapi');
     else if (!deps.ffmpeg) showToast('info', 'ffmpeg not found. Some formats may not convert properly.');
   } catch (e) {
     container.innerHTML = '<span class="dep-badge missing">ERR</span>';
   }
+}
+
+// ============ NAVIDROME SERVER MANAGEMENT ============
+let serverStatus = null;
+
+async function loadServerView() {
+  const container = document.getElementById('serverContent');
+  container.innerHTML = `<div class="empty-state">
+    <div style="width:48px;height:48px;color:var(--purple-dim)">${ICONS.server}</div>
+    <h3>CHECKING SERVER</h3>
+    <p>Detecting Navidrome installation...</p>
+  </div>`;
+
+  try {
+    serverStatus = await window.charon.navidromeServerStatus();
+  } catch (e) {
+    container.innerHTML = `<div class="empty-state">
+      <div style="width:48px;height:48px;color:var(--red-core)">${ICONS.alert}</div>
+      <h3>ERROR</h3>
+      <p>${escHtml(e.message)}</p>
+    </div>`;
+    return;
+  }
+
+  renderServerView();
+}
+
+function renderServerView() {
+  const container = document.getElementById('serverContent');
+  if (!serverStatus) return;
+
+  if (!serverStatus.installed) {
+    renderInstallWizard(container);
+    return;
+  }
+
+  const isRunning = serverStatus.running;
+  const version = serverStatus.version || '—';
+  const url = serverStatus.url || 'http://localhost:4533';
+
+  let html = `
+    <!-- Status Card -->
+    <div class="server-status-card ${isRunning ? 'running' : ''}">
+      <div class="server-status-header">
+        <div class="server-status-dot ${isRunning ? 'running' : ''}"></div>
+        <div class="server-status-text ${isRunning ? 'running' : ''}">${isRunning ? 'RUNNING' : 'STOPPED'}</div>
+        ${isRunning ? `<span class="server-version">v${escHtml(version)}</span>` : ''}
+      </div>
+      ${isRunning ? `<div class="server-url" onclick="window.charon.openUrl('${escAttr(url)}')">${escHtml(url)}</div>` : ''}
+      <div class="server-controls">
+        ${isRunning
+          ? `<button class="btn btn-ghost btn-sm" onclick="stopServer()">${ICONS.power} Stop</button>
+             <button class="btn btn-ghost btn-sm" onclick="restartServer()">${ICONS.refresh} Restart</button>
+             <button class="btn btn-primary btn-sm" onclick="window.charon.openUrl('${escAttr(url)}')">${ICONS.globe} Open Web UI</button>`
+          : `<button class="btn btn-primary btn-sm" onclick="startServer()">${ICONS.zap} Start Server</button>`
+        }
+      </div>
+      <div id="serverStats"></div>
+    </div>`;
+
+  // Library section
+  html += `
+    <div class="settings-group">
+      <div class="settings-group-title">Library</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Scan Library</div>
+          <div class="setting-desc">Trigger Navidrome to scan the music folder for new files</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="manualScan()" ${!isRunning ? 'disabled style="opacity:0.4;pointer-events:none"' : ''}>
+          ${ICONS.refresh} Scan Now
+        </button>
+      </div>
+      <div id="serverScanStatus" style="padding:4px 0;font-family:var(--font-mono);font-size:11px;color:var(--purple-dim);"></div>
+    </div>`;
+
+  // Config section
+  html += `
+    <div class="settings-group">
+      <div class="settings-group-title">Configuration</div>
+      ${serverStatus.configPath ? `
+        <div style="margin-bottom:12px;">
+          <div class="setting-desc" style="margin-bottom:8px">Editing: <span style="color:var(--cyan-core)">${escHtml(serverStatus.configPath)}</span></div>
+          <textarea class="server-config-editor" id="serverConfigEditor">${escHtml(serverStatus.config ? buildConfigDisplay(serverStatus.config) : '')}</textarea>
+        </div>
+        <div class="server-controls">
+          <button class="btn btn-primary btn-sm" onclick="saveServerConfig()">Save Config</button>
+          <button class="btn btn-ghost btn-sm" onclick="saveAndRestartServer()">Save & Restart</button>
+          <button class="btn btn-ghost btn-sm" onclick="reloadServerConfig()">${ICONS.refresh} Reload</button>
+        </div>
+      ` : `
+        <div class="setting-desc">No configuration file found. Start the server to auto-generate one.</div>
+      `}
+    </div>`;
+
+  // Info section
+  html += `
+    <div class="settings-group">
+      <div class="settings-group-title">Installation</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Binary</div>
+          <div class="setting-desc">${escHtml(serverStatus.binaryPath || 'Not found')}</div>
+        </div>
+      </div>
+      ${serverStatus.configPath ? `<div class="setting-row">
+        <div>
+          <div class="setting-label">Config</div>
+          <div class="setting-desc">${escHtml(serverStatus.configPath)}</div>
+        </div>
+      </div>` : ''}
+      ${serverStatus.config?.MusicFolder ? `<div class="setting-row">
+        <div>
+          <div class="setting-label">Music Folder</div>
+          <div class="setting-desc">${escHtml(serverStatus.config.MusicFolder)}</div>
+        </div>
+      </div>` : ''}
+      ${serverStatus.config?.DataFolder ? `<div class="setting-row">
+        <div>
+          <div class="setting-label">Data Folder</div>
+          <div class="setting-desc">${escHtml(serverStatus.config.DataFolder)}</div>
+        </div>
+      </div>` : ''}
+    </div>`;
+
+  container.innerHTML = html;
+
+  // Load stats if running
+  if (isRunning) loadServerStats();
+  // Load config into editor
+  if (serverStatus.configPath) loadServerConfigEditor();
+}
+
+function renderInstallWizard(container) {
+  container.innerHTML = `
+    <div class="server-status-card">
+      <div class="install-wizard">
+        <div class="install-wizard-icon">${ICONS.server}</div>
+        <h3>NAVIDROME NOT FOUND</h3>
+        <p>CHARON can automatically download and set up Navidrome for you. One click and your music server is ready.</p>
+        <div class="install-fields">
+          <div class="install-field">
+            <label>Install Location</label>
+            <input type="text" id="installPath" value="" placeholder="e.g. C:\\Navidrome">
+          </div>
+          <div class="install-field">
+            <label>Music Library Folder</label>
+            <input type="text" id="installMusicPath" value="" placeholder="e.g. D:\\Music">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="installNavidrome()" id="installBtn">
+          ${ICONS.download} Download & Install Navidrome
+        </button>
+        <div class="install-progress" id="installProgress"></div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Already Have Navidrome?</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Custom Binary Path</div>
+          <div class="setting-desc">Point CHARON to an existing navidrome.exe</div>
+        </div>
+        <input type="text" class="setting-input" id="customNavidromePath" placeholder="C:\\path\\to\\navidrome.exe" onchange="setCustomNavidromePath(this.value)">
+      </div>
+    </div>`;
+}
+
+function buildConfigDisplay(config) {
+  if (!config) return '';
+  let lines = [];
+  const keyOrder = ['MusicFolder', 'DataFolder', 'Address', 'Port', 'ScanSchedule', 'TranscodingCacheSize', 'ImageCacheSize', 'AutoImportPlaylists'];
+  const displayed = new Set();
+  for (const key of keyOrder) {
+    if (config[key] !== undefined) {
+      const val = config[key];
+      lines.push(isNaN(val) && val !== 'true' && val !== 'false' ? `${key} = '${val}'` : `${key} = ${val}`);
+      displayed.add(key);
+    }
+  }
+  for (const [key, val] of Object.entries(config)) {
+    if (!displayed.has(key)) {
+      lines.push(isNaN(val) && val !== 'true' && val !== 'false' ? `${key} = '${val}'` : `${key} = ${val}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+async function startServer() {
+  showToast('info', 'Starting Navidrome...');
+  try {
+    const result = await window.charon.navidromeServerStart();
+    if (result.success) {
+      showToast('success', `Navidrome started${result.version ? ' — v' + result.version : ''}`);
+    } else {
+      showToast('error', result.error || 'Failed to start');
+    }
+    await loadServerView();
+  } catch (e) {
+    showToast('error', e.message);
+  }
+}
+
+async function stopServer() {
+  showToast('info', 'Stopping Navidrome...');
+  try {
+    const result = await window.charon.navidromeServerStop();
+    if (result.success) {
+      showToast('success', 'Navidrome stopped');
+    } else {
+      showToast('error', result.error || 'Failed to stop');
+    }
+    await loadServerView();
+  } catch (e) {
+    showToast('error', e.message);
+  }
+}
+
+async function restartServer() {
+  showToast('info', 'Restarting Navidrome...');
+  try {
+    const result = await window.charon.navidromeServerRestart();
+    if (result.success) {
+      showToast('success', `Navidrome restarted${result.version ? ' — v' + result.version : ''}`);
+    } else {
+      showToast('error', result.error || 'Failed to restart');
+    }
+    await loadServerView();
+  } catch (e) {
+    showToast('error', e.message);
+  }
+}
+
+async function installNavidrome() {
+  const installPath = document.getElementById('installPath').value.trim();
+  const musicPath = document.getElementById('installMusicPath').value.trim();
+  const btn = document.getElementById('installBtn');
+  const progress = document.getElementById('installProgress');
+
+  if (!installPath) { showToast('error', 'Enter an install path'); return; }
+
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+  btn.style.pointerEvents = 'none';
+  progress.textContent = 'Starting installation...';
+
+  try {
+    const result = await window.charon.navidromeServerInstall(installPath, musicPath);
+    if (result.success) {
+      showToast('success', `Navidrome ${result.version} installed!`);
+      progress.textContent = 'Installation complete! Loading server view...';
+      await new Promise(r => setTimeout(r, 1000));
+      await loadServerView();
+    } else {
+      showToast('error', result.error || 'Installation failed');
+      progress.textContent = 'Failed: ' + (result.error || 'Unknown error');
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = '';
+    }
+  } catch (e) {
+    showToast('error', e.message);
+    progress.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = '';
+  }
+}
+
+async function setCustomNavidromePath(p) {
+  if (!p) return;
+  await saveSetting('navidromePath', p);
+  showToast('info', 'Custom path saved. Rechecking...');
+  await loadServerView();
+}
+
+async function loadServerStats() {
+  const container = document.getElementById('serverStats');
+  if (!container) return;
+
+  try {
+    const stats = await window.charon.navidromeServerStats();
+    if (!stats.success) return;
+
+    container.innerHTML = `<div class="server-stat-grid">
+      <div class="server-stat-box">
+        <div class="server-stat-value">${stats.artistCount || 0}</div>
+        <div class="server-stat-label">Artists</div>
+      </div>
+      <div class="server-stat-box">
+        <div class="server-stat-value">${stats.scanCount || 0}</div>
+        <div class="server-stat-label">Tracks Scanned</div>
+      </div>
+      <div class="server-stat-box">
+        <div class="server-stat-value">${stats.scanning ? 'YES' : 'IDLE'}</div>
+        <div class="server-stat-label">Scanning</div>
+      </div>
+    </div>`;
+
+    const scanStatus = document.getElementById('serverScanStatus');
+    if (scanStatus) {
+      scanStatus.textContent = stats.scanning ? 'Scan in progress...' : 'Last scan: idle';
+    }
+  } catch (e) {}
+}
+
+async function loadServerConfigEditor() {
+  if (!serverStatus?.configPath) return;
+  try {
+    const result = await window.charon.navidromeServerConfig('read', serverStatus.configPath);
+    if (result.success) {
+      const editor = document.getElementById('serverConfigEditor');
+      if (editor) editor.value = result.content;
+    }
+  } catch (e) {}
+}
+
+async function reloadServerConfig() {
+  await loadServerConfigEditor();
+  showToast('info', 'Config reloaded from disk');
+}
+
+async function saveServerConfig() {
+  if (!serverStatus?.configPath) { showToast('error', 'No config path'); return; }
+  const editor = document.getElementById('serverConfigEditor');
+  if (!editor) return;
+
+  try {
+    const result = await window.charon.navidromeServerConfig('write', serverStatus.configPath, editor.value);
+    if (result.success) {
+      showToast('success', 'Configuration saved');
+    } else {
+      showToast('error', result.error || 'Save failed');
+    }
+  } catch (e) {
+    showToast('error', e.message);
+  }
+}
+
+async function saveAndRestartServer() {
+  await saveServerConfig();
+  await restartServer();
 }
 
 // ============ NAVIDROME SCAN ============
@@ -1917,7 +2518,13 @@ function escHtml(str) {
 }
 
 function escAttr(str) {
-  return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\\/g, '\\\\');
 }
 
 function formatDuration(seconds) {
@@ -1940,7 +2547,13 @@ function getQualityClass(q) {
 // Queue updates from main process
 window.charon.onQueueUpdate((data) => renderQueue(data));
 window.charon.onDownloadProgress((data) => {
-  // Update progress for specific item in queue
+  // Auth progress — open browser for OAuth
+  if (data.data?.auth_url) {
+    showToast('info', 'Opening Tidal login page...');
+    window.charon.openUrl(data.data.auth_url);
+    return;
+  }
+  // Download progress for specific item in queue
   const item = downloadQueue.find(q => q.id === data.item_id);
   if (item) {
     item.progress = data.progress || 0;
@@ -1953,7 +2566,14 @@ window.charon.onDownloadComplete((item) => {
 window.charon.onNavidromeScanResult((data) => {
   if (data.success) {
     showToast('success', 'Navidrome library scan complete');
+    if (currentView === 'server') loadServerStats();
   }
+});
+window.charon.onNavidromeInstallProgress((data) => {
+  const progress = document.getElementById('installProgress');
+  if (progress) progress.textContent = data.message || '';
+  if (data.step === 'done') showToast('success', data.message);
+  if (data.step === 'error') showToast('error', data.message);
 });
 
 // Keyboard shortcuts
@@ -1963,21 +2583,142 @@ document.addEventListener('keydown', (e) => {
     switchView('search');
   }
   if (e.key === 'Escape') {
-    switchView('home');
+    goBack();
   }
 });
 
 // ============ INIT ============
 async function init() {
   await loadSettings();
-  checkDependencies();
-  checkAuth();
+  await checkDependencies();
+  await checkAuth();
   // Load initial queue state
   try {
     const queueData = await window.charon.queueGet();
     renderQueue(queueData);
-  } catch (e) {}
+  } catch (e) {
+    console.error('Failed to load queue:', e);
+  }
 }
+
+// ============ DIGITAL RAIN BACKGROUND ============
+(function initDigitalRain() {
+  const canvas = document.getElementById('digitalRain');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Character set: katakana, numbers, symbols
+  const katakana = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+  const digits = '0123456789';
+  const symbols = ':<>{}[]|/\\=+*^~!?@#$%&';
+  const chars = katakana + digits + symbols;
+
+  // Cyan palette & purple accent
+  const cyanColors = ['#06B6D4', '#22D3EE', '#67E8F9'];
+  const purpleColors = ['#9D4EDD', '#B76EFF'];
+
+  const fontSize = 11;
+  const columnWidth = 19; // pixels between columns
+
+  let columns = [];
+  let w, h, numCols;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    numCols = Math.floor(w / columnWidth);
+
+    // Preserve existing columns, add new ones if needed
+    while (columns.length < numCols) {
+      columns.push({
+        x: columns.length * columnWidth,
+        y: Math.random() * h,            // start at random vertical pos
+        speed: 0.3 + Math.random() * 1.2, // pixels per frame
+        chars: [],                         // trail of chars
+        trailLen: 8 + Math.floor(Math.random() * 14), // how many chars in trail
+        nextChar: 0                        // frame counter for char spawn rate
+      });
+    }
+    // Trim excess columns
+    columns.length = numCols;
+    // Update x positions
+    for (let i = 0; i < columns.length; i++) {
+      columns[i].x = i * columnWidth;
+    }
+  }
+
+  function getColor() {
+    // ~12% chance of purple
+    if (Math.random() < 0.12) {
+      return purpleColors[Math.floor(Math.random() * purpleColors.length)];
+    }
+    return cyanColors[Math.floor(Math.random() * cyanColors.length)];
+  }
+
+  function randomChar() {
+    return chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  function draw() {
+    // Fade the canvas with a semi-transparent black overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.font = fontSize + 'px "JetBrains Mono", monospace';
+    ctx.textBaseline = 'top';
+
+    for (let i = 0; i < columns.length; i++) {
+      const col = columns[i];
+
+      // Advance the column position
+      col.y += col.speed;
+
+      // Spawn a new character at the head position every few frames
+      col.nextChar += col.speed;
+      if (col.nextChar >= fontSize) {
+        col.nextChar = 0;
+        col.chars.push({
+          ch: randomChar(),
+          y: col.y,
+          color: getColor(),
+          alpha: 0.04 + Math.random() * 0.05 // 0.04 - 0.09
+        });
+
+        // Trim trail
+        if (col.chars.length > col.trailLen) {
+          col.chars.shift();
+        }
+      }
+
+      // Draw each character in the trail
+      for (let j = 0; j < col.chars.length; j++) {
+        const c = col.chars[j];
+        // Older chars (lower index) are dimmer
+        const ageFactor = (j + 1) / col.chars.length; // 0..1
+        const alpha = c.alpha * ageFactor;
+
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = c.color;
+        ctx.fillText(c.ch, col.x, c.y - (col.chars.length - j) * fontSize);
+      }
+
+      // Reset column when it goes past the bottom
+      if (col.y > h + col.trailLen * fontSize) {
+        col.y = -fontSize;
+        col.chars = [];
+        col.speed = 0.3 + Math.random() * 1.2;
+        col.trailLen = 8 + Math.floor(Math.random() * 14);
+      }
+    }
+
+    ctx.globalAlpha = 1.0;
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+})();
 
 init();
 </script>

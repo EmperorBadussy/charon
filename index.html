@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHARON — The Ferryman of Music</title>
+<meta name="description" content="Catalog Harvester & Automated Ripper for Organized Navidrome. Rip from Tidal in Master/FLAC quality. The companion to AETHER.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CHARON — OLED DIGITAL RIVER CYAN DESIGN
+   Catalog Harvester & Automated Ripper
+   for Organized Navidrome
+   ============================================ */
+
+:root {
+  --bg-void: #000000;
+  --bg-surface: #060B0F;
+  --bg-raised: #0A1419;
+  --bg-input: #0C1820;
+  --cyan-dim: #0D2B36;
+  --cyan-muted: #0E4D64;
+  --cyan-core: #06B6D4;
+  --cyan-bright: #22D3EE;
+  --cyan-vivid: #67E8F9;
+  --cyan-hot: #A5F3FC;
+  --cyan-white: #ECFEFF;
+  --glow-subtle: 0 0 10px rgba(34,211,238,0.15);
+  --glow-medium: 0 0 20px rgba(34,211,238,0.25), 0 0 40px rgba(6,182,212,0.15);
+  --glow-intense: 0 0 20px rgba(34,211,238,0.4), 0 0 60px rgba(6,182,212,0.25), 0 0 100px rgba(6,182,212,0.1);
+  --glow-text: 0 0 8px rgba(103,232,249,0.6);
+  --glow-neon: 0 0 4px #67E8F9, 0 0 12px rgba(103,232,249,0.5), 0 0 30px rgba(34,211,238,0.3), 0 0 60px rgba(6,182,212,0.15);
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 150ms var(--ease-smooth);
+  --transition-normal: 300ms var(--ease-smooth);
+  --transition-slow: 500ms var(--ease-smooth);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(6,182,212,0.4);
+  color: var(--cyan-white);
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb {
+  background: var(--cyan-muted);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan-bright);
+  box-shadow: 0 0 8px rgba(34,211,238,0.5);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg-void);
+  color: var(--cyan-white);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg-void);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============ REVEAL ANIMATIONS ============ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+}
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ============ NAVIGATION ============ */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(6,11,15,0.85);
+  backdrop-filter: blur(20px) saturate(1.2);
+  border-bottom-color: var(--cyan-dim);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--cyan-vivid);
+  text-shadow: var(--glow-neon);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition-normal);
+}
+.nav-logo:hover { color: var(--cyan-hot); }
+.nav-logo .logo-p {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 2px solid var(--cyan-bright);
+  border-radius: 8px;
+  font-size: 1.2rem;
+  box-shadow: var(--glow-neon);
+  transition: var(--transition-normal);
+}
+.nav-logo:hover .logo-p {
+  box-shadow: var(--glow-intense);
+  border-color: var(--cyan-vivid);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--cyan-hot);
+  text-decoration: none;
+  position: relative;
+  transition: var(--transition-normal);
+  letter-spacing: 0.03em;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--cyan-bright);
+  box-shadow: var(--glow-subtle);
+  transition: width 0.3s var(--ease-smooth);
+}
+.nav-links a:hover {
+  color: var(--cyan-white);
+  text-shadow: var(--glow-text);
+}
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  padding: 0.6rem 1.4rem;
+  border: 1px solid var(--cyan-bright);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cyan-white) !important;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  text-decoration: none;
+}
+.nav-cta::after { display: none !important; }
+.nav-cta:hover {
+  background: var(--cyan-core);
+  box-shadow: var(--glow-medium);
+  border-color: var(--cyan-vivid);
+}
+
+/* Mobile menu */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 1002;
+}
+.menu-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--cyan-vivid);
+  border-radius: 2px;
+  transition: var(--transition-normal);
+}
+.menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(30px);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+.mobile-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-overlay a {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--cyan-hot);
+  text-decoration: none;
+  transition: var(--transition-normal);
+  letter-spacing: 0.08em;
+}
+.mobile-overlay a:hover {
+  color: var(--cyan-white);
+  text-shadow: var(--glow-neon);
+}
+
+/* ============ HERO ============ */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 6rem 2rem 4rem;
+}
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 1200px;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan-hot);
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+  animation: fadeInDown 1s 0.2s both;
+}
+.hero-badge .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--cyan-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--cyan-bright);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 1.05;
+  color: var(--cyan-white);
+  text-shadow: var(--glow-neon);
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+}
+.hero-title .char {
+  display: inline-block;
+  animation: charReveal 0.6s both;
+  animation-delay: var(--d);
+}
+@keyframes charReveal {
+  0% { opacity: 0; transform: translateY(40px) rotateX(90deg); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0) rotateX(0); filter: blur(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-tagline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--cyan-vivid);
+  text-shadow: var(--glow-text);
+  margin-bottom: 1rem;
+  letter-spacing: 0.06em;
+  animation: fadeInUp 0.8s 1s both;
+}
+.hero-sub {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  color: var(--cyan-hot);
+  opacity: 0.8;
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+  animation: fadeInUp 0.8s 1.2s both;
+}
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.8s 1.4s both;
+}
+.btn-primary {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--cyan-core), var(--cyan-bright));
+  color: var(--bg-void);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s var(--ease-bounce), box-shadow 0.3s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--cyan-bright), var(--cyan-vivid));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--glow-intense);
+}
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary:active { transform: translateY(0) scale(0.97); }
+.btn-primary span { position: relative; z-index: 1; }
+.btn-primary svg { position: relative; z-index: 1; }
+
+.btn-secondary {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 1rem 2rem;
+  border: 1px solid var(--cyan-muted);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cyan-hot);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.btn-secondary:hover {
+  border-color: var(--cyan-bright);
+  color: var(--cyan-white);
+  box-shadow: var(--glow-medium);
+  background: rgba(6,182,212,0.1);
+}
+
+/* ============ APP MOCKUP ============ */
+
+.mockup-container {
+  animation: fadeInUp 1s 1.6s both;
+  perspective: 1200px;
+  margin-bottom: 2rem;
+}
+.app-mockup {
+  background: var(--bg-surface);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 16px;
+  box-shadow: var(--glow-intense), 0 30px 80px rgba(0,0,0,0.8);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  overflow: hidden;
+  transform: rotateX(4deg) scale(0.95);
+  transition: transform 0.6s var(--ease-smooth);
+}
+.app-mockup:hover {
+  transform: rotateX(0) scale(1);
+}
+
+.mock-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: rgba(10,20,25,0.9);
+  border-bottom: 1px solid var(--cyan-dim);
+}
+.mock-titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.mock-titlebar-logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.55rem;
+  color: var(--cyan-vivid);
+  text-shadow: var(--glow-text);
+  letter-spacing: 0.15em;
+}
+.mock-dots {
+  display: flex;
+  gap: 6px;
+}
+.mock-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--cyan-dim);
+}
+.mock-dots span:nth-child(1) { background: rgba(6,182,212,0.3); }
+.mock-dots span:nth-child(2) { background: rgba(6,182,212,0.5); }
+.mock-dots span:nth-child(3) { background: rgba(255,68,102,0.5); border-color: rgba(255,68,102,0.3); }
+
+.mock-body {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  height: 320px;
+}
+.mock-sidebar {
+  background: var(--bg-surface);
+  border-right: 1px solid var(--cyan-dim);
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.mock-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: var(--cyan-muted);
+  letter-spacing: 0.05em;
+  transition: var(--transition-fast);
+}
+.mock-sidebar-item.active {
+  background: rgba(6,182,212,0.12);
+  color: var(--cyan-bright);
+}
+.mock-sidebar-item svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  flex-shrink: 0;
+}
+.mock-search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.5rem;
+  background: var(--bg-input);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+.mock-search-box svg {
+  width: 12px;
+  height: 12px;
+  stroke: var(--cyan-muted);
+  fill: none;
+  stroke-width: 1.5;
+}
+.mock-search-text {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  color: var(--cyan-muted);
+}
+
+.mock-main-area {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-void);
+  overflow: hidden;
+}
+.mock-main-header {
+  padding: 0.6rem 0.8rem;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  color: var(--cyan-vivid);
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--cyan-dim);
+}
+.mock-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding: 0.6rem;
+  flex: 1;
+  overflow: hidden;
+}
+.mock-artist-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  transition: var(--transition-fast);
+}
+.mock-artist-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan-core), var(--cyan-dim));
+  box-shadow: 0 0 10px rgba(6,182,212,0.2);
+}
+.mock-artist-name {
+  font-family: var(--font-display);
+  font-size: 0.45rem;
+  color: var(--cyan-white);
+  letter-spacing: 0.05em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.mock-artist-sub {
+  font-family: var(--font-body);
+  font-size: 0.4rem;
+  color: var(--cyan-muted);
+}
+.mock-album-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.3rem;
+  padding: 0 0.6rem 0.5rem;
+}
+.mock-album-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 6px;
+}
+.mock-album-art-sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.mock-album-info {
+  flex: 1;
+  min-width: 0;
+}
+.mock-album-title {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--cyan-white);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mock-album-year {
+  font-family: var(--font-mono);
+  font-size: 0.4rem;
+  color: var(--cyan-muted);
+}
+.mock-quality-badge {
+  font-family: var(--font-mono);
+  font-size: 0.38rem;
+  color: var(--cyan-bright);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
+  white-space: nowrap;
+}
+.mock-dl-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(6,182,212,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mock-dl-btn svg {
+  width: 10px;
+  height: 10px;
+  stroke: var(--cyan-bright);
+  fill: none;
+  stroke-width: 2;
+}
+
+/* Mock bottom bar - download progress */
+.mock-bottombar {
+  border-top: 1px solid var(--cyan-dim);
+  background: var(--bg-raised);
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.mock-dl-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--cyan-dim), var(--cyan-core));
+  flex-shrink: 0;
+}
+.mock-dl-info {
+  flex: 1;
+  min-width: 0;
+}
+.mock-dl-title {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--cyan-white);
+  letter-spacing: 0.05em;
+}
+.mock-dl-detail {
+  font-family: var(--font-mono);
+  font-size: 0.4rem;
+  color: var(--cyan-muted);
+}
+.mock-dl-progress {
+  width: 120px;
+  height: 3px;
+  background: var(--cyan-dim);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mock-dl-progress-fill {
+  height: 100%;
+  background: var(--cyan-bright);
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(34,211,238,0.5);
+  animation: mock-dl-anim 6s linear infinite;
+}
+@keyframes mock-dl-anim {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+.mock-dl-percent {
+  font-family: var(--font-mono);
+  font-size: 0.45rem;
+  color: var(--cyan-bright);
+  white-space: nowrap;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  animation: scroll-bounce 2s infinite;
+}
+.scroll-indicator svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--cyan-muted);
+  fill: none;
+  stroke-width: 1.5;
+}
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+  50% { transform: translateX(-50%) translateY(10px); opacity: 1; }
+}
+
+/* Click ripple */
+.click-ripple { position:fixed; border-radius:50%; background:radial-gradient(circle,rgba(34,211,238,0.3),transparent 70%); pointer-events:none; z-index:99998; animation:ripple-out 0.6s ease-out forwards; }
+@keyframes ripple-out { 0%{width:0;height:0;opacity:1;} 100%{width:300px;height:300px;opacity:0;} }
+
+/* ============ SECTION LAYOUT ============ */
+
+.section {
+  padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+  position: relative;
+}
+.section-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--cyan-bright);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-label::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--cyan-bright);
+  box-shadow: 0 0 8px rgba(34,211,238,0.5);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: var(--cyan-white);
+  text-shadow: var(--glow-text);
+  margin-bottom: 1rem;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+.section-desc {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--cyan-hot);
+  opacity: 0.8;
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+/* ============ HOW IT WORKS — STEP CARDS ============ */
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+.step-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: var(--transition-normal);
+  cursor: default;
+  position: relative;
+}
+.step-card:hover {
+  border-color: var(--cyan-muted);
+  box-shadow: var(--glow-medium);
+  transform: translateY(-4px);
+}
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan-bright), transparent);
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+.step-card:hover::before { opacity: 1; }
+.step-preview {
+  height: 160px;
+  background: var(--bg-void);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-preview canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.step-number {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--cyan-muted);
+  letter-spacing: 0.15em;
+  z-index: 2;
+}
+.step-info {
+  padding: 1rem 1.25rem;
+}
+.step-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--cyan-white);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
+}
+.step-desc {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--cyan-muted);
+  line-height: 1.4;
+}
+
+/* ============ FEATURES ============ */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.feature-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan-bright), transparent);
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+.feature-card:hover {
+  border-color: var(--cyan-muted);
+  box-shadow: var(--glow-medium);
+  transform: translateY(-3px);
+}
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(6,182,212,0.15);
+  border: 1px solid var(--cyan-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: var(--transition-normal);
+}
+.feature-card:hover .feature-icon {
+  border-color: var(--cyan-muted);
+  box-shadow: var(--glow-subtle);
+  background: rgba(6,182,212,0.25);
+}
+.feature-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--cyan-bright);
+  fill: none;
+  stroke-width: 1.5;
+}
+.feature-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--cyan-white);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+.feature-text {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--cyan-muted);
+  line-height: 1.5;
+}
+.feature-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--cyan-vivid);
+  text-decoration: none;
+  transition: var(--transition-normal);
+}
+.feature-link:hover {
+  color: var(--cyan-white);
+  text-shadow: var(--glow-text);
+}
+.feature-link svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+/* ============ TECH STACK ============ */
+
+.tech-section {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--cyan-dim);
+  border-bottom: 1px solid var(--cyan-dim);
+}
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--cyan-hot);
+  transition: var(--transition-normal);
+  cursor: default;
+}
+.tech-badge:hover {
+  border-color: var(--cyan-muted);
+  box-shadow: var(--glow-medium);
+  color: var(--cyan-white);
+  transform: translateY(-2px);
+}
+.tech-badge .tech-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan-bright);
+  box-shadow: 0 0 6px var(--cyan-bright);
+}
+
+/* Architecture diagram */
+.arch-diagram {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--bg-void);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan-hot);
+  overflow-x: auto;
+}
+.arch-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+.arch-box {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  text-align: center;
+  transition: var(--transition-normal);
+  white-space: nowrap;
+}
+.arch-box:hover {
+  border-color: var(--cyan-bright);
+  box-shadow: var(--glow-subtle);
+}
+.arch-box.highlight {
+  border-color: var(--cyan-bright);
+  box-shadow: var(--glow-medium);
+  color: var(--cyan-white);
+}
+.arch-arrow {
+  color: var(--cyan-muted);
+  font-size: 1rem;
+}
+
+/* ============ PIPELINE ============ */
+
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  margin: 2rem 0;
+}
+.pipeline-node {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--cyan-hot);
+  transition: var(--transition-normal);
+  width: fit-content;
+}
+.pipeline-node:hover {
+  border-color: var(--cyan-bright);
+  box-shadow: var(--glow-medium);
+  color: var(--cyan-white);
+}
+.pipeline-node .node-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan-bright);
+  box-shadow: 0 0 8px var(--cyan-bright);
+  flex-shrink: 0;
+}
+.pipeline-connector {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(to bottom, var(--cyan-dim), var(--cyan-bright), var(--cyan-dim));
+}
+
+/* ============ DOWNLOAD CTA ============ */
+
+.download-section {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.download-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.download-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  color: var(--cyan-white);
+  text-shadow: var(--glow-neon);
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+.download-sub {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--cyan-hot);
+  opacity: 0.8;
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+.download-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.btn-download {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  padding: 1.2rem 3rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--cyan-core), var(--cyan-bright));
+  color: var(--bg-void);
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-bounce), box-shadow 0.3s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.btn-download::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--cyan-bright), var(--cyan-vivid));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn-download:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: var(--glow-intense), 0 20px 50px rgba(6,182,212,0.3);
+}
+.btn-download:hover::before { opacity: 1; }
+.btn-download span, .btn-download svg { position: relative; z-index: 1; }
+
+.coming-soon-badges {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.coming-badge {
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sys-req {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan-muted);
+  line-height: 1.8;
+  margin-top: 2rem;
+}
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--cyan-vivid);
+  text-decoration: none;
+  transition: var(--transition-normal);
+}
+.github-link:hover {
+  color: var(--cyan-white);
+  text-shadow: var(--glow-text);
+}
+.github-link svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.companion-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--cyan-vivid);
+  text-decoration: none;
+  transition: var(--transition-normal);
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 8px;
+}
+.companion-link:hover {
+  color: var(--cyan-white);
+  text-shadow: var(--glow-text);
+  border-color: var(--cyan-muted);
+  background: rgba(6,182,212,0.08);
+  box-shadow: var(--glow-subtle);
+}
+
+/* ============ FOOTER ============ */
+
+.footer {
+  border-top: 1px solid var(--cyan-dim);
+  padding: 3rem 2rem;
+}
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--cyan-vivid);
+  text-shadow: var(--glow-text);
+  letter-spacing: 0.1em;
+}
+.footer-tagline {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--cyan-muted);
+  font-style: italic;
+}
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--cyan-hot);
+  text-decoration: none;
+  transition: var(--transition-normal);
+}
+.footer-links a:hover {
+  color: var(--cyan-white);
+  text-shadow: var(--glow-text);
+}
+.footer-copy {
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cyan-dim);
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(13,43,54,0.4);
+}
+
+/* ============ RESPONSIVE ============ */
+
+@media (max-width: 1024px) {
+  .steps-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .menu-toggle { display: flex; }
+  .mock-body {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .mock-sidebar { display: none; }
+  .mock-main-area { min-height: 240px; }
+  .mock-results-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-links {
+    justify-content: center;
+  }
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero { padding-top: 5rem; padding-left: 1rem; padding-right: 1rem; }
+  .hero-sub { max-width: 100%; padding: 0 0.5rem; }
+  .hero-tagline { letter-spacing: 0.02em; }
+  .hero-badge { font-size: 0.55rem; letter-spacing: 0.06em; padding: 0.4rem 0.8rem; }
+  .app-mockup { border-radius: 10px; }
+  .mock-results-grid { grid-template-columns: 1fr 1fr; }
+  .section { padding-left: 1rem; padding-right: 1rem; }
+  .section-title { word-break: break-word; }
+  .section-desc { font-size: 0.95rem; }
+  .btn-primary, .btn-secondary { font-size: 0.75rem; padding: 0.8rem 1.5rem; letter-spacing: 0.06em; }
+  .btn-download { font-size: 0.8rem; padding: 0.9rem 1.8rem; }
+  .arch-diagram { padding: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .arch-box { white-space: normal; font-size: 0.65rem; padding: 0.4rem 0.6rem; }
+  .arch-row { flex-wrap: wrap; gap: 0.3rem; }
+  .pipeline-node { font-size: 0.7rem; padding: 0.6rem 1rem; max-width: 100%; }
+  .tech-badge { font-size: 0.7rem; padding: 0.5rem 0.8rem; }
+  .feature-card { padding: 1.25rem; }
+  .feature-title { font-size: 0.8rem; }
+  .feature-text { font-size: 0.82rem; }
+  .step-preview { height: 130px; }
+  .step-info { padding: 0.8rem 1rem; }
+  .step-name { font-size: 0.78rem; }
+  .step-desc { font-size: 0.78rem; }
+  .coming-badge { font-size: 0.65rem; }
+  .sys-req { font-size: 0.7rem; padding: 0.8rem; }
+  .download-title { word-break: break-word; }
+  .footer-inner { padding: 0 0.5rem; }
+  .footer-links { gap: 0.8rem; font-size: 0.75rem; }
+  .footer-tagline { font-size: 0.7rem; }
+  .github-link { font-size: 0.8rem; }
+}
+
+@media (max-width: 380px) {
+  .hero-title { letter-spacing: -0.01em; }
+  .hero-buttons { flex-direction: column; align-items: center; gap: 0.6rem; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; font-size: 0.7rem; }
+  .btn-download { width: 100%; justify-content: center; }
+  .section { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .nav { padding: 0 0.75rem; }
+  .tech-grid { gap: 0.5rem; }
+  .tech-badge { font-size: 0.6rem; padding: 0.4rem 0.6rem; }
+  .arch-box { font-size: 0.55rem; padding: 0.3rem 0.5rem; }
+}
+
+/* ============ CUSTOM CURSOR GLOW ============ */
+.cursor-glow {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ============ NAVIGATION ============ -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo">
+    <span class="logo-p">C</span>
+    HARON
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#tech">Tech</a></li>
+    <li><a href="#download" class="nav-cta">DOWNLOAD</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-overlay" id="mobileMenu">
+  <a href="#how-it-works" onclick="closeMobile()">HOW IT WORKS</a>
+  <a href="#features" onclick="closeMobile()">FEATURES</a>
+  <a href="#tech" onclick="closeMobile()">TECH</a>
+  <a href="#download" onclick="closeMobile()">DOWNLOAD</a>
+  <a href="https://aether-player.netlify.app/" onclick="closeMobile()">AETHER</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      VERSION 1.0 — COMPANION TO AETHER
+    </div>
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <p class="hero-tagline">The ferryman that carries music to your library.</p>
+    <p class="hero-sub">Rip from Tidal in Master/FLAC/AAC quality. Auto-organize. Auto-scan Navidrome. Built-in server management. One-click artist discography downloads. The companion to AETHER.</p>
+    <div class="hero-buttons">
+      <a href="https://github.com/EmperorBadussy/charon/releases" class="btn-primary" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>DOWNLOAD FOR WINDOWS</span>
+      </a>
+      <a href="https://aether-player.netlify.app/" class="btn-secondary" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><polygon points="13 4 23 12 13 20 13 4" opacity="0.5"/></svg>
+        <span>EXPLORE AETHER</span>
+      </a>
+    </div>
+    <div class="mockup-container">
+      <div class="app-mockup">
+        <div class="mock-titlebar">
+          <div class="mock-titlebar-left">
+            <span class="mock-titlebar-logo">CHARON</span>
+          </div>
+          <div class="mock-dots">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-sidebar">
+            <div class="mock-search-box">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span class="mock-search-text">Search Tidal...</span>
+            </div>
+            <div class="mock-sidebar-item active">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Search
+            </div>
+            <div class="mock-sidebar-item">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Queue
+            </div>
+            <div class="mock-sidebar-item">
+              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              Server
+            </div>
+            <div class="mock-sidebar-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings
+            </div>
+          </div>
+          <div class="mock-main-area">
+            <div class="mock-main-header">SEARCH RESULTS &mdash; "RADIOHEAD"</div>
+            <div class="mock-results-grid">
+              <div class="mock-artist-card">
+                <div class="mock-artist-avatar" style="background: linear-gradient(135deg, #0D2B36, #06B6D4);"></div>
+                <div class="mock-artist-name">Radiohead</div>
+                <div class="mock-artist-sub">Artist</div>
+              </div>
+              <div class="mock-artist-card">
+                <div class="mock-artist-avatar" style="background: linear-gradient(135deg, #0A1419, #0E4D64);"></div>
+                <div class="mock-artist-name">OK Computer</div>
+                <div class="mock-artist-sub">Album &bull; 1997</div>
+              </div>
+              <div class="mock-artist-card">
+                <div class="mock-artist-avatar" style="background: linear-gradient(135deg, #0D2B36, #22D3EE);"></div>
+                <div class="mock-artist-name">Kid A</div>
+                <div class="mock-artist-sub">Album &bull; 2000</div>
+              </div>
+              <div class="mock-artist-card">
+                <div class="mock-artist-avatar" style="background: linear-gradient(135deg, #0E4D64, #06B6D4);"></div>
+                <div class="mock-artist-name">In Rainbows</div>
+                <div class="mock-artist-sub">Album &bull; 2007</div>
+              </div>
+              <div class="mock-artist-card">
+                <div class="mock-artist-avatar" style="background: linear-gradient(135deg, #0C1820, #0E4D64);"></div>
+                <div class="mock-artist-name">The Bends</div>
+                <div class="mock-artist-sub">Album &bull; 1995</div>
+              </div>
+              <div class="mock-artist-card">
+                <div class="mock-artist-avatar" style="background: linear-gradient(135deg, #0D2B36, #67E8F9);"></div>
+                <div class="mock-artist-name">A Moon Shaped Pool</div>
+                <div class="mock-artist-sub">Album &bull; 2016</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-bottombar">
+          <div class="mock-dl-icon"></div>
+          <div class="mock-dl-info">
+            <div class="mock-dl-title">OK Computer &mdash; Paranoid Android</div>
+            <div class="mock-dl-detail">FLAC 24-bit/96kHz &bull; 42.3 MB</div>
+          </div>
+          <div class="mock-dl-progress">
+            <div class="mock-dl-progress-fill"></div>
+          </div>
+          <div class="mock-dl-percent">67%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-label reveal">01 // THE CROSSING</div>
+    <h2 class="section-title reveal">From Tidal to Your Library</h2>
+    <p class="section-desc reveal">Four steps across the digital river. From catalog to collection. The ferryman handles everything.</p>
+
+    <div class="steps-grid">
+      <!-- SEARCH -->
+      <div class="step-card reveal-scale" style="transition-delay:0.05s">
+        <div class="step-preview">
+          <canvas class="step-canvas" data-step="search"></canvas>
+          <div class="step-number">01</div>
+        </div>
+        <div class="step-info">
+          <div class="step-name">SEARCH</div>
+          <div class="step-desc">Browse Tidal's entire catalog. Search artists, albums, tracks. Full metadata and cover art.</div>
+        </div>
+      </div>
+
+      <!-- QUEUE -->
+      <div class="step-card reveal-scale" style="transition-delay:0.15s">
+        <div class="step-preview">
+          <canvas class="step-canvas" data-step="queue"></canvas>
+          <div class="step-number">02</div>
+        </div>
+        <div class="step-info">
+          <div class="step-name">QUEUE</div>
+          <div class="step-desc">One-click download whole discographies. Queue albums in bulk. Set quality preferences.</div>
+        </div>
+      </div>
+
+      <!-- RIP -->
+      <div class="step-card reveal-scale" style="transition-delay:0.25s">
+        <div class="step-preview">
+          <canvas class="step-canvas" data-step="rip"></canvas>
+          <div class="step-number">03</div>
+        </div>
+        <div class="step-info">
+          <div class="step-name">RIP</div>
+          <div class="step-desc">tiddl-powered downloads. Master/Hi-Res/FLAC/AAC quality. Real-time progress tracking.</div>
+        </div>
+      </div>
+
+      <!-- ORGANIZE -->
+      <div class="step-card reveal-scale" style="transition-delay:0.35s">
+        <div class="step-preview">
+          <canvas class="step-canvas" data-step="organize"></canvas>
+          <div class="step-number">04</div>
+        </div>
+        <div class="step-info">
+          <div class="step-name">ORGANIZE</div>
+          <div class="step-desc">Auto-scan Navidrome after each download. Your music appears in AETHER instantly.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-label reveal">02 // FEATURES</div>
+    <h2 class="section-title reveal">The Ferryman's Arsenal</h2>
+    <p class="section-desc reveal">Every tool needed to carry music across the digital stream. Engineered for efficiency.</p>
+
+    <div class="features-grid">
+      <div class="feature-card reveal" style="transition-delay:0.05s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="feature-title">TIDAL SEARCH ENGINE</div>
+        <div class="feature-text">Search artists, albums, tracks. Full metadata, cover art, quality badges. Browse discographies.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.1s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="feature-title">MASTER QUALITY DOWNLOADS</div>
+        <div class="feature-text">MQA/Hi-Res, FLAC CD, AAC 320, AAC 96. You choose the quality. tiddl handles the rest.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.15s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+        </div>
+        <div class="feature-title">DOWNLOAD QUEUE</div>
+        <div class="feature-text">Queue unlimited downloads. 3 concurrent by default. Configurable. Persistent across restarts.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.2s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="feature-title">NAVIDROME SERVER MANAGER</div>
+        <div class="feature-text">Install, start, stop, restart Navidrome from within CHARON. Auto-download latest release. Config editor.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.25s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="feature-title">AUTO LIBRARY SCAN</div>
+        <div class="feature-text">Every download triggers a Navidrome scan. Your music appears in AETHER within seconds.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.3s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <div class="feature-title">ARTIST DISCOGRAPHY</div>
+        <div class="feature-text">One click downloads an artist's entire catalog. Every album queued automatically.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.35s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><polygon points="13 4 23 12 13 20 13 4" opacity="0.5"/></svg>
+        </div>
+        <div class="feature-title">AETHER COMPANION</div>
+        <div class="feature-text">Built as the supply chain for AETHER. Rip, Organize, Play. The complete pipeline.</div>
+        <a href="https://aether-player.netlify.app/" class="feature-link" target="_blank">
+          Explore AETHER
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.4s">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="feature-title">CONFIGURABLE PATHS</div>
+        <div class="feature-text">Set your music directory, quality defaults, naming patterns. Everything customizable.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TECH STACK ============ -->
+<section class="section tech-section" id="tech">
+  <div class="section-inner" style="text-align:center;">
+    <div class="section-label reveal" style="justify-content:center;">03 // TECH STACK</div>
+    <h2 class="section-title reveal" style="margin-left:auto;margin-right:auto;">Forged in the Underworld</h2>
+    <p class="section-desc reveal" style="margin-left:auto;margin-right:auto;">A bridge between Python and Electron. Every tool chosen for reliability and speed.</p>
+
+    <div class="tech-grid reveal">
+      <div class="tech-badge"><span class="tech-dot"></span>Electron 33</div>
+      <div class="tech-badge"><span class="tech-dot"></span>Python</div>
+      <div class="tech-badge"><span class="tech-dot"></span>tidalapi</div>
+      <div class="tech-badge"><span class="tech-dot"></span>tiddl CLI</div>
+      <div class="tech-badge"><span class="tech-dot"></span>Navidrome</div>
+      <div class="tech-badge"><span class="tech-dot"></span>Subsonic API</div>
+      <div class="tech-badge"><span class="tech-dot"></span>Vanilla JS</div>
+      <div class="tech-badge"><span class="tech-dot"></span>JSON IPC</div>
+      <div class="tech-badge"><span class="tech-dot"></span>Single-File App</div>
+    </div>
+
+    <div class="arch-diagram reveal">
+      <div style="text-align:center;margin-bottom:1rem;color:var(--cyan-vivid);font-size:0.8rem;letter-spacing:0.15em;">ARCHITECTURE</div>
+      <div class="arch-row">
+        <div class="arch-box highlight">MAIN PROCESS (Electron)</div>
+      </div>
+      <div class="arch-row"><span class="arch-arrow">&#x2193;</span></div>
+      <div class="arch-row">
+        <div class="arch-box highlight">Python Bridge (stdin/stdout JSON IPC)</div>
+      </div>
+      <div class="arch-row"><span class="arch-arrow">&#x2193;</span></div>
+      <div class="arch-row">
+        <div class="arch-box">tidalapi (Search/Browse)</div>
+        <div class="arch-box">tiddl CLI (Download)</div>
+      </div>
+      <div class="arch-row"><span class="arch-arrow">&#x2193;</span></div>
+      <div class="arch-row">
+        <div class="arch-box">Navidrome (Auto-scan)</div>
+        <span class="arch-arrow">&rarr;</span>
+        <div class="arch-box highlight">AETHER (Play)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE PIPELINE ============ -->
+<section class="section" id="pipeline">
+  <div class="section-inner" style="text-align:center;">
+    <div class="section-label reveal" style="justify-content:center;">04 // THE PIPELINE</div>
+    <h2 class="section-title reveal" style="margin-left:auto;margin-right:auto;">The Digital River's Current</h2>
+    <p class="section-desc reveal" style="margin-left:auto;margin-right:auto;">Every step in the journey from Tidal's catalog to your speakers. Automated. Seamless. Relentless.</p>
+
+    <div class="pipeline reveal">
+      <div class="pipeline-node"><span class="node-icon"></span>User searches in CHARON</div>
+      <div class="pipeline-connector"></div>
+      <div class="pipeline-node"><span class="node-icon"></span>tidalapi returns results</div>
+      <div class="pipeline-connector"></div>
+      <div class="pipeline-node"><span class="node-icon"></span>User queues download</div>
+      <div class="pipeline-connector"></div>
+      <div class="pipeline-node"><span class="node-icon"></span>tiddl downloads to configured path</div>
+      <div class="pipeline-connector"></div>
+      <div class="pipeline-node"><span class="node-icon"></span>Navidrome auto-scans library</div>
+      <div class="pipeline-connector"></div>
+      <div class="pipeline-node" style="border-color: var(--cyan-bright); box-shadow: var(--glow-medium);"><span class="node-icon"></span>Music appears in AETHER</div>
+    </div>
+
+    <div style="margin-top:3rem;" class="reveal">
+      <div style="font-family:var(--font-display);font-size:0.85rem;color:var(--cyan-vivid);letter-spacing:0.1em;margin-bottom:1rem;">QUALITY OPTIONS</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;">
+        <div style="padding:0.5rem 1rem;background:var(--bg-raised);border:1px solid var(--cyan-muted);border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan-vivid);transition:var(--transition-normal);">MQA / Hi-Res</div>
+        <div style="padding:0.5rem 1rem;background:var(--bg-raised);border:1px solid var(--cyan-muted);border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan-vivid);transition:var(--transition-normal);">FLAC CD (16-bit/44.1kHz)</div>
+        <div style="padding:0.5rem 1rem;background:var(--bg-raised);border:1px solid var(--cyan-dim);border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan-hot);transition:var(--transition-normal);">AAC 320kbps</div>
+        <div style="padding:0.5rem 1rem;background:var(--bg-raised);border:1px solid var(--cyan-dim);border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan-hot);transition:var(--transition-normal);">AAC 96kbps</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOWNLOAD CTA ============ -->
+<section class="section download-section" id="download">
+  <div class="section-inner">
+    <div class="section-label reveal" style="justify-content:center;">05 // DOWNLOAD</div>
+    <h2 class="download-title reveal">Ready to Cross<br>the Digital River?</h2>
+    <p class="download-sub reveal">Free. Open source. The ferryman awaits.</p>
+
+    <div class="download-buttons reveal">
+      <a href="https://github.com/EmperorBadussy/charon/releases" class="btn-download" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>DOWNLOAD FOR WINDOWS</span>
+      </a>
+    </div>
+
+    <div class="coming-soon-badges reveal">
+      <div class="coming-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06z"/><path d="M10 2c1 .5 2 2 2 5"/></svg>
+        macOS — COMING SOON
+      </div>
+      <div class="coming-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Linux — COMING SOON
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan-muted);margin-bottom:0.3rem;">v1.0.0 &bull; Windows 10/11 (x64)</div>
+    </div>
+
+    <div class="sys-req reveal">
+      <strong style="color:var(--cyan-vivid);">System Requirements</strong><br>
+      Windows 10+ (64-bit) &bull; 4GB RAM &bull; Python 3.10+ &bull; 200MB disk space
+    </div>
+
+    <a href="https://github.com/EmperorBadussy/charon" class="github-link reveal" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+
+    <div style="margin-top: 2rem;" class="reveal">
+      <a href="https://aether-player.netlify.app/" class="companion-link" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><polygon points="13 4 23 12 13 20 13 4" opacity="0.5"/></svg>
+        Looking for the player? &rarr; AETHER
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">CHARON</div>
+      <div class="footer-tagline">The ferryman that carries music across the digital river's current.</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#tech">Tech Stack</a></li>
+      <li><a href="#download">Download</a></li>
+      <li><a href="https://github.com/EmperorBadussy/charon" target="_blank">GitHub</a></li>
+      <li><a href="https://aether-player.netlify.app/" target="_blank">AETHER</a></li>
+    </ul>
+    <div class="footer-copy">&copy; 2077 CHARON. Free and open source software.</div>
+    <div style="font-size:0.5rem;opacity:0.15;color:#0a0a0a;margin-top:4px;user-select:text;">ask The BadussyRipper2077 rip</div>
+  </div>
+</footer>
+
+<script>
+// ============ HERO TITLE CHARACTER ANIMATION ============
+(function() {
+  const title = document.getElementById('heroTitle');
+  const text = 'CHARON';
+  let html = '';
+  let delay = 0.4;
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === ' ') {
+      html += ' ';
+    } else {
+      html += '<span class="char" style="--d:' + delay.toFixed(2) + 's">' + text[i] + '</span>';
+      delay += 0.06;
+    }
+  }
+  title.innerHTML = html;
+})();
+
+// ============ HERO CANVAS — DIGITAL RIVER EFFECT ============
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], waveLines = [], mouse = { x: -999, y: -999 };
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Create digital river particles (flowing left to right)
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: Math.random() * 2000,
+      y: Math.random() * 2000,
+      vx: Math.random() * 0.6 + 0.15,
+      vy: (Math.random() - 0.5) * 0.12,
+      size: Math.random() * 2 + 0.5,
+      alpha: Math.random() * 0.5 + 0.1,
+      drift: Math.random() * Math.PI * 2
+    });
+  }
+
+  // Create wave lines
+  for (let i = 0; i < 8; i++) {
+    waveLines.push({
+      y: (i / 8) * 1.2 + 0.15,
+      amplitude: 3 + Math.random() * 5,
+      frequency: 0.003 + Math.random() * 0.004,
+      speed: 0.0003 + Math.random() * 0.0005,
+      phase: Math.random() * Math.PI * 2,
+      alpha: 0.06 + Math.random() * 0.08
+    });
+  }
+
+  document.addEventListener('mousemove', function(e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  function drawWaves(time) {
+    ctx.save();
+    waveLines.forEach(function(wave) {
+      var y = wave.y * h;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      for (var x = 0; x < w; x += 3) {
+        var offset = Math.sin(x * wave.frequency + time * wave.speed + wave.phase) * wave.amplitude;
+        offset += Math.sin(x * wave.frequency * 0.5 + time * wave.speed * 0.7) * wave.amplitude * 0.5;
+        ctx.lineTo(x, y + offset);
+      }
+      ctx.strokeStyle = 'rgba(6, 182, 212, ' + wave.alpha + ')';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  function drawParticles(time) {
+    particles.forEach(function(p) {
+      // Flow right with slight vertical drift
+      p.x += p.vx;
+      p.y += p.vy + Math.sin(time * 0.001 + p.drift) * 0.08;
+
+      // Wrap around
+      if (p.x > w + 10) { p.x = -10; p.y = Math.random() * h; }
+      if (p.y < -10) p.y = h + 10;
+      if (p.y > h + 10) p.y = -10;
+
+      // Mouse proximity glow
+      var dx = mouse.x - p.x;
+      var dy = mouse.y - p.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var glow = dist < 200 ? (1 - dist / 200) * 0.6 : 0;
+
+      // Main particle
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * (1 + glow), 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(103, 232, 249, ' + (p.alpha + glow) + ')';
+      ctx.fill();
+
+      // Glow halo
+      if (p.size > 1 || glow > 0.1) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(34, 211, 238, ' + ((p.alpha + glow) * 0.12) + ')';
+        ctx.fill();
+      }
+    });
+
+    // Draw connections between close particles
+    for (var i = 0; i < particles.length; i++) {
+      for (var j = i + 1; j < particles.length; j++) {
+        var dx = particles[i].x - particles[j].x;
+        var dy = particles[i].y - particles[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = 'rgba(6, 182, 212, ' + (0.08 * (1 - dist / 120)) + ')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function drawDigitalRiverFog(time) {
+    // Subtle moving fog at the bottom
+    var grad = ctx.createLinearGradient(0, h * 0.7, 0, h);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(1, 'rgba(6, 182, 212, 0.03)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, h * 0.7, w, h * 0.3);
+
+    // Horizon-like glow line at ~60%
+    var glowY = h * 0.6;
+    var gGrad = ctx.createLinearGradient(0, glowY - 30, 0, glowY + 30);
+    gGrad.addColorStop(0, 'transparent');
+    gGrad.addColorStop(0.5, 'rgba(6, 182, 212, 0.06)');
+    gGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = gGrad;
+    ctx.fillRect(0, glowY - 30, w, 60);
+  }
+
+  function animate(time) {
+    ctx.clearRect(0, 0, w, h);
+    drawDigitalRiverFog(time);
+    drawWaves(time);
+    drawParticles(time);
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+})();
+
+// ============ CURSOR GLOW ============
+(function() {
+  var glow = document.getElementById('cursorGlow');
+  var mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+  function update() {
+    cx += (mx - cx) * 0.08;
+    cy += (my - cy) * 0.08;
+    glow.style.left = cx + 'px';
+    glow.style.top = cy + 'px';
+    requestAnimationFrame(update);
+  }
+  update();
+  // Hide on mobile
+  if ('ontouchstart' in window) glow.style.display = 'none';
+})();
+
+// ============ NAV SCROLL EFFECT ============
+(function() {
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll', function() {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+})();
+
+// ============ MOBILE MENU ============
+function closeMobile() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('menuToggle').classList.remove('active');
+}
+document.getElementById('menuToggle').addEventListener('click', function() {
+  this.classList.toggle('active');
+  document.getElementById('mobileMenu').classList.toggle('open');
+});
+
+// ============ SCROLL REVEAL ============
+(function() {
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+    observer.observe(el);
+  });
+})();
+
+// ============ STEP CARD CANVAS ANIMATIONS ============
+(function() {
+  var canvases = document.querySelectorAll('.step-canvas');
+  var vizData = [];
+
+  canvases.forEach(function(c) {
+    var rect = c.parentElement.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.width = rect.width * dpr;
+    c.height = rect.height * dpr;
+    var ctx = c.getContext('2d');
+    ctx.scale(dpr, dpr);
+    var w = rect.width, h = rect.height;
+    var data = { c: c, ctx: ctx, w: w, h: h, type: c.dataset.step, hover: false, particles: [] };
+
+    // Init per-type data
+    if (data.type === 'search') {
+      // Magnifying glass particles
+      for (var i = 0; i < 20; i++) {
+        data.particles.push({
+          angle: Math.random() * Math.PI * 2,
+          radius: 20 + Math.random() * 25,
+          speed: 0.005 + Math.random() * 0.01,
+          size: 1 + Math.random() * 2,
+          alpha: 0.3 + Math.random() * 0.5
+        });
+      }
+    } else if (data.type === 'queue') {
+      // Stacked card data
+      data.cards = [];
+      for (var i = 0; i < 5; i++) {
+        data.cards.push({ y: 0, targetY: i * 22, alpha: 0 });
+      }
+    } else if (data.type === 'rip') {
+      // Progress bar data
+      data.progress = 0;
+      data.progressTarget = 0;
+      data.glowIntensity = 0;
+    } else if (data.type === 'organize') {
+      // Grid squares
+      data.squares = [];
+      for (var i = 0; i < 16; i++) {
+        data.squares.push({
+          x: (i % 4) * 30 + Math.random() * 100,
+          y: Math.floor(i / 4) * 30 + Math.random() * 80,
+          tx: (i % 4) * 30,
+          ty: Math.floor(i / 4) * 30,
+          size: 22,
+          alpha: 0.3 + Math.random() * 0.4
+        });
+      }
+    }
+
+    c.parentElement.addEventListener('mouseenter', function() { data.hover = true; });
+    c.parentElement.addEventListener('mouseleave', function() { data.hover = false; });
+
+    vizData.push(data);
+  });
+
+  function drawSearch(v, t) {
+    var ctx = v.ctx, w = v.w, h = v.h;
+    ctx.clearRect(0, 0, w, h);
+
+    var cx = w / 2, cy = h / 2 - 8;
+    var baseRadius = 28;
+    var pulseCount = v.hover ? 4 : 3;
+
+    // Pulsing rings
+    for (var i = 0; i < pulseCount; i++) {
+      var phase = (t * 0.001 + i * 1.2) % 4;
+      var r = baseRadius + phase * 18;
+      var alpha = Math.max(0, 0.4 - phase * 0.1);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(34, 211, 238, ' + alpha + ')';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // Magnifying glass
+    ctx.beginPath();
+    ctx.arc(cx, cy, baseRadius - 6, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(103, 232, 249, 0.7)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Handle
+    var handleAngle = Math.PI * 0.25;
+    var hx = cx + Math.cos(handleAngle) * (baseRadius - 4);
+    var hy = cy + Math.sin(handleAngle) * (baseRadius - 4);
+    ctx.beginPath();
+    ctx.moveTo(hx, hy);
+    ctx.lineTo(hx + 16, hy + 16);
+    ctx.strokeStyle = 'rgba(103, 232, 249, 0.7)';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Orbiting particles
+    v.particles.forEach(function(p) {
+      p.angle += p.speed * (v.hover ? 2 : 1);
+      var px = cx + Math.cos(p.angle) * p.radius;
+      var py = cy + Math.sin(p.angle) * p.radius;
+      ctx.beginPath();
+      ctx.arc(px, py, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(103, 232, 249, ' + p.alpha + ')';
+      ctx.fill();
+    });
+
+    // Center glow
+    var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, baseRadius);
+    grad.addColorStop(0, 'rgba(6, 182, 212, 0.12)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function drawQueue(v, t) {
+    var ctx = v.ctx, w = v.w, h = v.h;
+    ctx.clearRect(0, 0, w, h);
+
+    var cx = w / 2, startY = h / 2 - 50;
+    var cardW = 100, cardH = 18;
+    var cycle = (t * 0.0008) % 6;
+
+    for (var i = 0; i < 5; i++) {
+      var delay = i * 0.8;
+      var progress = Math.max(0, Math.min(1, (cycle - delay) / 0.6));
+      var eased = progress < 1 ? 1 - Math.pow(1 - progress, 3) : 1;
+
+      var x = cx - cardW / 2 + (1 - eased) * (v.hover ? 80 : 60);
+      var y = startY + i * (cardH + 6);
+      var alpha = eased * (0.4 + i * 0.12);
+
+      ctx.fillStyle = 'rgba(6, 182, 212, ' + (alpha * 0.15) + ')';
+      ctx.strokeStyle = 'rgba(34, 211, 238, ' + alpha + ')';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(x, y, cardW, cardH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // Inner detail line
+      ctx.fillStyle = 'rgba(103, 232, 249, ' + (alpha * 0.6) + ')';
+      ctx.fillRect(x + 8, y + cardH / 2 - 1, cardW * 0.5 * eased, 2);
+    }
+  }
+
+  function drawRip(v, t) {
+    var ctx = v.ctx, w = v.w, h = v.h;
+    ctx.clearRect(0, 0, w, h);
+
+    var barW = w * 0.6, barH = 8;
+    var bx = (w - barW) / 2, by = h / 2 - barH / 2;
+    var cycle = (t * 0.0004) % 1;
+    var progress = cycle;
+    var spd = v.hover ? 1.5 : 1;
+    progress = ((t * 0.0004 * spd) % 1);
+
+    // Background bar
+    ctx.fillStyle = 'rgba(13, 43, 54, 0.6)';
+    ctx.beginPath();
+    ctx.roundRect(bx, by, barW, barH, 4);
+    ctx.fill();
+
+    // Fill
+    var fillW = barW * progress;
+    ctx.fillStyle = 'rgba(34, 211, 238, 0.8)';
+    ctx.beginPath();
+    ctx.roundRect(bx, by, fillW, barH, 4);
+    ctx.fill();
+
+    // Glow on fill edge
+    var grad = ctx.createRadialGradient(bx + fillW, by + barH / 2, 0, bx + fillW, by + barH / 2, 30);
+    grad.addColorStop(0, 'rgba(34, 211, 238, 0.4)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(bx + fillW - 30, by - 20, 60, barH + 40);
+
+    // Percentage text
+    ctx.font = '500 12px Orbitron, sans-serif';
+    ctx.fillStyle = 'rgba(103, 232, 249, 0.8)';
+    ctx.textAlign = 'center';
+    ctx.fillText(Math.floor(progress * 100) + '%', w / 2, by + barH + 24);
+
+    // Scanning lines below bar
+    for (var i = 0; i < 3; i++) {
+      var lineY = by + barH + 36 + i * 8;
+      var lineW = (barW * 0.4 + Math.sin(t * 0.002 + i) * barW * 0.15);
+      ctx.fillStyle = 'rgba(6, 182, 212, ' + (0.15 - i * 0.04) + ')';
+      ctx.fillRect((w - lineW) / 2, lineY, lineW, 2);
+    }
+  }
+
+  function drawOrganize(v, t) {
+    var ctx = v.ctx, w = v.w, h = v.h;
+    ctx.clearRect(0, 0, w, h);
+
+    var gridX = w / 2 - 55, gridY = h / 2 - 55;
+    var cycle = ((t * 0.0005) % 4);
+    var organizing = cycle > 2;
+    var mixFactor = organizing ? Math.min(1, (cycle - 2) / 1.5) : 0;
+    var eased = mixFactor * mixFactor * (3 - 2 * mixFactor); // smoothstep
+
+    v.squares.forEach(function(sq, i) {
+      var finalX = gridX + (i % 4) * 30;
+      var finalY = gridY + Math.floor(i / 4) * 30;
+
+      // Randomized position if not organizing
+      var randX = gridX + (i % 4) * 30 + Math.sin(t * 0.001 + i * 1.7) * 35;
+      var randY = gridY + Math.floor(i / 4) * 30 + Math.cos(t * 0.0012 + i * 2.1) * 35;
+
+      var x = randX + (finalX - randX) * eased;
+      var y = randY + (finalY - randY) * eased;
+
+      var alpha = 0.3 + eased * 0.4;
+      ctx.fillStyle = 'rgba(6, 182, 212, ' + (alpha * 0.2) + ')';
+      ctx.strokeStyle = 'rgba(34, 211, 238, ' + alpha + ')';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(x, y, 22, 22, 3);
+      ctx.fill();
+      ctx.stroke();
+
+      // Inner glow when organized
+      if (eased > 0.5) {
+        var glowA = (eased - 0.5) * 2 * 0.3;
+        ctx.fillStyle = 'rgba(103, 232, 249, ' + glowA + ')';
+        ctx.fillRect(x + 5, y + 5, 12, 12);
+      }
+    });
+
+    // Check mark when fully organized
+    if (eased > 0.9) {
+      var checkAlpha = (eased - 0.9) * 10;
+      ctx.strokeStyle = 'rgba(103, 232, 249, ' + checkAlpha + ')';
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(w / 2 - 12, h / 2 + 45);
+      ctx.lineTo(w / 2 - 2, h / 2 + 55);
+      ctx.lineTo(w / 2 + 14, h / 2 + 38);
+      ctx.stroke();
+    }
+  }
+
+  function animateSteps(t) {
+    vizData.forEach(function(v) {
+      switch (v.type) {
+        case 'search': drawSearch(v, t); break;
+        case 'queue': drawQueue(v, t); break;
+        case 'rip': drawRip(v, t); break;
+        case 'organize': drawOrganize(v, t); break;
+      }
+    });
+    requestAnimationFrame(animateSteps);
+  }
+  requestAnimationFrame(animateSteps);
+})();
+
+// ============ CLICK RIPPLE EFFECT ============
+document.addEventListener('click', function(e) {
+  var ripple = document.createElement('div');
+  ripple.className = 'click-ripple';
+  ripple.style.left = (e.clientX - 150) + 'px';
+  ripple.style.top = (e.clientY - 150) + 'px';
+  document.body.appendChild(ripple);
+  setTimeout(function() { ripple.remove(); }, 600);
+});
+
+// ============ SMOOTH SCROLL FOR ANCHOR LINKS ============
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    var href = this.getAttribute('href');
+    if (href === '#') return;
+    var target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// ============ PARALLAX ON SECTION TITLES ============
+(function() {
+  var titles = document.querySelectorAll('.section-title, .download-title');
+  window.addEventListener('scroll', function() {
+    var viewCenter = window.innerHeight / 2;
+    titles.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      var center = rect.top + rect.height / 2;
+      var offset = (center - viewCenter) * 0.03;
+      el.style.transform = 'translateY(' + offset + 'px)';
+    });
+  });
+})();
+
+// ============ MAGNETIC BUTTONS ============
+(function() {
+  var buttons = document.querySelectorAll('.btn-primary, .btn-download');
+  buttons.forEach(function(btn) {
+    btn.addEventListener('mousemove', function(e) {
+      var rect = btn.getBoundingClientRect();
+      var x = e.clientX - rect.left - rect.width / 2;
+      var y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = 'translate(' + (x * 0.12) + 'px, ' + (y * 0.12) + 'px)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      btn.style.transform = '';
+    });
+  });
+})();
+
+// ============ 3D CARD TILT ============
+(function() {
+  var cards = document.querySelectorAll('.step-card, .feature-card');
+  cards.forEach(function(card) {
+    card.style.transformStyle = 'preserve-3d';
+    card.addEventListener('mousemove', function(e) {
+      var rect = card.getBoundingClientRect();
+      var x = (e.clientX - rect.left) / rect.width - 0.5;
+      var y = (e.clientY - rect.top) / rect.height - 0.5;
+      var tiltX = y * -6;
+      var tiltY = x * 6;
+      card.style.transform = 'perspective(800px) rotateX(' + tiltX + 'deg) rotateY(' + tiltY + 'deg) translateY(-4px)';
+    });
+    card.addEventListener('mouseleave', function() {
+      card.style.transform = '';
+    });
+  });
+})();
+</script>
+</body>
+</html>

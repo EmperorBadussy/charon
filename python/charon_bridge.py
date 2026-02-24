@@ -12,10 +12,10 @@
 import sys
 import json
 import subprocess
-import threading
 import os
 import re
 import traceback
+import datetime
 
 # Ensure unbuffered output
 sys.stdout.reconfigure(line_buffering=True)
@@ -23,6 +23,29 @@ sys.stderr.reconfigure(line_buffering=True)
 
 # ============ TIDALAPI SESSION ============
 _session = None
+
+def find_tiddl_config():
+    """Locate tiddl's config file (tiddl.json)."""
+    # Check TIDDL_PATH env override first
+    env_path = os.environ.get("TIDDL_PATH", "")
+    if env_path:
+        candidate = os.path.join(env_path, "tiddl.json")
+        if os.path.exists(candidate):
+            return candidate
+
+    # Default: ~/tiddl.json (tiddl's actual default location)
+    home = os.path.expanduser("~")
+    candidate = os.path.join(home, "tiddl.json")
+    if os.path.exists(candidate):
+        return candidate
+
+    # Legacy fallback: ~/.tiddl/config.json
+    candidate = os.path.join(home, ".tiddl", "config.json")
+    if os.path.exists(candidate):
+        return candidate
+
+    return None
+
 
 def get_session():
     """Get or create tidalapi session using tiddl's stored credentials."""
@@ -35,27 +58,34 @@ def get_session():
         _session = tidalapi.Session()
 
         # Try to load tiddl's stored auth token
-        tiddl_config_path = os.path.expanduser("~/.tiddl/config.json")
-        if os.path.exists(tiddl_config_path):
+        tiddl_config_path = find_tiddl_config()
+        if tiddl_config_path:
             with open(tiddl_config_path, "r") as f:
                 config = json.load(f)
-            token_type = config.get("token_type", "Bearer")
-            access_token = config.get("access_token")
-            refresh_token = config.get("refresh_token")
+
+            # tiddl stores auth under config["auth"] with keys: token, refresh_token, expires, user_id, country_code
+            auth = config.get("auth", {})
+            access_token = auth.get("token") or config.get("access_token")
+            refresh_token = auth.get("refresh_token")
+            expires = auth.get("expires")
 
             if access_token:
                 try:
-                    _session.load_oauth_session(token_type, access_token, refresh_token)
+                    expiry_time = None
+                    if expires:
+                        expiry_time = datetime.datetime.fromtimestamp(expires)
+                    _session.load_oauth_session("Bearer", access_token, refresh_token, expiry_time)
                     if _session.check_login():
+                        sys.stderr.write(f"Authenticated via tiddl config: {tiddl_config_path}\n")
                         return _session
-                except Exception:
-                    pass
+                except Exception as e:
+                    sys.stderr.write(f"Failed to load tiddl session: {e}\n")
 
         # Try tidalapi's own session file
-        session_file = os.path.expanduser("~/.tiddl/charon_session.json")
-        if os.path.exists(session_file):
+        charon_session = os.path.join(os.path.expanduser("~"), ".tiddl", "charon_session.json")
+        if os.path.exists(charon_session):
             try:
-                _session.load_session(session_file)
+                _session.load_session(charon_session)
                 if _session.check_login():
                     return _session
             except Exception:
@@ -99,14 +129,20 @@ def handle_search(params):
         results = session.search(query, limit=limit)
         items = []
 
+        # tidalapi 0.8+ returns a dict, older versions return an object
+        def get_results(key):
+            if isinstance(results, dict):
+                return results.get(key, []) or []
+            return getattr(results, key, []) or []
+
         if search_type == "track":
-            for track in (results.tracks or [])[:limit]:
+            for track in get_results("tracks")[:limit]:
                 items.append(format_track(track))
         elif search_type == "album":
-            for album in (results.albums or [])[:limit]:
+            for album in get_results("albums")[:limit]:
                 items.append(format_album_summary(album))
         elif search_type == "artist":
-            for artist in (results.artists or [])[:limit]:
+            for artist in get_results("artists")[:limit]:
                 items.append(format_artist_summary(artist))
 
         return {"status": "ok", "data": {"results": items, "type": search_type}}
@@ -231,22 +267,60 @@ def handle_auth_status(params):
 
 
 def handle_auth_login(params):
-    """Initiate OAuth login flow."""
+    """Initiate OAuth login flow — blocks until user completes auth or timeout."""
+    global _session
     try:
         import tidalapi
         session = tidalapi.Session()
         login, future = session.login_oauth()
 
-        # Return the auth URL — user needs to visit it
-        return {
-            "status": "ok",
+        auth_url = f"https://{login.verification_uri_complete}"
+
+        # Send the auth URL as a progress event so the renderer can show it immediately
+        # The actual response comes after auth completes
+        progress_msg = json.dumps({
+            "status": "progress",
+            "request_id": params.get("_request_id", ""),
             "data": {
-                "auth_url": f"https://{login.verification_uri_complete}",
-                "message": "Visit the URL to authenticate. Waiting..."
+                "auth_url": auth_url,
+                "message": "Visit the URL to authenticate. Waiting for completion..."
             }
-        }
+        })
+        sys.stdout.write(progress_msg + "\n")
+        sys.stdout.flush()
+
+        # Wait for the user to complete OAuth (up to 5 minutes)
+        future.result(timeout=300)
+
+        if session.check_login():
+            _session = session
+            # Save session for reuse
+            session_file = os.path.expanduser("~/.tiddl/charon_session.json")
+            os.makedirs(os.path.dirname(session_file), exist_ok=True)
+            try:
+                session.save_session(session_file)
+            except Exception:
+                pass
+
+            user_name = ""
+            try:
+                user_name = getattr(session.user, "name", "") or getattr(session.user, "first_name", "") or ""
+            except Exception:
+                pass
+
+            return {
+                "status": "ok",
+                "data": {
+                    "authenticated": True,
+                    "user": user_name,
+                    "message": "Successfully authenticated with Tidal"
+                }
+            }
+        else:
+            return {"status": "error", "error": "Authentication failed — session not valid"}
+
     except Exception as e:
-        return {"status": "error", "error": str(e)}
+        return {"status": "error", "error": f"Auth failed: {str(e)}"}
 
 
 # ============ DOWNLOAD ============
@@ -259,13 +333,16 @@ def handle_download(params, request_id):
     if not url:
         return {"status": "error", "error": "No URL provided"}
 
-    # Build tiddl command
-    cmd = ["tiddl", url, "-q", quality.lower()]
+    # Build tiddl command: tiddl url <URL> download -q <quality> -p <path>
+    # tiddl quality: master=MQA/HiRes, high=FLAC CD, normal=AAC 320, low=AAC 96
+    quality_map = {"MAX": "master", "MASTER": "master", "LOSSLESS": "high", "HIGH": "normal", "NORMAL": "low", "LOW": "low"}
+    q = quality_map.get(quality.upper(), quality.lower())
+    cmd = ["tiddl", "url", url, "download", "-q", q]
 
-    # Get download directory from default or config
-    download_dir = params.get("download_dir", os.path.expanduser("E:/Music"))
+    # Download directory
+    download_dir = params.get("download_dir", os.path.join(os.path.expanduser("~"), "Music", "CHARON"))
     if download_dir:
-        cmd.extend(["-o", download_dir])
+        cmd.extend(["-p", download_dir])
 
     try:
         process = subprocess.Popen(
@@ -274,7 +351,7 @@ def handle_download(params, request_id):
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
-            env={**os.environ, "PYTHONUNBUFFERED": "1"}
+            env={**os.environ, "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8"}
         )
 
         last_progress = 0
@@ -448,9 +525,12 @@ def process_command(line):
     params = cmd.get("params", {})
     request_id = cmd.get("request_id", "")
 
-    # Download is special — it sends progress events
+    # Download and auth_login are special — they send progress events and need request_id
     if action == "download":
         result = handle_download(params, request_id)
+    elif action == "auth_login":
+        params["_request_id"] = request_id
+        result = handle_auth_login(params)
     elif action in HANDLERS:
         result = HANDLERS[action](params)
     else:

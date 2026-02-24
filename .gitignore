@@ -1,13 +1,44 @@
+# Dependencies
 node_modules/
+package-lock.json
+
+# Build output
 dist/
 out/
 build/
 release/
 *.exe
 *.msi
-.DS_Store
-Thumbs.db
+*.asar
+
+# Environment & secrets
 .env
+.env.*
+*.pem
+*.key
+tiddl.json
+config.json
+credentials.json
+
+# OS junk
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# Logs & temp
 *.log
 *.tmp
 *.bak
+npm-debug.log*

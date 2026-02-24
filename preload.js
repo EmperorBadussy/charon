@@ -8,10 +8,14 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('charon', {
-  // ── Window controls ──
+  // ── Window controls (matches AETHER) ──
   minimize: () => ipcRenderer.send('window-minimize'),
   maximize: () => ipcRenderer.send('window-maximize'),
   close: () => ipcRenderer.send('window-close'),
+  isMaximized: () => ipcRenderer.invoke('window-is-maximized'),
+  onWindowState: (callback) => {
+    ipcRenderer.on('window-state', (_event, state) => callback(state));
+  },
 
   // ── Python bridge commands ──
   bridge: (action, params) => ipcRenderer.invoke('bridge-command', action, params),
@@ -50,6 +54,13 @@ contextBridge.exposeInMainWorld('charon', {
 
   // ── Navidrome ──
   navidromeScan: () => ipcRenderer.invoke('navidrome-scan'),
+  navidromeServerStatus: () => ipcRenderer.invoke('navidrome-server-status'),
+  navidromeServerStart: () => ipcRenderer.invoke('navidrome-server-start'),
+  navidromeServerStop: () => ipcRenderer.invoke('navidrome-server-stop'),
+  navidromeServerRestart: () => ipcRenderer.invoke('navidrome-server-restart'),
+  navidromeServerInstall: (installPath, musicPath) => ipcRenderer.invoke('navidrome-server-install', installPath, musicPath),
+  navidromeServerConfig: (action, configPath, newConfig) => ipcRenderer.invoke('navidrome-server-config', action, configPath, newConfig),
+  navidromeServerStats: () => ipcRenderer.invoke('navidrome-server-stats'),
 
   // ── Settings ──
   getSettings: () => ipcRenderer.invoke('settings-get'),
@@ -83,5 +94,11 @@ contextBridge.exposeInMainWorld('charon', {
     const handler = (event, data) => callback(data);
     ipcRenderer.on('navidrome-scan-result', handler);
     return () => ipcRenderer.removeListener('navidrome-scan-result', handler);
+  },
+
+  onNavidromeInstallProgress: (callback) => {
+    const handler = (event, data) => callback(data);
+    ipcRenderer.on('navidrome-install-progress', handler);
+    return () => ipcRenderer.removeListener('navidrome-install-progress', handler);
   }
 });
