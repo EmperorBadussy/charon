@@ -30,6 +30,12 @@
 
 ---
 
+<p align="center">
+  <img src="screenshot.png" alt="CHARON — Home Screen" width="100%"/>
+</p>
+
+---
+
 <br/>
 
 ## `> WHAT IS THIS`
