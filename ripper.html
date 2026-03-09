@@ -69,7 +69,8 @@ body {
 /* ── TITLEBAR ── */
 .titlebar {
   height: var(--titlebar-height);
-  background: var(--bg-surface);
+  background: rgba(6,11,15,0.9);
+  backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -131,7 +132,8 @@ body {
 .sidebar {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
-  background: var(--bg-surface);
+  background: rgba(6,11,15,0.85);
+  backdrop-filter: blur(20px) saturate(1.2);
   border-right: 1px solid rgba(6,182,212,0.1);
   display: flex;
   flex-direction: column;
@@ -181,14 +183,31 @@ body {
   transition: all 0.2s;
   border-left: 2px solid transparent;
   position: relative;
+  overflow: hidden;
 }
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--purple-bright);
+  box-shadow: 0 0 8px rgba(34,211,238,0.5), 0 0 16px rgba(34,211,238,0.3);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+.nav-item:hover::before { transform: scaleY(1); }
 .nav-item:hover {
   background: rgba(6,182,212,0.08);
-  border-left-color: var(--purple-muted);
+  border-left-color: transparent;
+}
+.nav-item.active::before {
+  transform: scaleY(1);
+  background: var(--purple-vivid);
+  box-shadow: 0 0 10px rgba(103,232,249,0.6), 0 0 20px rgba(34,211,238,0.4);
 }
 .nav-item.active {
   background: rgba(6,182,212,0.12);
-  border-left-color: var(--purple-bright);
+  border-left-color: transparent;
 }
 .nav-item.active .nav-label { color: var(--purple-hot); }
 .nav-item svg {
@@ -263,13 +282,14 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--bg-void);
+  background: transparent;
 }
 
 /* ── SEARCH BAR ── */
 .search-bar-container {
   padding: 12px 20px;
-  background: var(--bg-surface);
+  background: rgba(6,11,15,0.8);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(6,182,212,0.08);
   display: flex;
   align-items: center;
@@ -322,6 +342,95 @@ body {
 .search-type-select:focus { border-color: var(--purple-core); }
 .search-type-select option { background: var(--bg-raised); color: var(--purple-white); }
 
+/* ── SEARCH TYPE TABS ── */
+.search-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-raised);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  border: 1px solid rgba(6,182,212,0.1);
+}
+.search-tab {
+  padding: 6px 14px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--purple-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  position: relative;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.search-tab:hover {
+  color: var(--purple-bright);
+  background: rgba(6,182,212,0.08);
+}
+.search-tab.active {
+  color: var(--purple-hot);
+  background: rgba(6,182,212,0.15);
+  box-shadow: 0 0 12px rgba(6,182,212,0.2), inset 0 1px 0 rgba(103,232,249,0.1);
+}
+.search-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: var(--purple-bright);
+  box-shadow: 0 0 6px rgba(34,211,238,0.5);
+}
+
+/* ── ARTIST CARD ENHANCEMENTS ── */
+.card-download-all {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(6,182,212,0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8) translateY(4px);
+  transition: all 0.25s ease;
+  box-shadow: 0 0 15px rgba(6,182,212,0.4);
+  z-index: 2;
+}
+.card-download-all svg { width: 16px; height: 16px; color: #000; }
+.card:hover .card-download-all { opacity: 1; transform: scale(1) translateY(0); }
+.card-download-all:hover {
+  background: var(--purple-hot);
+  box-shadow: 0 0 20px rgba(103,232,249,0.6);
+  transform: scale(1.1) translateY(0) !important;
+}
+
+.card-type-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: var(--font-display);
+  font-size: 8px;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.7);
+  color: var(--purple-bright);
+  border: 1px solid rgba(6,182,212,0.2);
+  backdrop-filter: blur(8px);
+  z-index: 2;
+  text-transform: uppercase;
+}
+
 /* ── DYNAMIC CONTENT AREA ── */
 .content-area {
   flex: 1;
@@ -331,8 +440,23 @@ body {
 }
 
 /* ── VIEW CONTAINERS ── */
-.view { display: none; padding: 24px; }
-.view.active { display: block; }
+.view {
+  display: none;
+  padding: 24px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.view.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+.view.view-entering {
+  display: block;
+  opacity: 0;
+  transform: translateY(8px);
+}
 
 /* ── WELCOME / HOME VIEW ── */
 .welcome-hero {
@@ -341,18 +465,40 @@ body {
 }
 .welcome-logo {
   font-family: var(--font-display);
-  font-size: 48px;
+  font-size: 64px;
   font-weight: 900;
-  letter-spacing: 8px;
+  letter-spacing: 12px;
   background: linear-gradient(135deg, var(--purple-bright), var(--purple-vivid), var(--purple-hot));
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
-  animation: glowPulse 3s ease-in-out infinite;
+  animation: glowPulse 3s ease-in-out infinite, logoGradientShift 6s ease-in-out infinite;
+  position: relative;
+}
+.welcome-logo::after {
+  content: 'CHARON';
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: 12px;
+  background: inherit;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: blur(12px);
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
 }
 @keyframes glowPulse {
   0%, 100% { filter: drop-shadow(0 0 20px rgba(34,211,238,0.3)); }
-  50% { filter: drop-shadow(0 0 40px rgba(103,232,249,0.5)); }
+  50% { filter: drop-shadow(0 0 50px rgba(103,232,249,0.6)); }
+}
+@keyframes logoGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 .welcome-tagline {
   font-family: var(--font-body);
@@ -378,7 +524,8 @@ body {
   margin: 0 auto;
 }
 .welcome-card {
-  background: var(--bg-raised);
+  background: rgba(10,20,25,0.75);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(6,182,212,0.1);
   border-radius: var(--radius-lg);
   padding: 24px 20px;
@@ -444,7 +591,8 @@ body {
 
 /* ── CARDS (track, album, artist) ── */
 .card {
-  background: var(--bg-raised);
+  background: rgba(10,20,25,0.7);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(6,182,212,0.08);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -454,8 +602,8 @@ body {
 }
 .card:hover {
   border-color: var(--purple-muted);
-  box-shadow: var(--glow-medium);
-  transform: translateY(-3px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 25px rgba(6,182,212,0.3), 0 0 50px rgba(6,182,212,0.15);
+  transform: translateY(-3px) scale(1.02);
 }
 .card-art {
   width: 100%;
@@ -623,12 +771,25 @@ body {
   width: 200px; height: 200px;
   border-radius: var(--radius-lg);
   background: var(--bg-elevated);
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
   box-shadow: var(--glow-medium);
   border: 1px solid rgba(6,182,212,0.15);
+  position: relative;
 }
-.detail-art img { width: 100%; height: 100%; object-fit: cover; }
+.detail-art img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg); }
+.detail-art::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: 10%;
+  width: 80%;
+  height: 30px;
+  background: linear-gradient(to bottom, rgba(6,182,212,0.12), transparent);
+  filter: blur(8px);
+  border-radius: 50%;
+  pointer-events: none;
+}
 .detail-meta { flex: 1; min-width: 0; }
 .detail-type {
   font-family: var(--font-display);
@@ -730,21 +891,66 @@ body {
 .queue-empty svg { width: 48px; height: 48px; margin-bottom: 12px; }
 .queue-empty p { font-size: 14px; }
 
-/* Download progress bar */
+/* Download progress detail text */
+.track-progress-detail {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--purple-bright);
+  margin-top: 2px;
+  opacity: 0.8;
+}
+.track-progress-count {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--purple-muted);
+  margin-top: 1px;
+}
+.progress-pct {
+  position: absolute;
+  right: -32px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--purple-bright);
+  white-space: nowrap;
+}
+
+/* Download progress bar — enhanced */
 .progress-bar-wrap {
   width: 120px;
-  height: 4px;
+  height: 6px;
   background: var(--bg-elevated);
-  border-radius: 2px;
-  overflow: hidden;
+  border-radius: 3px;
+  overflow: visible;
   flex-shrink: 0;
+  position: relative;
 }
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--purple-core), var(--cyan-core));
-  border-radius: 2px;
-  transition: width 0.3s;
-  box-shadow: 0 0 8px rgba(6,182,212,0.3);
+  background: linear-gradient(90deg, var(--purple-core), var(--cyan-bright), var(--purple-core));
+  background-size: 200% 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 12px rgba(6,182,212,0.5), 0 0 4px rgba(34,211,238,0.8);
+  animation: progressShimmer 1.5s linear infinite;
+  position: relative;
+}
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 20px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: progressScanline 1s ease-in-out infinite;
+}
+@keyframes progressShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes progressScanline {
+  0%, 100% { opacity: 0.3; transform: translateX(-10px); }
+  50% { opacity: 1; transform: translateX(0); }
 }
 
 /* Status badges */
@@ -763,7 +969,8 @@ body {
 
 /* ── SETTINGS VIEW ── */
 .settings-group {
-  background: var(--bg-raised);
+  background: rgba(10,20,25,0.75);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(6,182,212,0.08);
   border-radius: var(--radius-lg);
   padding: 20px;
@@ -861,7 +1068,8 @@ body {
 
 /* ── HELP VIEW ── */
 .help-section {
-  background: var(--bg-raised);
+  background: rgba(10,20,25,0.75);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(6,182,212,0.08);
   border-radius: var(--radius-lg);
   padding: 20px;
@@ -908,9 +1116,9 @@ body {
   gap: 8px;
 }
 .toast {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  background: rgba(10,20,25,0.85);
+  backdrop-filter: blur(24px) saturate(1.3);
+  border: 1px solid rgba(6,182,212,0.15);
   border-radius: var(--radius-md);
   padding: 12px 16px;
   min-width: 280px;
@@ -918,23 +1126,37 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: var(--glow-medium);
-  animation: toastIn 0.3s ease-out;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), var(--glow-medium);
+  animation: toastIn 0.35s cubic-bezier(0.16,1,0.3,1);
   transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
 }
-.toast.toast-out { opacity: 0; transform: translateX(100%); }
-@keyframes toastIn { from { opacity: 0; transform: translateX(100%); } }
+.toast.toast-out { opacity: 0; transform: translateX(120%); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(120%) scale(0.8); } to { opacity: 1; transform: translateX(0) scale(1); } }
 .toast-icon { flex-shrink: 0; }
 .toast-icon svg { width: 18px; height: 18px; }
-.toast-icon.success svg { color: var(--green-core); }
-.toast-icon.error svg { color: var(--red-core); }
-.toast-icon.info svg { color: var(--cyan-core); }
+.toast-icon.success svg { color: var(--green-core); animation: toastCheckBounce 0.5s ease; }
+.toast-icon.error svg { color: var(--red-core); animation: toastShake 0.4s ease; }
+.toast-icon.info svg { color: var(--cyan-core); animation: toastSpin 0.6s ease; }
+@keyframes toastCheckBounce { 0% { transform: scale(0); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+@keyframes toastShake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-3px); } 40%, 80% { transform: translateX(3px); } }
+@keyframes toastSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .toast-text {
   flex: 1;
   font-size: 12px;
   color: var(--purple-hot);
   line-height: 1.3;
 }
+.toast-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: var(--cyan-core);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  animation: toastTimer 4s linear forwards;
+}
+@keyframes toastTimer { from { width: 100%; } to { width: 0%; } }
 
 /* ── LOADING SKELETON ── */
 .skeleton {
@@ -988,7 +1210,8 @@ body {
 
 /* ── SERVER VIEW ── */
 .server-status-card {
-  background: var(--bg-raised);
+  background: rgba(10,20,25,0.75);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(6,182,212,0.1);
   border-radius: var(--radius-lg);
   padding: 24px;
@@ -1185,7 +1408,138 @@ body {
   .detail-actions { justify-content: center; }
 }
 
-/* ── DIGITAL RAIN BACKGROUND ── */
+/* ── MICRO-INTERACTIONS ── */
+.nav-item:hover svg { animation: iconBounce 0.4s ease; }
+@keyframes iconBounce { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.25); } 70% { transform: scale(0.95); } }
+.nav-item.active svg { filter: drop-shadow(0 0 4px rgba(103,232,249,0.5)); }
+.btn:active { transform: scale(0.96) !important; transition: transform 0.08s; }
+.btn-primary:active { box-shadow: 0 0 20px rgba(6,182,212,0.5) !important; }
+
+/* Card entrance stagger */
+@keyframes cardFadeIn { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.results-grid .card { animation: cardFadeIn 0.35s ease backwards; }
+.results-grid .card:nth-child(1) { animation-delay: 0.03s; }
+.results-grid .card:nth-child(2) { animation-delay: 0.06s; }
+.results-grid .card:nth-child(3) { animation-delay: 0.09s; }
+.results-grid .card:nth-child(4) { animation-delay: 0.12s; }
+.results-grid .card:nth-child(5) { animation-delay: 0.15s; }
+.results-grid .card:nth-child(6) { animation-delay: 0.18s; }
+.results-grid .card:nth-child(7) { animation-delay: 0.21s; }
+.results-grid .card:nth-child(8) { animation-delay: 0.24s; }
+.results-grid .card:nth-child(n+9) { animation-delay: 0.27s; }
+
+/* Track row stagger */
+@keyframes trackSlideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+.track-list .track-row { animation: trackSlideIn 0.25s ease backwards; }
+.track-list .track-row:nth-child(1) { animation-delay: 0.02s; }
+.track-list .track-row:nth-child(2) { animation-delay: 0.04s; }
+.track-list .track-row:nth-child(3) { animation-delay: 0.06s; }
+.track-list .track-row:nth-child(4) { animation-delay: 0.08s; }
+.track-list .track-row:nth-child(5) { animation-delay: 0.10s; }
+.track-list .track-row:nth-child(n+6) { animation-delay: 0.12s; }
+
+.track-action-btn:hover svg { filter: drop-shadow(0 0 6px rgba(6,182,212,0.6)); }
+
+/* Card hover glow aura */
+.card { box-shadow: inset 0 1px 0 rgba(255,255,255,0.03); }
+.card::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-md);
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(ellipse at center, rgba(6,182,212,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+.card:hover::after { opacity: 1; }
+
+/* ── GLASSMORPHISM DEPTH ── */
+.settings-group,
+.help-section,
+.server-status-card {
+  background: rgba(10,20,25,0.65);
+  backdrop-filter: blur(16px) saturate(1.15);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), inset 0 -1px 0 rgba(0,0,0,0.3);
+}
+.sidebar { box-shadow: inset -1px 0 0 rgba(6,182,212,0.05); }
+
+/* ── WELCOME ENTRANCE ANIMATIONS ── */
+.welcome-card { animation: welcomeCardIn 0.5s ease backwards; }
+.welcome-card:nth-child(1) { animation-delay: 0.2s; }
+.welcome-card:nth-child(2) { animation-delay: 0.35s; }
+.welcome-card:nth-child(3) { animation-delay: 0.5s; }
+@keyframes welcomeCardIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.welcome-tagline { animation: fadeSlideUp 0.6s ease 0.1s backwards; }
+.welcome-subtitle { animation: fadeSlideUp 0.6s ease 0.15s backwards; }
+@keyframes fadeSlideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── QUEUE STATUS INDICATORS ── */
+.queue-status-indicator {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.queue-status-indicator svg { width: 14px; height: 14px; }
+.pulse-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--cyan-core);
+  animation: pulseDot 1.5s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(6,182,212,0.5);
+}
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px rgba(6,182,212,0.4); }
+  50% { transform: scale(1.3); opacity: 0.7; box-shadow: 0 0 14px rgba(6,182,212,0.7); }
+}
+.queued-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--purple-muted);
+}
+.check-anim svg { color: var(--green-core); animation: checkPop 0.4s ease-out; }
+@keyframes checkPop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.3); } 100% { transform: scale(1); opacity: 1; } }
+.queue-status-indicator.error svg { color: var(--red-core); }
+
+/* ── SEARCH ANIMATIONS ── */
+.search-input-wrap.focused svg {
+  color: var(--purple-bright);
+  animation: searchPulse 0.6s ease;
+}
+@keyframes searchPulse {
+  0% { transform: translateY(-50%) scale(1); }
+  30% { transform: translateY(-50%) scale(1.2) rotate(-15deg); }
+  60% { transform: translateY(-50%) scale(0.95); }
+  100% { transform: translateY(-50%) scale(1); }
+}
+.search-typing-indicator {
+  position: absolute;
+  right: 12px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; gap: 3px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.search-typing-indicator.visible { opacity: 1; }
+.search-typing-indicator .dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--cyan-core);
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+.search-typing-indicator .dot:nth-child(2) { animation-delay: 0.15s; }
+.search-typing-indicator .dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.search-input:focus {
+  border-color: var(--purple-core);
+  box-shadow: var(--glow-subtle), inset 0 0 20px rgba(6,182,212,0.03);
+}
+
+/* ── TRON BACKGROUND ── */
 #digitalRain {
   position: fixed;
   top: 0;
@@ -1193,8 +1547,6 @@ body {
   width: 100%;
   height: 100%;
   z-index: 0;
-  filter: blur(2px);
-  opacity: 0.5;
   pointer-events: none;
 }
 </style>
@@ -1291,14 +1643,20 @@ body {
   <div class="main-content">
     <!-- Search Bar -->
     <div class="search-bar-container">
-      <div class="search-input-wrap">
+      <div class="search-input-wrap" id="searchInputWrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" class="search-input" id="searchInput" placeholder="Search Tidal catalog..." onkeydown="if(event.key==='Enter')doSearch()">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search artists, albums, tracks..." onkeydown="if(event.key==='Enter')doSearch()" oninput="onSearchInput()" onfocus="document.getElementById('searchInputWrap').classList.add('focused')" onblur="document.getElementById('searchInputWrap').classList.remove('focused')">
+        <div class="search-typing-indicator" id="searchTypingIndicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       </div>
-      <select class="search-type-select" id="searchType">
-        <option value="track">Tracks</option>
+      <div class="search-tabs" id="searchTabs">
+        <button class="search-tab active" data-type="artist" onclick="setSearchType('artist')">Artists</button>
+        <button class="search-tab" data-type="album" onclick="setSearchType('album')">Albums</button>
+        <button class="search-tab" data-type="track" onclick="setSearchType('track')">Tracks</button>
+      </div>
+      <select class="search-type-select" id="searchType" style="display:none">
+        <option value="artist" selected>Artists</option>
         <option value="album">Albums</option>
-        <option value="artist">Artists</option>
+        <option value="track">Tracks</option>
       </select>
     </div>
 
@@ -1583,6 +1941,15 @@ const ICONS = {
   settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
 };
 
+// Image error fallback — replaces broken images with disc placeholder
+function imgErr(img) {
+  img.style.display = 'none';
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card-art-placeholder';
+  placeholder.innerHTML = ICONS.disc;
+  img.parentElement.appendChild(placeholder);
+}
+
 // ============ VIEW SWITCHING ============
 function switchView(view) {
   if (view !== currentView) {
@@ -1595,10 +1962,20 @@ function switchView(view) {
     item.classList.toggle('active', item.dataset.view === view);
   });
 
-  // Update views
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  // Animate out current views, animate in target
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.classList.remove('view-entering');
+  });
   const viewEl = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
-  if (viewEl) viewEl.classList.add('active');
+  if (viewEl) {
+    viewEl.classList.add('view-entering');
+    void viewEl.offsetWidth;
+    requestAnimationFrame(() => {
+      viewEl.classList.remove('view-entering');
+      viewEl.classList.add('active');
+    });
+  }
 
   // Focus search input when switching to search
   if (view === 'search') {
@@ -1619,9 +1996,13 @@ function goBack() {
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.toggle('active', item.dataset.view === prev);
     });
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => { v.classList.remove('active'); v.classList.remove('view-entering'); });
     const viewEl = document.getElementById('view' + prev.charAt(0).toUpperCase() + prev.slice(1));
-    if (viewEl) viewEl.classList.add('active');
+    if (viewEl) {
+      viewEl.classList.add('view-entering');
+      void viewEl.offsetWidth;
+      requestAnimationFrame(() => { viewEl.classList.remove('view-entering'); viewEl.classList.add('active'); });
+    }
   } else {
     switchView('home');
   }
@@ -1660,6 +2041,31 @@ async function doSearch() {
   }
 }
 
+let currentSearchType = 'artist';
+function setSearchType(type) {
+  currentSearchType = type;
+  document.getElementById('searchType').value = type;
+  document.querySelectorAll('.search-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.type === type);
+  });
+  // Auto-search if there's a query
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) doSearch();
+}
+
+let searchTypingTimer = null;
+function onSearchInput() {
+  const indicator = document.getElementById('searchTypingIndicator');
+  const val = document.getElementById('searchInput').value;
+  if (val.length > 0) {
+    indicator.classList.add('visible');
+    clearTimeout(searchTypingTimer);
+    searchTypingTimer = setTimeout(() => indicator.classList.remove('visible'), 800);
+  } else {
+    indicator.classList.remove('visible');
+  }
+}
+
 function renderResultsGrid(items, type) {
   if (type === 'track') return renderTrackList(items);
 
@@ -1667,21 +2073,44 @@ function renderResultsGrid(items, type) {
   for (const item of items) {
     const artUrl = item.image_url || '';
     const artHtml = artUrl
-      ? `<img src="${escHtml(artUrl)}" loading="lazy" alt="">`
+      ? `<img src="${escHtml(artUrl)}" loading="lazy" alt="" onerror="imgErr(this)">`
       : `<div class="card-art-placeholder">${type === 'artist' ? ICONS.user : ICONS.disc}</div>`;
 
-    html += `<div class="card" onclick="${type === 'artist' ? `loadArtist('${item.id}')` : `loadAlbum('${item.id}')`}">
-      <div class="card-art">${artHtml}<div class="card-overlay">
-        <button class="card-play-btn" onclick="event.stopPropagation();${type === 'album' ? `downloadAlbum('${item.id}','${escAttr(item.title || item.name)}')` : `loadArtist('${item.id}')`}">
-          ${type === 'album' ? ICONS.download : ICONS.play}
-        </button>
-      </div></div>
-      <div class="card-info">
-        <div class="card-title">${escHtml(item.title || item.name)}</div>
-        ${item.artist ? `<div class="card-sub">${escHtml(item.artist)}</div>` : ''}
-        ${item.year ? `<div class="card-sub">${item.year}</div>` : ''}
-      </div>
-    </div>`;
+    const typeBadge = `<div class="card-type-badge">${type}</div>`;
+
+    if (type === 'artist') {
+      html += `<div class="card" onclick="loadArtist('${item.id}')">
+        <div class="card-art">${artHtml}${typeBadge}
+          <div class="card-overlay">
+            <button class="card-play-btn" onclick="event.stopPropagation();loadArtist('${item.id}')">
+              ${ICONS.play}
+            </button>
+          </div>
+          <button class="card-download-all" title="Download entire discography" onclick="event.stopPropagation();downloadArtist('${item.id}','${escAttr(item.name || '')}')">
+            ${ICONS.download}
+          </button>
+        </div>
+        <div class="card-info">
+          <div class="card-title">${escHtml(item.name || '')}</div>
+          <div class="card-sub" style="color:var(--purple-muted);font-size:11px;">View discography</div>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="card" onclick="loadAlbum('${item.id}')">
+        <div class="card-art">${artHtml}${typeBadge}
+          <div class="card-overlay">
+            <button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum('${item.id}','${escAttr(item.title || '')}')">
+              ${ICONS.download}
+            </button>
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-title">${escHtml(item.title || item.name)}</div>
+          ${item.artist ? `<div class="card-sub">${escHtml(item.artist)}</div>` : ''}
+          ${item.year ? `<div class="card-sub">${item.year}</div>` : ''}
+        </div>
+      </div>`;
+    }
   }
   html += '</div>';
   return html;
@@ -1694,7 +2123,7 @@ function renderTrackList(tracks) {
     const dur = formatDuration(t.duration || 0);
     const artUrl = t.image_url || '';
     const artHtml = artUrl
-      ? `<img src="${escHtml(artUrl)}" loading="lazy" alt="">`
+      ? `<img src="${escHtml(artUrl)}" loading="lazy" alt="" onerror="imgErr(this)">`
       : '';
 
     html += `<div class="track-row">
@@ -1735,16 +2164,20 @@ async function loadArtist(artistId) {
     const topTracks = topTracksResult.data?.tracks || [];
 
     const artUrl = artist.image_url || '';
-    const artHtml = artUrl ? `<img src="${escHtml(artUrl)}" alt="">` : '';
+    const artHtml = artUrl ? `<img src="${escHtml(artUrl)}" alt="" onerror="imgErr(this)">` : '';
 
     let html = `<div class="detail-hero">
       <div class="detail-art">${artHtml}</div>
       <div class="detail-meta">
         <div class="detail-type">ARTIST</div>
         <div class="detail-title">${escHtml(artist.name || 'Unknown')}</div>
+        <div class="detail-stats">
+          <span class="detail-stat"><span>${albums.length}</span> albums</span>
+          <span class="detail-stat"><span>${topTracks.length}</span> top tracks</span>
+        </div>
         <div class="detail-actions">
           <button class="btn btn-primary" onclick="downloadArtist('${artistId}','${escAttr(artist.name || '')}')">
-            ${ICONS.download} Download All
+            ${ICONS.download} Download All (${albums.length} Albums)
           </button>
           <button class="btn btn-ghost" onclick="goBack()">
             ${ICONS.back} Back
@@ -1764,7 +2197,7 @@ async function loadArtist(artistId) {
       for (const album of albums) {
         const albumArt = album.image_url || '';
         html += `<div class="card" onclick="loadAlbum('${album.id}')">
-          <div class="card-art">${albumArt ? `<img src="${escHtml(albumArt)}" loading="lazy" alt="">` : `<div class="card-art-placeholder">${ICONS.disc}</div>`}
+          <div class="card-art">${albumArt ? `<img src="${escHtml(albumArt)}" loading="lazy" alt="" onerror="imgErr(this)">` : `<div class="card-art-placeholder">${ICONS.disc}</div>`}
             <div class="card-overlay">
               <button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum('${album.id}','${escAttr(album.title || '')}')">
                 ${ICONS.download}
@@ -1797,7 +2230,7 @@ async function loadAlbum(albumId) {
     const tracks = album.tracks || [];
 
     const artUrl = album.image_url || '';
-    const artHtml = artUrl ? `<img src="${escHtml(artUrl)}" alt="">` : '';
+    const artHtml = artUrl ? `<img src="${escHtml(artUrl)}" alt="" onerror="imgErr(this)">` : '';
     const totalDur = tracks.reduce((sum, t) => sum + (t.duration || 0), 0);
 
     let html = `<div class="detail-hero">
@@ -1939,13 +2372,36 @@ function renderQueueView() {
   html += '<div class="track-list">';
   for (const item of downloadQueue) {
     const progress = item.progress || 0;
+    const statusIndicator = item.status === 'downloading'
+      ? '<div class="queue-status-indicator downloading"><div class="pulse-dot"></div></div>'
+      : item.status === 'completed'
+        ? '<div class="queue-status-indicator completed"><div class="check-anim">' + ICONS.check + '</div></div>'
+        : item.status === 'error'
+          ? '<div class="queue-status-indicator error">' + ICONS.alert + '</div>'
+          : '<div class="queue-status-indicator queued"><div class="queued-dot"></div></div>';
+
+    // Build progress detail string
+    let progressDetail = '';
+    if (item.status === 'downloading') {
+      if (item.currentTrack) {
+        progressDetail = `<div class="track-progress-detail">${escHtml(item.currentTrack)}</div>`;
+      }
+      if (item.totalTracks > 0) {
+        progressDetail += `<div class="track-progress-count">${item.tracksDone || 0} / ${item.totalTracks} tracks</div>`;
+      } else if (item.progressMessage) {
+        progressDetail += `<div class="track-progress-count">${escHtml(item.progressMessage)}</div>`;
+      }
+    }
+
     html += `<div class="track-row">
+      ${statusIndicator}
       <div class="track-info-col">
         <div class="track-name">${escHtml(item.title || 'Unknown')}</div>
         <div class="track-artist-name">${escHtml(item.artist || '')} ${item.type ? '· ' + item.type : ''}</div>
+        ${progressDetail}
       </div>
       <span class="status-badge ${item.status}">${item.status.toUpperCase()}</span>
-      ${item.status === 'downloading' ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progress}%"></div></div>` : ''}
+      ${item.status === 'downloading' ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progress}%"></div><span class="progress-pct">${progress}%</span></div>` : ''}
       <div class="track-actions" style="opacity:1">
         ${item.status === 'queued' ? `<button class="track-action-btn" title="Remove" onclick="removeFromQueue('${item.id}')">${ICONS.x}</button>` : ''}
       </div>
@@ -2249,11 +2705,11 @@ function renderInstallWizard(container) {
         <div class="install-fields">
           <div class="install-field">
             <label>Install Location</label>
-            <input type="text" id="installPath" value="" placeholder="e.g. C:\\Navidrome">
+            <input type="text" id="installPath" value="" placeholder="~/Navidrome">
           </div>
           <div class="install-field">
             <label>Music Library Folder</label>
-            <input type="text" id="installMusicPath" value="" placeholder="e.g. D:\\Music">
+            <input type="text" id="installMusicPath" value="" placeholder="~/Music/CHARON">
           </div>
         </div>
         <button class="btn btn-primary" onclick="installNavidrome()" id="installBtn">
@@ -2471,7 +2927,7 @@ function showToast(type, message) {
   toast.className = 'toast';
 
   const iconSvg = type === 'success' ? ICONS.check : type === 'error' ? ICONS.alert : ICONS.info;
-  toast.innerHTML = `<div class="toast-icon ${type}">${iconSvg}</div><div class="toast-text">${escHtml(message)}</div>`;
+  toast.innerHTML = `<div class="toast-icon ${type}">${iconSvg}</div><div class="toast-text">${escHtml(message)}</div><div class="toast-progress"></div>`;
   container.appendChild(toast);
 
   setTimeout(() => {
@@ -2557,6 +3013,10 @@ window.charon.onDownloadProgress((data) => {
   const item = downloadQueue.find(q => q.id === data.item_id);
   if (item) {
     item.progress = data.progress || 0;
+    item.currentTrack = data.current_track || '';
+    item.tracksDone = data.tracks_done || 0;
+    item.totalTracks = data.total_tracks || 0;
+    item.progressMessage = data.message || '';
     if (currentView === 'queue') renderQueueView();
   }
 });
@@ -2601,123 +3061,376 @@ async function init() {
   }
 }
 
-// ============ DIGITAL RAIN BACKGROUND ============
-(function initDigitalRain() {
+// ============ TRON BACKGROUND ============
+(function initTronBackground() {
   const canvas = document.getElementById('digitalRain');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  // Character set: katakana, numbers, symbols
-  const katakana = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-  const digits = '0123456789';
-  const symbols = ':<>{}[]|/\\=+*^~!?@#$%&';
-  const chars = katakana + digits + symbols;
+  let w, h, mouseX = 0.5, mouseY = 0.5;
+  let time = 0;
 
-  // Cyan palette & purple accent
-  const cyanColors = ['#06B6D4', '#22D3EE', '#67E8F9'];
-  const purpleColors = ['#9D4EDD', '#B76EFF'];
+  // ── Color palette ──
+  const CYAN = { r: 6, g: 182, b: 212 };
+  const CYAN_BRIGHT = { r: 34, g: 211, b: 238 };
+  const CYAN_HOT = { r: 103, g: 232, b: 249 };
 
-  const fontSize = 11;
-  const columnWidth = 19; // pixels between columns
+  function rgba(c, a) { return `rgba(${c.r},${c.g},${c.b},${a})`; }
 
-  let columns = [];
-  let w, h, numCols;
+  // ── Perspective grid ──
+  const GRID = {
+    horizonY: 0.35,     // horizon at 35% from top
+    vanishX: 0.5,       // center vanishing point
+    hLines: 28,         // horizontal grid lines
+    vLines: 40,         // vertical grid lines
+    scrollSpeed: 0.4,   // grid scroll speed
+    offset: 0           // animated offset
+  };
+
+  // ── Particles (floating embers / data sparks) ──
+  let particles = [];
+  const PARTICLE_COUNT = 60;
+
+  function spawnParticle(forceY) {
+    return {
+      x: Math.random() * w,
+      y: forceY !== undefined ? forceY : Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -0.2 - Math.random() * 0.5,
+      size: 1 + Math.random() * 2,
+      life: 1.0,
+      decay: 0.001 + Math.random() * 0.003,
+      pulse: Math.random() * Math.PI * 2,
+      type: Math.random() < 0.15 ? 'bright' : 'normal'
+    };
+  }
+
+  // ── Energy streams (horizontal flowing lines — River Styx) ──
+  let streams = [];
+  const STREAM_COUNT = 5;
+
+  function spawnStream() {
+    const y = h * (0.5 + Math.random() * 0.45);
+    return {
+      y,
+      baseY: y,
+      speed: 0.5 + Math.random() * 1.5,
+      width: 80 + Math.random() * 200,
+      x: -200,
+      alpha: 0.03 + Math.random() * 0.06,
+      thickness: 1 + Math.random() * 2,
+      wave: Math.random() * Math.PI * 2,
+      waveAmp: 2 + Math.random() * 6
+    };
+  }
+
+  // ── Circuit traces (lines that light up and fade) ──
+  let circuits = [];
+  const CIRCUIT_COUNT = 8;
+
+  function spawnCircuit() {
+    const startX = Math.random() * w;
+    const startY = h * (0.4 + Math.random() * 0.55);
+    const segments = [];
+    let cx = startX, cy = startY;
+    const segCount = 3 + Math.floor(Math.random() * 5);
+    for (let i = 0; i < segCount; i++) {
+      const horizontal = Math.random() < 0.6;
+      const len = 30 + Math.random() * 100;
+      const ex = horizontal ? cx + (Math.random() < 0.5 ? len : -len) : cx;
+      const ey = horizontal ? cy : cy + (Math.random() < 0.3 ? -len * 0.5 : len * 0.5);
+      segments.push({ x1: cx, y1: cy, x2: ex, y2: ey });
+      cx = ex; cy = ey;
+    }
+    return {
+      segments,
+      progress: 0,
+      speed: 0.003 + Math.random() * 0.005,
+      alpha: 0,
+      maxAlpha: 0.04 + Math.random() * 0.08,
+      state: 'growing', // growing -> lit -> fading -> dead
+      litTimer: 0
+    };
+  }
+
+  // ── Horizontal scanlines ──
+  function drawScanlines() {
+    ctx.fillStyle = rgba(CYAN, 0.008);
+    for (let y = 0; y < h; y += 4) {
+      ctx.fillRect(0, y, w, 1);
+    }
+    // Moving scanline
+    const scanY = (time * 30) % (h + 100) - 50;
+    const grad = ctx.createLinearGradient(0, scanY - 20, 0, scanY + 20);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(0.5, rgba(CYAN_BRIGHT, 0.04));
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, scanY - 20, w, 40);
+  }
+
+  // ── Draw perspective grid floor ──
+  function drawGrid() {
+    const horizonY = h * GRID.horizonY;
+    const vanishX = w * GRID.vanishX + (mouseX - 0.5) * 40;
+    const floorTop = horizonY;
+    const floorBottom = h;
+    const floorHeight = floorBottom - floorTop;
+
+    // Horizontal lines with perspective spacing
+    GRID.offset = (GRID.offset + GRID.scrollSpeed) % 100;
+    ctx.strokeStyle = rgba(CYAN, 0.06);
+    ctx.lineWidth = 0.5;
+
+    for (let i = 0; i < GRID.hLines; i++) {
+      const t = (i + GRID.offset / 100) / GRID.hLines;
+      const perspT = t * t; // quadratic for perspective compression
+      const y = floorTop + perspT * floorHeight;
+      if (y < floorTop || y > floorBottom) continue;
+
+      const dist = 1 - perspT; // distance from camera
+      const alpha = 0.03 + dist * 0.04;
+      ctx.strokeStyle = rgba(CYAN, alpha);
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+
+    // Vertical lines converging to vanishing point
+    for (let i = -GRID.vLines / 2; i <= GRID.vLines / 2; i++) {
+      const spread = (i / (GRID.vLines / 2));
+      const bottomX = vanishX + spread * w * 0.9;
+      const alpha = 0.02 + (1 - Math.abs(spread)) * 0.04;
+      ctx.strokeStyle = rgba(CYAN, alpha);
+      ctx.beginPath();
+      ctx.moveTo(vanishX, floorTop);
+      ctx.lineTo(bottomX, floorBottom);
+      ctx.stroke();
+    }
+
+    // Horizon glow line
+    const horizGrad = ctx.createLinearGradient(0, horizonY - 1, 0, horizonY + 3);
+    horizGrad.addColorStop(0, 'transparent');
+    horizGrad.addColorStop(0.5, rgba(CYAN_BRIGHT, 0.12));
+    horizGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = horizGrad;
+    ctx.fillRect(0, horizonY - 1, w, 4);
+
+    // Horizon bloom
+    const bloomGrad = ctx.createRadialGradient(vanishX, horizonY, 0, vanishX, horizonY, w * 0.4);
+    bloomGrad.addColorStop(0, rgba(CYAN_BRIGHT, 0.06));
+    bloomGrad.addColorStop(0.5, rgba(CYAN, 0.02));
+    bloomGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = bloomGrad;
+    ctx.fillRect(0, horizonY - 60, w, 120);
+  }
+
+  // ── Draw particles ──
+  function drawParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= p.decay;
+      p.pulse += 0.05;
+
+      if (p.life <= 0 || p.y < -10 || p.x < -10 || p.x > w + 10) {
+        particles[i] = spawnParticle(h + 10);
+        continue;
+      }
+
+      const flicker = 0.6 + 0.4 * Math.sin(p.pulse);
+      const alpha = p.life * flicker;
+      const color = p.type === 'bright' ? CYAN_HOT : CYAN_BRIGHT;
+
+      // Glow
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(color, alpha * 0.06);
+      ctx.fill();
+
+      // Core
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(color, alpha * 0.25);
+      ctx.fill();
+    }
+  }
+
+  // ── Draw energy streams ──
+  function drawStreams() {
+    for (let i = 0; i < streams.length; i++) {
+      const s = streams[i];
+      s.x += s.speed;
+      s.wave += 0.02;
+
+      if (s.x > w + 300) {
+        streams[i] = spawnStream();
+        streams[i].x = -200;
+        continue;
+      }
+
+      const waveY = s.baseY + Math.sin(s.wave) * s.waveAmp;
+
+      // Stream glow
+      const grad = ctx.createLinearGradient(s.x - s.width / 2, 0, s.x + s.width / 2, 0);
+      grad.addColorStop(0, 'transparent');
+      grad.addColorStop(0.3, rgba(CYAN_BRIGHT, s.alpha));
+      grad.addColorStop(0.5, rgba(CYAN_HOT, s.alpha * 1.5));
+      grad.addColorStop(0.7, rgba(CYAN_BRIGHT, s.alpha));
+      grad.addColorStop(1, 'transparent');
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = s.thickness;
+      ctx.beginPath();
+      ctx.moveTo(s.x - s.width / 2, waveY);
+
+      // Wavy line
+      for (let t = 0; t <= 1; t += 0.05) {
+        const px = s.x - s.width / 2 + t * s.width;
+        const py = waveY + Math.sin(s.wave + t * 4) * s.waveAmp * 0.3;
+        ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Wider glow under stream
+      ctx.strokeStyle = rgba(CYAN, s.alpha * 0.3);
+      ctx.lineWidth = s.thickness * 6;
+      ctx.beginPath();
+      ctx.moveTo(s.x - s.width / 2, waveY);
+      ctx.lineTo(s.x + s.width / 2, waveY);
+      ctx.stroke();
+    }
+  }
+
+  // ── Draw circuit traces ──
+  function drawCircuits() {
+    for (let i = circuits.length - 1; i >= 0; i--) {
+      const c = circuits[i];
+
+      switch (c.state) {
+        case 'growing':
+          c.progress += c.speed;
+          c.alpha = c.maxAlpha * Math.min(c.progress * 3, 1);
+          if (c.progress >= 1) { c.state = 'lit'; c.litTimer = 60 + Math.random() * 120; }
+          break;
+        case 'lit':
+          c.litTimer--;
+          c.alpha = c.maxAlpha * (0.8 + 0.2 * Math.sin(time * 3));
+          if (c.litTimer <= 0) c.state = 'fading';
+          break;
+        case 'fading':
+          c.alpha -= 0.002;
+          if (c.alpha <= 0) { circuits[i] = spawnCircuit(); continue; }
+          break;
+      }
+
+      const totalSegs = c.segments.length;
+      const segsToShow = c.state === 'growing' ? Math.ceil(c.progress * totalSegs) : totalSegs;
+
+      for (let j = 0; j < segsToShow && j < c.segments.length; j++) {
+        const seg = c.segments[j];
+
+        // Line
+        ctx.strokeStyle = rgba(CYAN_BRIGHT, c.alpha);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(seg.x1, seg.y1);
+        ctx.lineTo(seg.x2, seg.y2);
+        ctx.stroke();
+
+        // Glow
+        ctx.strokeStyle = rgba(CYAN, c.alpha * 0.4);
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(seg.x1, seg.y1);
+        ctx.lineTo(seg.x2, seg.y2);
+        ctx.stroke();
+
+        // Node at junction
+        ctx.beginPath();
+        ctx.arc(seg.x1, seg.y1, 2, 0, Math.PI * 2);
+        ctx.fillStyle = rgba(CYAN_HOT, c.alpha * 1.2);
+        ctx.fill();
+      }
+
+      // Leading node glow during growth
+      if (c.state === 'growing' && segsToShow > 0) {
+        const lastSeg = c.segments[segsToShow - 1];
+        const t = (c.progress * totalSegs) % 1;
+        const leadX = lastSeg.x1 + (lastSeg.x2 - lastSeg.x1) * t;
+        const leadY = lastSeg.y1 + (lastSeg.y2 - lastSeg.y1) * t;
+        ctx.beginPath();
+        ctx.arc(leadX, leadY, 4, 0, Math.PI * 2);
+        ctx.fillStyle = rgba(CYAN_HOT, c.alpha * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(leadX, leadY, 10, 0, Math.PI * 2);
+        ctx.fillStyle = rgba(CYAN_BRIGHT, c.alpha * 0.3);
+        ctx.fill();
+      }
+    }
+  }
+
+  // ── Vignette ──
+  function drawVignette() {
+    const grad = ctx.createRadialGradient(w / 2, h / 2, w * 0.25, w / 2, h / 2, w * 0.75);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(1, 'rgba(0,0,0,0.4)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  // ── Main loop ──
+  function draw() {
+    time += 0.016;
+    ctx.clearRect(0, 0, w, h);
+
+    drawGrid();
+    drawStreams();
+    drawCircuits();
+    drawParticles();
+    drawScanlines();
+    drawVignette();
+
+    requestAnimationFrame(draw);
+  }
 
   function resize() {
     w = canvas.width = window.innerWidth;
     h = canvas.height = window.innerHeight;
-    numCols = Math.floor(w / columnWidth);
-
-    // Preserve existing columns, add new ones if needed
-    while (columns.length < numCols) {
-      columns.push({
-        x: columns.length * columnWidth,
-        y: Math.random() * h,            // start at random vertical pos
-        speed: 0.3 + Math.random() * 1.2, // pixels per frame
-        chars: [],                         // trail of chars
-        trailLen: 8 + Math.floor(Math.random() * 14), // how many chars in trail
-        nextChar: 0                        // frame counter for char spawn rate
-      });
-    }
-    // Trim excess columns
-    columns.length = numCols;
-    // Update x positions
-    for (let i = 0; i < columns.length; i++) {
-      columns[i].x = i * columnWidth;
-    }
   }
 
-  function getColor() {
-    // ~12% chance of purple
-    if (Math.random() < 0.12) {
-      return purpleColors[Math.floor(Math.random() * purpleColors.length)];
+  function init() {
+    resize();
+    // Init particles
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(spawnParticle());
+    // Init streams
+    streams = [];
+    for (let i = 0; i < STREAM_COUNT; i++) {
+      const s = spawnStream();
+      s.x = Math.random() * w; // stagger initial positions
+      streams.push(s);
     }
-    return cyanColors[Math.floor(Math.random() * cyanColors.length)];
-  }
-
-  function randomChar() {
-    return chars[Math.floor(Math.random() * chars.length)];
-  }
-
-  function draw() {
-    // Fade the canvas with a semi-transparent black overlay
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
-    ctx.fillRect(0, 0, w, h);
-
-    ctx.font = fontSize + 'px "JetBrains Mono", monospace';
-    ctx.textBaseline = 'top';
-
-    for (let i = 0; i < columns.length; i++) {
-      const col = columns[i];
-
-      // Advance the column position
-      col.y += col.speed;
-
-      // Spawn a new character at the head position every few frames
-      col.nextChar += col.speed;
-      if (col.nextChar >= fontSize) {
-        col.nextChar = 0;
-        col.chars.push({
-          ch: randomChar(),
-          y: col.y,
-          color: getColor(),
-          alpha: 0.04 + Math.random() * 0.05 // 0.04 - 0.09
-        });
-
-        // Trim trail
-        if (col.chars.length > col.trailLen) {
-          col.chars.shift();
-        }
-      }
-
-      // Draw each character in the trail
-      for (let j = 0; j < col.chars.length; j++) {
-        const c = col.chars[j];
-        // Older chars (lower index) are dimmer
-        const ageFactor = (j + 1) / col.chars.length; // 0..1
-        const alpha = c.alpha * ageFactor;
-
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = c.color;
-        ctx.fillText(c.ch, col.x, c.y - (col.chars.length - j) * fontSize);
-      }
-
-      // Reset column when it goes past the bottom
-      if (col.y > h + col.trailLen * fontSize) {
-        col.y = -fontSize;
-        col.chars = [];
-        col.speed = 0.3 + Math.random() * 1.2;
-        col.trailLen = 8 + Math.floor(Math.random() * 14);
-      }
-    }
-
-    ctx.globalAlpha = 1.0;
-    requestAnimationFrame(draw);
+    // Init circuits
+    circuits = [];
+    for (let i = 0; i < CIRCUIT_COUNT; i++) circuits.push(spawnCircuit());
+    draw();
   }
 
   window.addEventListener('resize', resize);
-  resize();
-  draw();
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX / window.innerWidth;
+    mouseY = e.clientY / window.innerHeight;
+    // Subtle parallax
+    const mx = (mouseX - 0.5) * 4;
+    const my = (mouseY - 0.5) * 4;
+    canvas.style.transform = `translate(${mx}px, ${my}px)`;
+  });
+
+  init();
 })();
 
 init();

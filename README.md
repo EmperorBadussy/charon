@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/CHARON-v1.0.0-06B6D4?style=for-the-badge&labelColor=000000" alt="Version"/>
+  <img src="https://img.shields.io/badge/CHARON-v1.1.0-06B6D4?style=for-the-badge&labelColor=000000" alt="Version"/>
   <img src="https://img.shields.io/badge/Electron-33-0E7490?style=for-the-badge&logo=electron&logoColor=67E8F9&labelColor=000000" alt="Electron"/>
   <img src="https://img.shields.io/badge/Python-3.10+-22D3EE?style=for-the-badge&logo=python&logoColor=67E8F9&labelColor=000000" alt="Python"/>
   <img src="https://img.shields.io/badge/Platform-Windows-A5F3FC?style=for-the-badge&logo=windows&logoColor=67E8F9&labelColor=000000" alt="Platform"/>
@@ -38,7 +38,7 @@ CHARON is a desktop application that rips music from Tidal and deposits it direc
 
 It's the companion app to [**AETHER**](https://github.com/EmperorBadussy/aether) — AETHER plays, CHARON harvests. Two halves of the same system.
 
-Built on Electron with a Python bridge to [tiddl](https://github.com/oskvr37/tiddl) and [tidalapi](https://github.com/tamland/python-tidal). Every pixel matches the Styx Cyan design language — OLED black backgrounds with a monochromatic cyan/teal palette. A blurred digital rain canvas drifts behind frosted-glass panels.
+Built on Electron with a Python bridge to [tiddl](https://github.com/oskvr37/tiddl) and [tidalapi](https://github.com/tamland/python-tidal). Every pixel matches the Styx Cyan design language — OLED black backgrounds with a monochromatic cyan/teal palette. A multi-layered Tron-style canvas (perspective grid, energy streams, circuit traces, floating particles) drifts behind frosted-glass panels.
 
 <br/>
 
@@ -47,16 +47,18 @@ Built on Electron with a Python bridge to [tiddl](https://github.com/oskvr37/tid
 ```
  SEARCH & BROWSE
   ├─ Full Tidal catalog search (artists, albums, tracks)
-  ├─ Artist pages (discography, top tracks, bio)
+  ├─ Tabbed search type switcher (Artists / Albums / Tracks)
+  ├─ Artist pages (discography, top tracks, download all)
   ├─ Album pages (track listing, metadata, artwork)
-  ├─ Track detail views
+  ├─ One-click download entire artist discography
   └─ Real-time search with result categorization
 
  DOWNLOAD ENGINE
   ├─ Quality tiers: Master (MQA/HiRes), Lossless (FLAC CD), High (AAC 320), Normal (AAC 96)
-  ├─ Download queue with progress tracking
+  ├─ Download queue with per-track progress tracking
   ├─ Batch operations (queue entire albums/discographies)
-  ├─ Automatic metadata & artwork embedding
+  ├─ Automatic metadata, lyrics & artwork embedding
+  ├─ Downloads continue in background when window is closed
   └─ Downloads directly to your Navidrome music directory
 
  NAVIDROME INTEGRATION
@@ -76,10 +78,11 @@ Built on Electron with a Python bridge to [tiddl](https://github.com/oskvr37/tid
  INTERFACE
   ├─ OLED-optimized (true #000000 black)
   ├─ Monochromatic cyan palette (Styx Cyan — 12 shades)
-  ├─ Blurred digital rain canvas background
+  ├─ Tron-style canvas background (perspective grid, energy streams, circuit traces)
   ├─ Glassmorphism panels with frosted-glass layering
   ├─ Frameless window with custom titlebar
-  ├─ System tray integration
+  ├─ System tray (minimize-to-tray, background downloads)
+  ├─ Animated micro-interactions & card entrance stagger
   └─ Responsive layout
 ```
 
@@ -125,7 +128,7 @@ Built on Electron with a Python bridge to [tiddl](https://github.com/oskvr37/tid
 | Download | tiddl CLI (MQA, FLAC, AAC support) |
 | Server | Navidrome (Subsonic API) |
 | Build | electron-builder (NSIS installer) |
-| Design | Canvas 2D digital rain + glassmorphism |
+| Design | Canvas 2D Tron background + glassmorphism |
 
 <br/>
 
@@ -190,9 +193,9 @@ CHARON follows the **Styx Cyan** design language — AETHER's twin, shifted from
 --cyan-hot:     #A5F3FC
 --cyan-white:   #ECFEFF
 
-/* Digital rain canvas — blurred behind frosted-glass panels */
-/* Mostly cyan characters with ~12% purple splashes */
-/* filter: blur(2px), opacity: 0.5 */
+/* Tron canvas — perspective grid, energy streams, circuit traces */
+/* Floating particles, scanlines, vignette */
+/* All panels use glassmorphism (backdrop-filter: blur) */
 ```
 
 Fonts: **Orbitron** (display) / **Rajdhani** (body) / **JetBrains Mono** (technical)
@@ -278,10 +281,12 @@ CHARON is one half of a two-app ecosystem:
 - [x] Quality selection (Master/Lossless/High/Normal)
 - [x] Navidrome server management (start/stop/restart/install)
 - [x] Auto-scan Navidrome after downloads
-- [x] Styx Cyan design system + digital rain
+- [x] Styx Cyan design system + Tron background
+- [x] Batch artist discography download
+- [x] Per-track download progress
+- [x] Background downloads (minimize to tray)
 - [ ] macOS & Linux builds
 - [ ] Playlist import (Tidal → local)
-- [ ] Batch artist discography download
 - [ ] Download history & duplicate detection
 - [ ] Scheduled downloads
 - [ ] Auto-updater
@@ -301,5 +306,5 @@ MIT License. Do whatever you want. Credit appreciated but not required.
 </p>
 
 <p align="center">
-  <code>[ CHARON v1.0.0 ]</code>
+  <code>[ CHARON v1.1.0 ]</code>
 </p>

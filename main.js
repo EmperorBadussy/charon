@@ -19,6 +19,7 @@
 
 const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell, screen, session } = require('electron');
 const path = require('path');
+const os = require('os');
 const { spawn } = require('child_process');
 const crypto = require('crypto');
 const fs = require('fs');
@@ -150,7 +151,22 @@ function createTray() {
     const contextMenu = Menu.buildFromTemplate([
       { label: 'Show CHARON', click: () => { if (mainWindow) { mainWindow.show(); mainWindow.focus(); } } },
       { type: 'separator' },
-      { label: 'Quit', click: () => { app.isQuitting = true; app.quit(); } }
+      { label: 'Quit', click: () => {
+        if (activeDownloads > 0) {
+          const { dialog } = require('electron');
+          dialog.showMessageBox({
+            type: 'question',
+            buttons: ['Keep Running', 'Quit Anyway'],
+            defaultId: 0,
+            title: 'Downloads Active',
+            message: `${activeDownloads} download(s) still running. Quit anyway?`
+          }).then(result => {
+            if (result.response === 1) { app.isQuitting = true; app.quit(); }
+          });
+        } else {
+          app.isQuitting = true; app.quit();
+        }
+      }}
     ]);
     tray.setToolTip('CHARON — Tidal Ripper');
     tray.setContextMenu(contextMenu);
@@ -283,13 +299,14 @@ function processQueue() {
     saveQueue();
 
     // Pass download dir from settings
-    const downloadDir = globalSettings.downloadDir || path.join(app.getPath('music'), 'CHARON');
+    const downloadDir = globalSettings.downloadDir || path.join(os.homedir(), 'Music', 'CHARON');
 
     sendBridgeCommand('download', {
       url: item.tidalUrl,
       quality: item.quality || globalSettings.quality || 'master',
       item_id: item.id,
-      download_dir: downloadDir
+      download_dir: downloadDir,
+      threads: parseInt(globalSettings.downloadThreads) || 4
     }, 600000) // 10 min timeout
       .then(result => {
         item.status = 'completed';
@@ -357,6 +374,7 @@ let navidromeProcess = null;
 function findNavidromeBinary() {
   const candidates = [
     globalSettings.navidromePath,
+    path.join(os.homedir(), 'Navidrome', 'navidrome.exe'),
     path.join(process.env.PROGRAMFILES || 'C:\\Program Files', 'Navidrome', 'navidrome.exe'),
     path.join(process.env['PROGRAMFILES(X86)'] || 'C:\\Program Files (x86)', 'Navidrome', 'navidrome.exe'),
     path.join(process.env.LOCALAPPDATA || '', 'Navidrome', 'navidrome.exe'),
@@ -653,7 +671,7 @@ ipcMain.handle('navidrome-server-install', async (event, installPath, musicPath)
     );
     if (!asset) throw new Error('No Windows AMD64 build found in latest release');
 
-    installPath = installPath || path.join(app.getPath('userData'), 'navidrome');
+    installPath = installPath || path.join(os.homedir(), 'Navidrome');
     fs.mkdirSync(installPath, { recursive: true });
 
     // Download
@@ -672,7 +690,7 @@ ipcMain.handle('navidrome-server-install', async (event, installPath, musicPath)
     try { fs.unlinkSync(zipPath); } catch (e) {}
 
     // Create directories
-    musicPath = musicPath || path.join(app.getPath('music'), 'CHARON');
+    musicPath = musicPath || path.join(os.homedir(), 'Music', 'CHARON');
     fs.mkdirSync(musicPath, { recursive: true });
     const dataPath = path.join(installPath, 'data');
     fs.mkdirSync(dataPath, { recursive: true });
@@ -778,7 +796,13 @@ app.on('window-all-closed', () => {
   // Don't quit on window close (tray keeps running)
 });
 
-app.on('before-quit', () => {
+app.on('before-quit', (e) => {
+  // If downloads are active, warn and minimize to tray instead
+  if (activeDownloads > 0 && !app.isQuitting) {
+    e.preventDefault();
+    if (mainWindow) mainWindow.hide();
+    return;
+  }
   app.isQuitting = true;
   saveQueue();
   if (pythonBridge && !pythonBridge.killed) {

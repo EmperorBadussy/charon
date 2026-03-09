@@ -333,16 +333,34 @@ def handle_download(params, request_id):
     if not url:
         return {"status": "error", "error": "No URL provided"}
 
-    # Build tiddl command: tiddl url <URL> download -q <quality> -p <path>
+    # Build tiddl command: tiddl url <URL> download -q <quality> -p <path> -l
     # tiddl quality: master=MQA/HiRes, high=FLAC CD, normal=AAC 320, low=AAC 96
     quality_map = {"MAX": "master", "MASTER": "master", "LOSSLESS": "high", "HIGH": "normal", "NORMAL": "low", "LOW": "low"}
     q = quality_map.get(quality.upper(), quality.lower())
-    cmd = ["tiddl", "url", url, "download", "-q", q]
 
     # Download directory
-    download_dir = params.get("download_dir", os.path.join(os.path.expanduser("~"), "Music", "CHARON"))
-    if download_dir:
-        cmd.extend(["-p", download_dir])
+    default_dir = os.path.join(os.path.expanduser("~"), "Music", "CHARON")
+    download_dir = params.get("download_dir", default_dir)
+
+    cmd = ["tiddl", "url", url, "download", "-q", q, "-p", download_dir, "-l"]
+
+    # Thread count for concurrent downloads
+    threads = params.get("threads")
+    if threads:
+        cmd.extend(["-t", str(threads)])
+
+    # If downloading an album, try to get track count for progress calculation
+    total_tracks = 0
+    if "/album/" in url:
+        try:
+            session = get_session()
+            album_id = url.rstrip("/").split("/")[-1]
+            album = session.album(int(album_id))
+            total_tracks = album.num_tracks or 0
+        except Exception:
+            pass
+    elif "/artist/" in url:
+        total_tracks = 0  # Unknown for artist, we'll estimate
 
     try:
         process = subprocess.Popen(
@@ -351,11 +369,13 @@ def handle_download(params, request_id):
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
-            env={**os.environ, "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8"}
+            env={**os.environ, "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8",
+                 "NO_COLOR": "1", "TERM": "dumb"}
         )
 
-        last_progress = 0
+        tracks_done = 0
         output_lines = []
+        current_track = ""
 
         for line in process.stdout:
             line = line.strip()
@@ -363,44 +383,76 @@ def handle_download(params, request_id):
                 continue
             output_lines.append(line)
 
-            # Parse progress from tiddl output
-            progress_match = re.search(r"(\d+)%", line)
-            if progress_match:
-                progress = int(progress_match.group(1))
-                if progress != last_progress:
-                    last_progress = progress
-                    # Send progress event
-                    progress_msg = json.dumps({
-                        "status": "progress",
-                        "request_id": request_id,
-                        "item_id": item_id,
-                        "progress": progress,
-                        "message": line
-                    })
-                    sys.stdout.write(progress_msg + "\n")
-                    sys.stdout.flush()
+            # tiddl v2.8 output: track completion = line with 'Track Name' and Mbps/MB
+            # e.g. "'Green Valley' • 56.89 Mbps • 22.43 MB"
+            # Album header: "Album 'Conditions of My Parole'"
+            track_match = re.search(r"'(.+?)'\s.*?(\d+\.?\d*)\s*MB", line)
+            album_match = re.search(r"Album\s+'(.+?)'", line)
+
+            if album_match:
+                # Album header detected — send start event
+                album_name = album_match.group(1)
+                progress_msg = json.dumps({
+                    "status": "progress",
+                    "request_id": request_id,
+                    "item_id": item_id,
+                    "progress": 0,
+                    "tracks_done": 0,
+                    "total_tracks": total_tracks,
+                    "message": f"Downloading album: {album_name}",
+                    "current_track": ""
+                })
+                sys.stdout.write(progress_msg + "\n")
+                sys.stdout.flush()
+            elif track_match:
+                tracks_done += 1
+                current_track = track_match.group(1)
+                file_size_mb = track_match.group(2)
+
+                # Calculate progress
+                if total_tracks > 0:
+                    progress = min(int((tracks_done / total_tracks) * 100), 100)
+                else:
+                    # Single track or unknown total
+                    progress = 100 if "/track/" in url else min(tracks_done * 5, 95)
+
+                progress_msg = json.dumps({
+                    "status": "progress",
+                    "request_id": request_id,
+                    "item_id": item_id,
+                    "progress": progress,
+                    "tracks_done": tracks_done,
+                    "total_tracks": total_tracks,
+                    "message": f"{current_track} ({file_size_mb} MB)",
+                    "current_track": current_track
+                })
+                sys.stdout.write(progress_msg + "\n")
+                sys.stdout.flush()
 
         process.wait()
 
         if process.returncode == 0:
-            # Try to find the downloaded file from output
-            file_path = ""
-            file_size = 0
-            for out_line in output_lines:
-                # tiddl typically prints the file path
-                if os.sep in out_line or "/" in out_line:
-                    potential_path = out_line.strip()
-                    if os.path.exists(potential_path):
-                        file_path = potential_path
-                        file_size = os.path.getsize(potential_path)
-                        break
+            # Send 100% completion
+            progress_msg = json.dumps({
+                "status": "progress",
+                "request_id": request_id,
+                "item_id": item_id,
+                "progress": 100,
+                "tracks_done": tracks_done,
+                "total_tracks": total_tracks or tracks_done,
+                "message": f"Complete — {tracks_done} tracks downloaded",
+                "current_track": ""
+            })
+            sys.stdout.write(progress_msg + "\n")
+            sys.stdout.flush()
 
             return {
                 "status": "ok",
                 "data": {
-                    "file_path": file_path,
-                    "file_size": file_size,
-                    "output": "\n".join(output_lines[-10:])  # Last 10 lines
+                    "file_path": download_dir,
+                    "file_size": 0,
+                    "tracks_downloaded": tracks_done,
+                    "output": "\n".join(output_lines[-10:])
                 }
             }
         else:
@@ -417,18 +469,26 @@ def handle_download(params, request_id):
 
 
 # ============ FORMATTERS ============
-def get_image_url(obj, size=480):
-    """Safely get image URL from tidalapi object."""
-    try:
-        return obj.image(size)
-    except Exception:
+def get_image_url(obj, size=None):
+    """Safely get image URL from tidalapi object.
+    Albums support: 80, 160, 320, 640, 1280
+    Artists support: 160, 320, 480, 750
+    """
+    # Try multiple resolutions in order of preference
+    sizes = [640, 320, 480, 160, 750, 1280, 80] if size is None else [size, 640, 320, 480, 160, 750, 80]
+    for s in sizes:
         try:
-            return obj.image(320)
+            url = obj.image(s)
+            if url:
+                return url
         except Exception:
-            try:
-                return obj.image(160)
-            except Exception:
-                return ""
+            continue
+    # Last resort: build URL manually from cover/picture UUID
+    uuid = getattr(obj, 'cover', None) or getattr(obj, 'picture', None)
+    if uuid:
+        hex_id = uuid.replace('-', '/')
+        return f"https://resources.tidal.com/images/{hex_id}/320x320.jpg"
+    return ""
 
 
 def format_track(track):

@@ -19,6 +19,9 @@ release/
 tiddl.json
 config.json
 credentials.json
+charon-settings.json
+charon-queue.json
+.tiddl/
 
 # OS junk
 Thumbs.db
@@ -29,6 +32,10 @@ Desktop.ini
 .vscode/
 .idea/
 *.sublime-*
+.claude/
+
+# Deploy
+.netlify/
 
 # Python
 __pycache__/
