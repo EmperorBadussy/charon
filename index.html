@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CHARON — The Ferryman of Music</title>
 <meta name="description" content="Catalog Harvester & Automated Ripper for Organized Navidrome. Rip from Tidal in Master/FLAC quality. The companion to AETHER.">
+<meta property="og:title" content="CHARON — The Ferryman of Music">
+<meta property="og:description" content="Catalog Harvester & Automated Ripper for Organized Navidrome. Rip Tidal in Master/FLAC quality.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://emperorbadussy.github.io/charon/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#06B6D4">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='15' width='100' height='100' fill='%23060B0F'/><text x='50' y='72' font-size='60' text-anchor='middle' fill='%2322D3EE' font-family='sans-serif' font-weight='bold'>C</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1413,10 +1420,49 @@ body {
   transition: opacity 0.3s;
 }
 
+/* ============ POLISH ENHANCEMENTS ============ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 99997;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan-core), var(--cyan-vivid), var(--cyan-hot));
+  box-shadow: 0 0 8px rgba(34,211,238,0.6), 0 0 20px rgba(6,182,212,0.3);
+  z-index: 10001;
+  width: 0%;
+  transition: width 0.05s linear;
+}
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, var(--cyan-dim) 20%, var(--cyan-bright) 50%, var(--cyan-dim) 80%, transparent 95%);
+  box-shadow: 0 0 10px rgba(34,211,238,0.2), 0 0 30px rgba(6,182,212,0.1);
+  opacity: 0.6;
+}
+.hero-title-glitch {
+  animation: titleGlitch 8s 2.5s infinite;
+}
+@keyframes titleGlitch {
+  0%, 100% { text-shadow: var(--glow-neon); }
+  2% { text-shadow: -3px 0 var(--cyan-core), 3px 0 var(--cyan-vivid); clip-path: inset(35% 0 25% 0); }
+  4% { text-shadow: var(--glow-neon); clip-path: none; }
+  42% { text-shadow: 2px 0 var(--cyan-bright), -2px 0 var(--cyan-core); clip-path: inset(15% 0 55% 0); }
+  44% { text-shadow: var(--glow-neon); clip-path: none; }
+}
+
 </style>
 </head>
 <body>
 
+<div class="scroll-progress" id="scrollProgress"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- ============ NAVIGATION ============ -->
@@ -1553,6 +1599,8 @@ body {
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- ============ HOW IT WORKS ============ -->
 <section class="section" id="how-it-works">
   <div class="section-inner">
@@ -1611,6 +1659,8 @@ body {
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- ============ FEATURES ============ -->
 <section class="section" id="features">
@@ -1691,6 +1741,8 @@ body {
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- ============ TECH STACK ============ -->
 <section class="section tech-section" id="tech">
   <div class="section-inner" style="text-align:center;">
@@ -1734,6 +1786,8 @@ body {
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- ============ THE PIPELINE ============ -->
 <section class="section" id="pipeline">
   <div class="section-inner" style="text-align:center;">
@@ -1766,6 +1820,8 @@ body {
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- ============ DOWNLOAD CTA ============ -->
 <section class="section download-section" id="download">
@@ -1830,6 +1886,7 @@ body {
       <li><a href="https://github.com/EmperorBadussy/charon" target="_blank">GitHub</a></li>
       <li><a href="https://aether-player.netlify.app/" target="_blank">AETHER</a></li>
     </ul>
+    <div style="width:100%;text-align:center;margin-top:1rem;"><a href="https://emperorbadussy.github.io/suite/" style="font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.12em;color:var(--cyan-muted);text-decoration:none;border:1px solid var(--cyan-dim);padding:0.3rem 0.8rem;border-radius:4px;transition:all 0.3s;" onmouseover="this.style.color='var(--cyan-vivid)';this.style.borderColor='var(--cyan-bright)';this.style.boxShadow='0 0 12px rgba(34,211,238,0.3)'" onmouseout="this.style.color='';this.style.borderColor='';this.style.boxShadow=''">PART OF THE SUITE</a></div>
     <div class="footer-copy">&copy; 2077 CHARON. Free and open source software.</div>
     <div style="font-size:0.5rem;opacity:0.15;color:#0a0a0a;margin-top:4px;user-select:text;">ask The BadussyRipper2077 rip</div>
   </div>
@@ -2374,6 +2431,12 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a) {
     });
   });
 })();
+
+// ============ SCROLL PROGRESS BAR ============
+(function(){var b=document.getElementById('scrollProgress');if(!b)return;window.addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-window.innerHeight;b.style.width=(h>0?(window.scrollY/h)*100:0)+'%';});})();
+
+// ============ GLITCH TITLE ============
+(function(){setTimeout(function(){var t=document.getElementById('heroTitle');if(t)t.classList.add('hero-title-glitch');},2500);})();
 </script>
 </body>
 </html>
