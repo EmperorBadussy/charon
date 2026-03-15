@@ -966,6 +966,28 @@ body {
 .status-badge.downloading { background: rgba(6,182,212,0.15); color: var(--cyan-core); }
 .status-badge.completed { background: rgba(34,197,94,0.15); color: var(--green-core); }
 .status-badge.error { background: rgba(239,68,68,0.15); color: var(--red-core); }
+.status-badge.duplicate { background: rgba(245,158,11,0.15); color: var(--amber-core); }
+.library-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+.library-status.in-library {
+  background: rgba(34,197,94,0.12);
+  color: var(--green-core);
+  border: 1px solid rgba(34,197,94,0.2);
+}
+.library-status.in-library svg { width: 14px; height: 14px; }
+.library-status.not-in-library {
+  background: rgba(6,182,212,0.08);
+  color: var(--purple-muted);
+  border: 1px solid rgba(6,182,212,0.1);
+}
 
 /* ── SETTINGS VIEW ── */
 .settings-group {
@@ -1395,6 +1417,55 @@ body {
   min-height: 20px;
 }
 
+
+/* -- FAVORITES VIEW -- */
+.fav-header { display: flex; align-items: center; justify-content: space-between; padding: 0 0 16px; }
+.fav-header-left { display: flex; align-items: center; gap: 12px; }
+.fav-header h2 { font-family: var(--font-display); font-size: 18px; letter-spacing: 3px; color: var(--purple-hot); }
+.fav-count { font-family: var(--font-mono); font-size: 11px; color: var(--purple-muted); }
+.fav-tabs { display: flex; gap: 2px; background: var(--bg-raised); border-radius: var(--radius-md); padding: 3px; border: 1px solid rgba(6,182,212,0.1); margin-bottom: 16px; }
+.fav-tab { padding: 6px 14px; font-family: var(--font-display); font-size: 10px; letter-spacing: 2px; color: var(--purple-muted); cursor: pointer; border-radius: var(--radius-sm); transition: all 0.25s ease; text-transform: uppercase; background: transparent; border: none; outline: none; }
+.fav-tab:hover { color: var(--purple-bright); background: rgba(6,182,212,0.08); }
+.fav-tab.active { color: var(--purple-hot); background: rgba(6,182,212,0.15); box-shadow: 0 0 12px rgba(6,182,212,0.2); }
+.fav-star-btn { width: 30px; height: 30px; border-radius: 50%; background: none; border: 1px solid rgba(6,182,212,0.15); color: var(--purple-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s; flex-shrink: 0; }
+.fav-star-btn:hover { color: var(--amber-core); border-color: var(--amber-core); background: rgba(245,158,11,0.1); }
+.fav-star-btn.favorited { color: var(--amber-core); border-color: var(--amber-core); background: rgba(245,158,11,0.15); }
+.fav-star-btn.favorited:hover { color: var(--purple-muted); border-color: rgba(6,182,212,0.15); background: none; }
+.fav-star-btn svg { width: 14px; height: 14px; }
+.card-fav-star { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(6,182,212,0.15); color: var(--purple-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s; z-index: 3; opacity: 0; }
+.card:hover .card-fav-star { opacity: 1; }
+.card-fav-star.favorited { opacity: 1; color: var(--amber-core); border-color: var(--amber-core); background: rgba(245,158,11,0.2); }
+.card-fav-star:hover { color: var(--amber-core); border-color: var(--amber-core); transform: scale(1.15); }
+.card-fav-star.favorited:hover { color: var(--purple-muted); border-color: rgba(6,182,212,0.15); }
+.card-fav-star svg { width: 12px; height: 12px; }
+.fav-item-actions { display: flex; gap: 4px; margin-top: 6px; }
+.fav-date { font-family: var(--font-mono); font-size: 9px; color: var(--purple-dim); margin-top: 4px; letter-spacing: 0.5px; }
+
+/* -- STATS VIEW -- */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.stat-card { background: rgba(10,20,25,0.75); backdrop-filter: blur(12px); border: 1px solid rgba(6,182,212,0.1); border-radius: var(--radius-lg); padding: 20px; text-align: center; position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--purple-core), var(--cyan-core)); opacity: 0.5; }
+.stat-value { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--purple-vivid); margin-bottom: 4px; }
+.stat-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; color: var(--purple-dim); text-transform: uppercase; }
+.stats-section { background: rgba(10,20,25,0.65); backdrop-filter: blur(16px) saturate(1.15); border: 1px solid rgba(6,182,212,0.08); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), inset 0 -1px 0 rgba(0,0,0,0.3); }
+.stats-section-title { font-family: var(--font-display); font-size: 11px; letter-spacing: 3px; color: var(--purple-bright); margin-bottom: 16px; text-transform: uppercase; }
+.stats-chart-wrap { position: relative; display: flex; align-items: center; justify-content: center; gap: 24px; }
+.stats-chart-wrap canvas { display: block; }
+.stats-legend { display: flex; flex-direction: column; gap: 8px; }
+.stats-legend-item { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--purple-hot); }
+.stats-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.stats-artist-list { display: grid; gap: 6px; }
+.stats-artist-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: var(--radius-sm); transition: background 0.15s; }
+.stats-artist-row:hover { background: rgba(6,182,212,0.06); }
+.stats-artist-rank { font-family: var(--font-mono); font-size: 11px; color: var(--purple-dim); width: 20px; text-align: right; flex-shrink: 0; }
+.stats-artist-name { flex: 1; font-size: 13px; color: var(--purple-hot); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stats-artist-count { font-family: var(--font-mono); font-size: 11px; color: var(--purple-bright); flex-shrink: 0; }
+.stats-artist-bar { width: 80px; height: 4px; background: var(--bg-elevated); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.stats-artist-bar-fill { height: 100%; background: var(--purple-core); border-radius: 2px; transition: width 0.5s ease; }
+.stats-sparkline-wrap { width: 100%; height: 80px; position: relative; }
+.stats-sparkline-wrap canvas { width: 100%; height: 100%; }
+.stats-footer { display: flex; justify-content: flex-end; padding-top: 12px; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 800px) {
   .sidebar { width: 56px; min-width: 56px; }
@@ -1549,6 +1620,420 @@ body {
   z-index: 0;
   pointer-events: none;
 }
+
+/* ── PLAYLIST IMPORT OVERLAY ── */
+.playlist-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: overlayFadeIn 0.25s ease;
+}
+.playlist-overlay.closing {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+@keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.playlist-modal {
+  background: var(--bg-surface);
+  border: 1px solid rgba(6,182,212,0.15);
+  border-radius: var(--radius-xl);
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 64px rgba(0,0,0,0.6), var(--glow-medium);
+  animation: modalSlideIn 0.3s cubic-bezier(0.16,1,0.3,1);
+  overflow: hidden;
+}
+@keyframes modalSlideIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.playlist-modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(6,182,212,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.playlist-modal-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--purple-bright);
+}
+.playlist-modal-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: none;
+  border: 1px solid rgba(6,182,212,0.15);
+  color: var(--purple-hot);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.playlist-modal-close:hover {
+  background: rgba(239,68,68,0.15);
+  border-color: var(--red-core);
+  color: var(--red-core);
+}
+.playlist-modal-close svg { width: 14px; height: 14px; }
+.playlist-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+.playlist-url-input {
+  width: 100%;
+  background: var(--bg-raised);
+  border: 1px solid rgba(6,182,212,0.12);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--purple-white);
+  outline: none;
+  transition: all 0.2s;
+}
+.playlist-url-input::placeholder { color: var(--purple-dim); }
+.playlist-url-input:focus {
+  border-color: var(--purple-core);
+  box-shadow: var(--glow-subtle);
+}
+.playlist-fetch-btn {
+  margin-top: 12px;
+  width: 100%;
+}
+.playlist-info-card {
+  background: rgba(10,20,25,0.7);
+  border: 1px solid rgba(6,182,212,0.1);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-top: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.playlist-info-art {
+  width: 80px; height: 80px;
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.playlist-info-art img { width: 100%; height: 100%; object-fit: cover; }
+.playlist-info-meta { flex: 1; min-width: 0; }
+.playlist-info-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--purple-white);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.playlist-info-details {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--purple-muted);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.playlist-info-details span { color: var(--purple-bright); }
+.playlist-info-desc {
+  font-size: 12px;
+  color: var(--purple-dim);
+  margin-top: 6px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.playlist-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  align-items: center;
+}
+.playlist-select-info {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--purple-dim);
+  margin-left: auto;
+}
+.playlist-tracks-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.playlist-tracks-label {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--purple-muted);
+  text-transform: uppercase;
+}
+.playlist-select-all {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cyan-core);
+  cursor: pointer;
+  background: none;
+  border: none;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+.playlist-select-all:hover { color: var(--purple-hot); }
+.playlist-track-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+  border-bottom: 1px solid rgba(6,182,212,0.04);
+}
+.playlist-track-row:hover { background: rgba(6,182,212,0.06); }
+.playlist-track-row input[type="checkbox"] {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border: 1px solid var(--purple-muted);
+  border-radius: 3px;
+  background: var(--bg-elevated);
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s;
+}
+.playlist-track-row input[type="checkbox"]:checked {
+  background: var(--purple-core);
+  border-color: var(--purple-bright);
+  box-shadow: 0 0 6px rgba(6,182,212,0.3);
+}
+.playlist-track-row input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 5px;
+  width: 4px; height: 8px;
+  border: solid var(--purple-white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.playlist-loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--purple-muted);
+}
+.playlist-loading-spinner {
+  width: 32px; height: 32px;
+  border: 2px solid rgba(6,182,212,0.15);
+  border-top-color: var(--cyan-core);
+  border-radius: 50%;
+  animation: playlistSpin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes playlistSpin { to { transform: rotate(360deg); } }
+.playlist-loading-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+/* ── BRIDGE DISCONNECT BANNER ── */
+.bridge-banner {
+  display: none;
+  position: fixed;
+  top: var(--titlebar-height);
+  left: 0; right: 0;
+  z-index: 9998;
+  background: rgba(239,68,68,0.12);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(239,68,68,0.3);
+  padding: 10px 20px;
+  align-items: center;
+  gap: 12px;
+  animation: bannerSlideIn 0.3s ease;
+}
+.bridge-banner.visible { display: flex; }
+@keyframes bannerSlideIn { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+.bridge-banner-icon { color: var(--red-core); flex-shrink: 0; }
+.bridge-banner-icon svg { width: 20px; height: 20px; }
+.bridge-banner-text {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--red-core);
+}
+.bridge-banner-btn {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(239,68,68,0.4);
+  background: rgba(239,68,68,0.15);
+  color: var(--red-core);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.bridge-banner-btn:hover {
+  background: rgba(239,68,68,0.3);
+  box-shadow: 0 0 12px rgba(239,68,68,0.3);
+}
+
+/* ── LOAD MORE BUTTON ── */
+.load-more-container {
+  text-align: center;
+  padding: 16px 24px 32px;
+}
+.load-more-btn {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 3px;
+  padding: 10px 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(6,182,212,0.2);
+  background: rgba(6,182,212,0.08);
+  color: var(--purple-bright);
+  cursor: pointer;
+  transition: all 0.25s;
+  text-transform: uppercase;
+}
+.load-more-btn:hover {
+  background: rgba(6,182,212,0.15);
+  border-color: var(--purple-muted);
+  box-shadow: var(--glow-subtle);
+  transform: translateY(-1px);
+}
+.load-more-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.load-more-btn .spinner {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border: 2px solid rgba(6,182,212,0.3);
+  border-top-color: var(--cyan-core);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── RETRY STATUS ── */
+.status-badge.retrying {
+  background: rgba(245,158,11,0.15);
+  color: var(--amber-core);
+}
+.retry-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--amber-core);
+  margin-left: 4px;
+}
+.retry-btn {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(6,182,212,0.2);
+  background: rgba(6,182,212,0.1);
+  color: var(--cyan-core);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.retry-btn:hover {
+  background: rgba(6,182,212,0.2);
+  border-color: var(--cyan-core);
+}
+
+/* ── ERROR LOG PANEL ── */
+.error-log-panel {
+  display: none;
+  position: fixed;
+  bottom: 0; right: 0;
+  width: 420px;
+  max-height: 320px;
+  z-index: 9997;
+  background: rgba(6,11,15,0.92);
+  backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(239,68,68,0.15);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow: hidden;
+  animation: errorLogIn 0.3s ease;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+}
+.error-log-panel.visible { display: flex; flex-direction: column; }
+@keyframes errorLogIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.error-log-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(239,68,68,0.1);
+  flex-shrink: 0;
+}
+.error-log-header-title {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--red-core);
+  flex: 1;
+}
+.error-log-header-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--purple-dim);
+}
+.error-log-close {
+  width: 24px; height: 24px;
+  border: none; background: none;
+  color: var(--purple-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.error-log-close:hover { background: rgba(239,68,68,0.15); color: var(--red-core); }
+.error-log-close svg { width: 14px; height: 14px; }
+.error-log-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.error-log-entry {
+  padding: 6px 14px;
+  border-bottom: 1px solid rgba(6,182,212,0.04);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.error-log-entry:last-child { border-bottom: none; }
+.error-log-time {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--purple-dim);
+  margin-right: 8px;
+}
+.error-log-msg { color: var(--purple-hot); }
+.error-log-empty {
+  padding: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--purple-dim);
+}
 </style>
 </head>
 <body>
@@ -1598,6 +2083,17 @@ body {
         <span class="nav-label">Search</span>
       </div>
 
+      <div class="nav-item" data-view="favorites" onclick="switchView('favorites')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="nav-label">Favorites</span>
+        <span class="nav-badge" id="favBadge" style="display:none">0</span>
+      </div>
+
+      <div class="nav-item" onclick="openPlaylistImport()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10"/><line x1="12" y1="10" x2="12" y2="21"/><polyline points="8 17 12 21 16 17"/><line x1="7" y1="7" x2="17" y2="7"/><line x1="7" y1="11" x2="13" y2="11"/></svg>
+        <span class="nav-label">Import Playlist</span>
+      </div>
+
       <div class="nav-section-label">Downloads</div>
 
       <div class="nav-item" data-view="queue" onclick="switchView('queue')">
@@ -1609,6 +2105,11 @@ body {
       <div class="nav-item" data-view="history" onclick="switchView('history')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span class="nav-label">History</span>
+      </div>
+
+      <div class="nav-item" data-view="stats" onclick="switchView('stats')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span class="nav-label">Stats</span>
       </div>
 
       <div class="nav-section-label">System</div>
@@ -1626,6 +2127,12 @@ body {
       <div class="nav-item" data-view="help" onclick="switchView('help')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <span class="nav-label">Help</span>
+      </div>
+
+      <div class="nav-item" onclick="toggleErrorLog()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span class="nav-label">Error Log</span>
+        <span class="nav-badge" id="errorBadge" style="display:none;background:var(--red-core)">0</span>
       </div>
     </div>
 
@@ -1725,7 +2232,29 @@ body {
         </div>
       </div>
 
-      <!-- SETTINGS VIEW -->
+      <!-- FAVORITES VIEW -->
+      <div class="view" id="viewFavorites">
+        <div id="favoritesContent">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <h3>NO FAVORITES YET</h3>
+            <p>Star albums and tracks from search results to save them here.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS VIEW -->
+      <div class="view" id="viewStats">
+        <div style="max-width:720px;" id="statsContent">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <h3>NO DOWNLOAD DATA</h3>
+            <p>Download some music to see statistics here.</p>
+          </div>
+        </div>
+      </div>
+
+            <!-- SETTINGS VIEW -->
       <div class="view" id="viewSettings">
         <div style="max-width:640px;">
           <div class="settings-group">
@@ -1767,6 +2296,17 @@ body {
                 <div class="setting-desc">Track file naming pattern</div>
               </div>
               <input type="text" class="setting-input" id="settingNaming" value="{artist}/{album}/{number}. {title}" onchange="saveSetting('naming', this.value)">
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-label">Skip Duplicates</div>
+                <div class="setting-desc">Automatically skip albums/tracks already in your library</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="settingSkipDuplicates" onchange="saveSetting('skipDuplicates', this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
             </div>
           </div>
 
@@ -1896,8 +2436,51 @@ body {
   </div><!-- /main-content -->
 </div><!-- /app-layout -->
 
+<!-- Playlist Import Overlay -->
+<div class="playlist-overlay" id="playlistOverlay" style="display:none" onclick="if(event.target===this)closePlaylistImport()">
+  <div class="playlist-modal">
+    <div class="playlist-modal-header">
+      <span class="playlist-modal-title">IMPORT PLAYLIST</span>
+      <button class="playlist-modal-close" onclick="closePlaylistImport()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="playlist-modal-body" id="playlistModalBody">
+      <input type="text" class="playlist-url-input" id="playlistUrlInput" placeholder="Paste Tidal playlist URL..." onkeydown="if(event.key==='Enter')fetchPlaylist()">
+      <button class="btn btn-primary playlist-fetch-btn" onclick="fetchPlaylist()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M21 15V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10"/><line x1="12" y1="10" x2="12" y2="21"/><polyline points="8 17 12 21 16 17"/></svg>
+        Fetch Playlist
+      </button>
+      <div id="playlistContent"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Toast container -->
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- Bridge disconnect banner -->
+<div class="bridge-banner" id="bridgeBanner">
+  <div class="bridge-banner-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  </div>
+  <div class="bridge-banner-text">BRIDGE DISCONNECTED — Restart required</div>
+  <button class="bridge-banner-btn" onclick="restartBridge()">RESTART BRIDGE</button>
+</div>
+
+<!-- Error log panel -->
+<div class="error-log-panel" id="errorLogPanel">
+  <div class="error-log-header">
+    <div class="error-log-header-title">ERROR LOG</div>
+    <div class="error-log-header-count" id="errorLogCount">0 errors</div>
+    <button class="error-log-close" onclick="toggleErrorLog()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="error-log-body" id="errorLogBody">
+    <div class="error-log-empty">No errors recorded</div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════════
      JAVASCRIPT
@@ -1919,6 +2502,20 @@ let downloadHistory = [];
 let isAuthenticated = false;
 let navigationStack = []; // for back navigation
 
+// Search pagination state
+let searchPagination = {
+  query: '',
+  type: 'artist',
+  offset: 0,
+  limit: 50,
+  hasMore: false,
+  loading: false
+};
+
+// Error log state
+let errorLog = [];
+const MAX_ERROR_LOG = 20;
+
 // SVG icon helpers
 const ICONS = {
   download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
@@ -1938,6 +2535,9 @@ const ICONS = {
   power: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>',
   zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
   globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  starFilled: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  barChart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
   settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
 };
 
@@ -1986,6 +2586,12 @@ function switchView(view) {
   if (view === 'server') {
     loadServerView();
   }
+  if (view === 'favorites') {
+    renderFavoritesView();
+  }
+  if (view === 'stats') {
+    renderStatsView();
+  }
 }
 
 function goBack() {
@@ -2023,7 +2629,10 @@ async function doSearch() {
   container.innerHTML = renderSkeletonGrid(8);
 
   try {
-    const result = await window.charon.search(query, type, 50);
+    // Reset pagination for new search
+    searchPagination = { query, type, offset: 0, limit: 50, hasMore: false, loading: false };
+
+    const result = await window.charon.search(query, type, 50, 0);
     if (searchId !== lastSearchId) return; // Discard stale results
     if (result.status === 'error') {
       container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>SEARCH FAILED</h3><p>${escHtml(result.error)}</p></div>`;
@@ -2035,8 +2644,13 @@ async function doSearch() {
       return;
     }
     searchResults = items;
-    container.innerHTML = `<div class="results-header">${items.length} ${type.toUpperCase()}S FOUND</div>` + renderResultsGrid(items, type);
+    searchPagination.offset = items.length;
+    searchPagination.hasMore = items.length >= 50;
+    container.innerHTML = `<div class="results-header">${items.length} ${type.toUpperCase()}S FOUND</div>`
+      + renderResultsGrid(items, type)
+      + renderLoadMoreButton();
   } catch (e) {
+    logError('Bridge error: ' + e.message);
     container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>BRIDGE ERROR</h3><p>${escHtml(e.message)}</p><p style="margin-top:8px;font-size:11px;color:var(--purple-dim);">Make sure Python bridge is running and tiddl/tidalapi are installed.</p></div>`;
   }
 }
@@ -2053,6 +2667,39 @@ function setSearchType(type) {
   if (q) doSearch();
 }
 
+
+async function loadMoreResults() {
+  if (searchPagination.loading || !searchPagination.hasMore) return;
+  searchPagination.loading = true;
+  const btn = document.getElementById('loadMoreBtn');
+  if (btn) btn.innerHTML = '<span class="spinner"></span>Loading more...';
+  try {
+    const result = await window.charon.search(searchPagination.query, searchPagination.type, searchPagination.limit, searchPagination.offset);
+    if (result.status === 'error') {
+      showToast('error', 'Failed to load more: ' + (result.error || 'Unknown'));
+      if (btn) btn.innerHTML = 'LOAD MORE';
+      return;
+    }
+    const newItems = result.data?.results || [];
+    searchResults = searchResults.concat(newItems);
+    searchPagination.offset += newItems.length;
+    searchPagination.hasMore = newItems.length >= searchPagination.limit;
+    const container = document.getElementById('searchResults');
+    container.innerHTML = `<div class="results-header">${searchResults.length} ${searchPagination.type.toUpperCase()}S FOUND</div>` + renderResultsGrid(searchResults, searchPagination.type) + renderLoadMoreButton();
+    const contentArea = document.getElementById('contentArea');
+    if (contentArea) setTimeout(() => contentArea.scrollTop = contentArea.scrollHeight - contentArea.clientHeight - 100, 50);
+  } catch (e) {
+    logError('Load more error: ' + e.message);
+    if (btn) btn.innerHTML = 'LOAD MORE';
+  } finally {
+    searchPagination.loading = false;
+  }
+}
+
+function renderLoadMoreButton() {
+  if (!searchPagination.hasMore) return '';
+  return '<div class="load-more-container"><button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreResults()">LOAD MORE</button></div>';
+}
 let searchTypingTimer = null;
 function onSearchInput() {
   const indicator = document.getElementById('searchTypingIndicator');
@@ -2099,10 +2746,11 @@ function renderResultsGrid(items, type) {
       html += `<div class="card" onclick="loadAlbum('${item.id}')">
         <div class="card-art">${artHtml}${typeBadge}
           <div class="card-overlay">
-            <button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum('${item.id}','${escAttr(item.title || '')}')">
+            <button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum('${item.id}','${escAttr(item.title || '')}','${escAttr(item.artist || '')}')">
               ${ICONS.download}
             </button>
           </div>
+          ${favStarHtml({id: item.id, title: item.title || item.name, artist: item.artist || '', type: 'album', image_url: item.image_url || ''}, true)}
         </div>
         <div class="card-info">
           <div class="card-title">${escHtml(item.title || item.name)}</div>
@@ -2136,6 +2784,7 @@ function renderTrackList(tracks) {
       ${t.quality ? `<span class="quality-badge ${getQualityClass(t.quality)}">${escHtml(t.quality)}</span>` : ''}
       <span class="track-duration">${dur}</span>
       <div class="track-actions">
+        ${favStarHtml({id: t.id, title: t.title || t.name, artist: t.artist || '', type: 'track', image_url: t.image_url || ''}, false)}
         <button class="track-action-btn" title="Download" onclick="downloadTrack('${t.id}','${escAttr(t.title || t.name)}','${escAttr(t.artist || '')}')">
           ${ICONS.download}
         </button>
@@ -2199,7 +2848,7 @@ async function loadArtist(artistId) {
         html += `<div class="card" onclick="loadAlbum('${album.id}')">
           <div class="card-art">${albumArt ? `<img src="${escHtml(albumArt)}" loading="lazy" alt="" onerror="imgErr(this)">` : `<div class="card-art-placeholder">${ICONS.disc}</div>`}
             <div class="card-overlay">
-              <button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum('${album.id}','${escAttr(album.title || '')}')">
+              <button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum('${album.id}','${escAttr(album.title || '')}','${escAttr(artist.name || '')}')">
                 ${ICONS.download}
               </button>
             </div>
@@ -2245,8 +2894,9 @@ async function loadAlbum(albumId) {
           <span class="detail-stat"><span>${formatDuration(totalDur)}</span></span>
           ${album.quality ? `<span class="quality-badge ${getQualityClass(album.quality)}">${escHtml(album.quality)}</span>` : ''}
         </div>
+        <div id="albumLibraryStatus" style="margin-bottom:8px"></div>
         <div class="detail-actions">
-          <button class="btn btn-primary" onclick="downloadAlbum('${albumId}','${escAttr(album.title || '')}')">
+          <button class="btn btn-primary" onclick="downloadAlbum('${albumId}','${escAttr(album.title || '')}','${escAttr(album.artist || '')}')">
             ${ICONS.download} Download Album
           </button>
           ${album.artist_id ? `<button class="btn btn-ghost" onclick="loadArtist('${album.artist_id}')">View Artist</button>` : ''}
@@ -2271,6 +2921,7 @@ async function loadAlbum(albumId) {
           ${t.quality ? `<span class="quality-badge ${getQualityClass(t.quality)}">${escHtml(t.quality)}</span>` : ''}
           <span class="track-duration">${formatDuration(t.duration || 0)}</span>
           <div class="track-actions">
+            ${favStarHtml({id: t.id, title: t.title || t.name, artist: t.artist || album.artist || '', type: 'track', image_url: album.image_url || ''}, false)}
             <button class="track-action-btn" title="Download" onclick="downloadTrack('${t.id}','${escAttr(t.title || t.name)}','${escAttr(t.artist || album.artist || '')}')">
               ${ICONS.download}
             </button>
@@ -2282,6 +2933,20 @@ async function loadAlbum(albumId) {
     }
 
     container.innerHTML = html;
+
+    // Check library duplicate status asynchronously
+    try {
+      const dupCheck = await window.charon.checkDuplicate({ artist: album.artist || '', album: album.title || '', title: '' });
+      const statusEl = document.getElementById('albumLibraryStatus');
+      if (statusEl) {
+        if (dupCheck.exists) {
+          statusEl.innerHTML = `<span class="library-status in-library">${ICONS.check} IN LIBRARY</span>`;
+          statusEl.title = dupCheck.path || '';
+        } else {
+          statusEl.innerHTML = `<span class="library-status not-in-library">NOT IN LIBRARY</span>`;
+        }
+      }
+    } catch (e) { /* ignore */ }
   } catch (e) {
     container.innerHTML = `<div class="empty-state"><div>${ICONS.alert}</div><h3>FAILED TO LOAD ALBUM</h3><p>${escHtml(e.message)}</p></div>`;
   }
@@ -2291,12 +2956,32 @@ async function loadAlbum(albumId) {
 async function downloadTrack(trackId, title, artist) {
   const tidalUrl = `https://tidal.com/browse/track/${trackId}`;
   try {
+    // Duplicate detection
+    let isDuplicate = false;
+    let dupPath = null;
+    try {
+      const dupCheck = await window.charon.checkDuplicate({ artist: artist || '', album: '', title: title || '' });
+      if (dupCheck.exists) {
+        isDuplicate = true;
+        dupPath = dupCheck.path;
+        if (settings.skipDuplicates) {
+          showToast('info', `Skipped (duplicate): ${title}`);
+          return;
+        }
+        if (!confirm(`This track appears to already exist in your library at:\n${dupCheck.path}\n\nDownload anyway?`)) {
+          return;
+        }
+      }
+    } catch (e) { /* proceed if check fails */ }
+
     await window.charon.queueAdd({
       tidalUrl,
       title: title || 'Unknown Track',
       artist: artist || '',
       type: 'track',
-      quality: settings.quality || 'MAX'
+      quality: settings.quality || 'MAX',
+      isDuplicate,
+      dupPath
     });
     showToast('success', `Queued: ${title}`);
   } catch (e) {
@@ -2304,14 +2989,36 @@ async function downloadTrack(trackId, title, artist) {
   }
 }
 
-async function downloadAlbum(albumId, title) {
+async function downloadAlbum(albumId, title, artist) {
   const tidalUrl = `https://tidal.com/browse/album/${albumId}`;
   try {
+    // Duplicate detection
+    let isDuplicate = false;
+    let dupPath = null;
+    const artistName = artist || '';
+    try {
+      const dupCheck = await window.charon.checkDuplicate({ artist: artistName, album: title || '', title: '' });
+      if (dupCheck.exists) {
+        isDuplicate = true;
+        dupPath = dupCheck.path;
+        if (settings.skipDuplicates) {
+          showToast('info', `Skipped (duplicate): ${title}`);
+          return;
+        }
+        if (!confirm(`This album appears to already exist in your library at:\n${dupCheck.path}\n\nDownload anyway?`)) {
+          return;
+        }
+      }
+    } catch (e) { /* proceed if check fails */ }
+
     await window.charon.queueAdd({
       tidalUrl,
       title: title || 'Unknown Album',
+      artist: artistName,
       type: 'album',
-      quality: settings.quality || 'MAX'
+      quality: settings.quality || 'MAX',
+      isDuplicate,
+      dupPath
     });
     showToast('success', `Queued album: ${title}`);
   } catch (e) {
@@ -2324,16 +3031,37 @@ async function downloadArtist(artistId, name) {
   try {
     const result = await window.charon.getArtistAlbums(artistId);
     const albums = result.data?.albums || [];
+    let skipped = 0;
     for (const album of albums) {
+      // Duplicate detection per album
+      let isDuplicate = false;
+      let dupPath = null;
+      try {
+        const dupCheck = await window.charon.checkDuplicate({ artist: name, album: album.title || '', title: '' });
+        if (dupCheck.exists) {
+          isDuplicate = true;
+          dupPath = dupCheck.path;
+          if (settings.skipDuplicates) {
+            skipped++;
+            continue;
+          }
+        }
+      } catch (e) { /* proceed if check fails */ }
+
       await window.charon.queueAdd({
         tidalUrl: `https://tidal.com/browse/album/${album.id}`,
         title: album.title || 'Unknown Album',
         artist: name,
         type: 'album',
-        quality: settings.quality || 'MAX'
+        quality: settings.quality || 'MAX',
+        isDuplicate,
+        dupPath
       });
     }
-    showToast('success', `Queued ${albums.length} albums from ${name}`);
+    const msg = skipped > 0
+      ? `Queued ${albums.length - skipped} albums from ${name} (${skipped} duplicates skipped)`
+      : `Queued ${albums.length} albums from ${name}`;
+    showToast('success', msg);
   } catch (e) {
     showToast('error', `Failed: ${e.message}`);
   }
@@ -2378,7 +3106,9 @@ function renderQueueView() {
         ? '<div class="queue-status-indicator completed"><div class="check-anim">' + ICONS.check + '</div></div>'
         : item.status === 'error'
           ? '<div class="queue-status-indicator error">' + ICONS.alert + '</div>'
-          : '<div class="queue-status-indicator queued"><div class="queued-dot"></div></div>';
+          : item.status === 'retrying'
+            ? '<div class="queue-status-indicator error">' + ICONS.refresh + '</div>'
+            : '<div class="queue-status-indicator queued"><div class="queued-dot"></div></div>';
 
     // Build progress detail string
     let progressDetail = '';
@@ -2391,7 +3121,16 @@ function renderQueueView() {
       } else if (item.progressMessage) {
         progressDetail += `<div class="track-progress-count">${escHtml(item.progressMessage)}</div>`;
       }
+    } else if (item.status === 'retrying') {
+      progressDetail = `<div class="track-progress-detail" style="color:var(--amber-core)">Retrying in 5s... (${item.retryCount || 0}/3)</div>`;
     }
+
+    // Retry badge for items that have been retried
+    const retryBadge = (item.retryCount > 0 && item.status !== 'completed')
+      ? `<span class="retry-badge">Retry ${item.retryCount}/3</span>` : '';
+
+    // Status display text
+    const statusText = item.status === 'retrying' ? 'RETRYING' : item.status.toUpperCase();
 
     html += `<div class="track-row">
       ${statusIndicator}
@@ -2400,10 +3139,12 @@ function renderQueueView() {
         <div class="track-artist-name">${escHtml(item.artist || '')} ${item.type ? '· ' + item.type : ''}</div>
         ${progressDetail}
       </div>
-      <span class="status-badge ${item.status}">${item.status.toUpperCase()}</span>
+      ${item.isDuplicate ? '<span class="status-badge duplicate">DUPLICATE</span>' : ''}
+      <span class="status-badge ${item.status}">${statusText}</span>${retryBadge}
       ${item.status === 'downloading' ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progress}%"></div><span class="progress-pct">${progress}%</span></div>` : ''}
       <div class="track-actions" style="opacity:1">
         ${item.status === 'queued' ? `<button class="track-action-btn" title="Remove" onclick="removeFromQueue('${item.id}')">${ICONS.x}</button>` : ''}
+        ${item.status === 'error' ? `<button class="retry-btn" title="Retry download" onclick="retryDownload('${item.id}')">RETRY</button>` : ''}
       </div>
     </div>`;
   }
@@ -2474,6 +3215,7 @@ async function loadSettings() {
     if (settings.navidromePass) document.getElementById('settingNaviPass').value = settings.navidromePass;
     if (settings.autoScan !== undefined) document.getElementById('settingAutoScan').checked = settings.autoScan;
     if (settings.notifications !== undefined) document.getElementById('settingNotifications').checked = settings.notifications;
+    if (settings.skipDuplicates !== undefined) document.getElementById('settingSkipDuplicates').checked = settings.skipDuplicates;
   } catch (e) {
     console.error('Failed to load settings:', e);
   }
@@ -2555,10 +3297,14 @@ async function checkDependencies() {
     html += `<span class="dep-badge ${deps.ffmpeg ? 'ok' : 'missing'}">FF</span>`;
     container.innerHTML = html;
 
-    if (!deps.python) showToast('error', 'Python not found. Install Python 3.8+ and add to PATH.');
-    else if (!deps.tiddl) showToast('error', 'tiddl not found. Run: pip install tiddl');
-    else if (!deps.tidalapi) showToast('error', 'tidalapi not found. Run: pip install tidalapi');
-    else if (!deps.ffmpeg) showToast('info', 'ffmpeg not found. Some formats may not convert properly.');
+    if (!deps.python) {
+      showToast('error', 'Python not found. Install Python 3.8+ from python.org and add to PATH.');
+    } else if (!deps.tiddl) {
+      showToast('error', 'tiddl not found. Run: pip install tiddl — then run "tiddl" once to authenticate.');
+    } else if (!deps.tidalapi) {
+      showToast('error', 'tidalapi not found. Run: pip install tidalapi');
+    }
+    if (!deps.ffmpeg) showToast('info', 'ffmpeg not found. Some formats may not convert properly.');
   } catch (e) {
     container.innerHTML = '<span class="dep-badge missing">ERR</span>';
   }
@@ -2918,6 +3664,187 @@ async function manualScan() {
   }
 }
 
+// ============ PLAYLIST IMPORT ============
+let playlistData = null;
+
+function openPlaylistImport() {
+  const overlay = document.getElementById('playlistOverlay');
+  overlay.style.display = 'flex';
+  overlay.classList.remove('closing');
+  document.getElementById('playlistUrlInput').value = '';
+  document.getElementById('playlistContent').innerHTML = '';
+  playlistData = null;
+  setTimeout(() => document.getElementById('playlistUrlInput').focus(), 100);
+}
+
+function closePlaylistImport() {
+  const overlay = document.getElementById('playlistOverlay');
+  overlay.classList.add('closing');
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    overlay.classList.remove('closing');
+  }, 200);
+}
+
+function parsePlaylistId(input) {
+  if (!input) return null;
+  input = input.trim();
+  if (/^[a-f0-9-]{36}$/i.test(input) || /^\d+$/.test(input)) return input;
+  const match = input.match(/tidal\.com\/(?:browse\/)?playlist\/([a-f0-9-]+)/i);
+  return match ? match[1] : null;
+}
+
+async function fetchPlaylist() {
+  const input = document.getElementById('playlistUrlInput').value;
+  const playlistId = parsePlaylistId(input);
+  const contentEl = document.getElementById('playlistContent');
+
+  if (!playlistId) {
+    contentEl.innerHTML = `<div style="margin-top:16px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red-core);font-size:12px;">
+      Invalid playlist URL. Expected format:<br>
+      <code style="font-family:var(--font-mono);font-size:11px;color:var(--purple-muted)">https://tidal.com/browse/playlist/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code><br>
+      <code style="font-family:var(--font-mono);font-size:11px;color:var(--purple-muted)">https://listen.tidal.com/playlist/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>
+    </div>`;
+    return;
+  }
+
+  contentEl.innerHTML = `<div class="playlist-loading">
+    <div class="playlist-loading-spinner"></div>
+    <div class="playlist-loading-text">Loading playlist...</div>
+  </div>`;
+
+  try {
+    const result = await window.charon.getPlaylist(playlistId);
+
+    if (result.status === 'error') {
+      contentEl.innerHTML = `<div style="margin-top:16px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red-core);font-size:12px;">
+        ${escHtml(result.error)}
+      </div>`;
+      return;
+    }
+
+    playlistData = result.data;
+    renderPlaylistResult();
+  } catch (e) {
+    contentEl.innerHTML = `<div style="margin-top:16px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);color:var(--red-core);font-size:12px;">
+      Failed to fetch playlist: ${escHtml(e.message)}<br>
+      <span style="color:var(--purple-dim);font-size:11px;">Make sure the Python bridge is running and you are authenticated.</span>
+    </div>`;
+  }
+}
+
+function renderPlaylistResult() {
+  if (!playlistData) return;
+  const contentEl = document.getElementById('playlistContent');
+  const tracks = playlistData.tracks || [];
+  const totalDur = tracks.reduce((sum, t) => sum + (t.duration || 0), 0);
+
+  const artHtml = playlistData.image_url
+    ? `<img src="${escHtml(playlistData.image_url)}" alt="" onerror="this.style.display='none'">`
+    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--purple-dim)">${ICONS.music}</div>`;
+
+  let html = `
+    <div class="playlist-info-card">
+      <div class="playlist-info-art">${artHtml}</div>
+      <div class="playlist-info-meta">
+        <div class="playlist-info-name">${escHtml(playlistData.name || 'Untitled Playlist')}</div>
+        <div class="playlist-info-details">
+          <div><span>${tracks.length}</span> tracks</div>
+          <div><span>${formatDuration(totalDur)}</span> total</div>
+          ${playlistData.creator ? `<div>by <span>${escHtml(playlistData.creator)}</span></div>` : ''}
+        </div>
+        ${playlistData.description ? `<div class="playlist-info-desc">${escHtml(playlistData.description)}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="playlist-actions">
+      <button class="btn btn-primary btn-sm" onclick="queuePlaylistTracks('all')">
+        ${ICONS.download} Queue All (${tracks.length})
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="queuePlaylistTracks('selected')">
+        ${ICONS.download} Queue Selected
+      </button>
+      <span class="playlist-select-info" id="playlistSelectInfo">${tracks.length} / ${tracks.length} selected</span>
+    </div>
+
+    <div class="playlist-tracks-header">
+      <span class="playlist-tracks-label">TRACKS</span>
+      <button class="playlist-select-all" onclick="toggleAllPlaylistTracks(true)">Select All</button>
+      <button class="playlist-select-all" onclick="toggleAllPlaylistTracks(false)">Deselect All</button>
+    </div>`;
+
+  for (let i = 0; i < tracks.length; i++) {
+    const t = tracks[i];
+    const dur = formatDuration(t.duration || 0);
+    html += `<div class="playlist-track-row">
+      <input type="checkbox" checked data-track-idx="${i}" onchange="updatePlaylistSelectInfo()">
+      <span class="track-num">${i + 1}</span>
+      <div class="track-info-col">
+        <div class="track-name">${escHtml(t.title || t.name)}</div>
+        <div class="track-artist-name">${escHtml(t.artist || '')} ${t.album ? '· ' + escHtml(t.album) : ''}</div>
+      </div>
+      ${t.quality ? `<span class="quality-badge ${getQualityClass(t.quality)}">${escHtml(t.quality)}</span>` : ''}
+      <span class="track-duration">${dur}</span>
+    </div>`;
+  }
+
+  contentEl.innerHTML = html;
+}
+
+function toggleAllPlaylistTracks(checked) {
+  document.querySelectorAll('#playlistContent .playlist-track-row input[type="checkbox"]').forEach(cb => {
+    cb.checked = checked;
+  });
+  updatePlaylistSelectInfo();
+}
+
+function updatePlaylistSelectInfo() {
+  const checkboxes = document.querySelectorAll('#playlistContent .playlist-track-row input[type="checkbox"]');
+  const checked = document.querySelectorAll('#playlistContent .playlist-track-row input[type="checkbox"]:checked');
+  const info = document.getElementById('playlistSelectInfo');
+  if (info) info.textContent = `${checked.length} / ${checkboxes.length} selected`;
+}
+
+async function queuePlaylistTracks(mode) {
+  if (!playlistData || !playlistData.tracks) return;
+  const tracks = playlistData.tracks;
+  let toQueue = [];
+
+  if (mode === 'all') {
+    toQueue = tracks;
+  } else {
+    const checkboxes = document.querySelectorAll('#playlistContent .playlist-track-row input[type="checkbox"]:checked');
+    checkboxes.forEach(cb => {
+      const idx = parseInt(cb.dataset.trackIdx);
+      if (tracks[idx]) toQueue.push(tracks[idx]);
+    });
+  }
+
+  if (toQueue.length === 0) {
+    showToast('error', 'No tracks selected');
+    return;
+  }
+
+  let queued = 0;
+  for (const track of toQueue) {
+    try {
+      await window.charon.queueAdd({
+        tidalUrl: `https://tidal.com/browse/track/${track.id}`,
+        title: track.title || track.name || 'Unknown Track',
+        artist: track.artist || '',
+        type: 'track',
+        quality: settings.quality || 'MAX'
+      });
+      queued++;
+    } catch (e) {
+      console.error('Failed to queue track:', e);
+    }
+  }
+
+  showToast('success', `Queued ${queued} tracks from "${playlistData.name || 'playlist'}"`);
+  closePlaylistImport();
+}
+
 // ============ TOAST NOTIFICATIONS ============
 function showToast(type, message) {
   if (settings.notifications === false && type !== 'error') return;
@@ -2930,10 +3857,85 @@ function showToast(type, message) {
   toast.innerHTML = `<div class="toast-icon ${type}">${iconSvg}</div><div class="toast-text">${escHtml(message)}</div><div class="toast-progress"></div>`;
   container.appendChild(toast);
 
+  // Also log errors to error log
+  if (type === 'error') logError(message);
+
   setTimeout(() => {
     toast.classList.add('toast-out');
     setTimeout(() => toast.remove(), 300);
   }, 4000);
+}
+
+// ============ ERROR LOG ============
+function logError(message) {
+  const entry = {
+    time: new Date().toLocaleTimeString(),
+    timestamp: Date.now(),
+    message: String(message)
+  };
+  errorLog.unshift(entry);
+  if (errorLog.length > MAX_ERROR_LOG) errorLog.pop();
+  updateErrorBadge();
+  renderErrorLog();
+}
+
+function updateErrorBadge() {
+  const badge = document.getElementById('errorBadge');
+  if (errorLog.length > 0) {
+    badge.textContent = errorLog.length;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function toggleErrorLog() {
+  const panel = document.getElementById('errorLogPanel');
+  panel.classList.toggle('visible');
+  if (panel.classList.contains('visible')) renderErrorLog();
+}
+
+function renderErrorLog() {
+  const body = document.getElementById('errorLogBody');
+  const count = document.getElementById('errorLogCount');
+  if (!body) return;
+  count.textContent = errorLog.length + ' error' + (errorLog.length !== 1 ? 's' : '');
+  if (errorLog.length === 0) {
+    body.innerHTML = '<div class="error-log-empty">No errors recorded</div>';
+    return;
+  }
+  let html = '';
+  for (const entry of errorLog) {
+    html += `<div class="error-log-entry"><span class="error-log-time">${escHtml(entry.time)}</span><span class="error-log-msg">${escHtml(entry.message)}</span></div>`;
+  }
+  body.innerHTML = html;
+}
+
+// ============ DOWNLOAD RETRY ============
+async function retryDownload(itemId) {
+  try {
+    await window.charon.queueRetry(itemId);
+    showToast('info', 'Re-queued for download');
+  } catch (e) {
+    showToast('error', 'Failed to retry: ' + e.message);
+  }
+}
+
+// ============ BRIDGE MANAGEMENT ============
+async function restartBridge() {
+  const banner = document.getElementById('bridgeBanner');
+  showToast('info', 'Restarting Python bridge...');
+  try {
+    const result = await window.charon.restartBridge();
+    if (result.success) {
+      banner.classList.remove('visible');
+      showToast('success', 'Bridge restarted successfully');
+    } else {
+      showToast('error', 'Failed to restart bridge: ' + (result.error || 'Unknown'));
+    }
+  } catch (e) {
+    showToast('error', 'Restart failed: ' + e.message);
+  }
 }
 
 // ============ SKELETON LOADERS ============
@@ -3022,11 +4024,15 @@ window.charon.onDownloadProgress((data) => {
 });
 window.charon.onDownloadComplete((item) => {
   showToast('success', `Downloaded: ${item.title || 'Unknown'}`);
+  recordDownloadStat(item);
 });
 window.charon.onNavidromeScanResult((data) => {
   if (data.success) {
     showToast('success', 'Navidrome library scan complete');
     if (currentView === 'server') loadServerStats();
+  } else if (data.error) {
+    showToast('error', 'Navidrome scan failed: ' + data.error);
+    logError('Navidrome scan failed: ' + data.error);
   }
 });
 window.charon.onNavidromeInstallProgress((data) => {
@@ -3036,6 +4042,18 @@ window.charon.onNavidromeInstallProgress((data) => {
   if (data.step === 'error') showToast('error', data.message);
 });
 
+// Bridge disconnection
+window.charon.onBridgeDisconnected((data) => {
+  const banner = document.getElementById('bridgeBanner');
+  banner.classList.add('visible');
+  showToast('error', 'Bridge disconnected: ' + (data.message || 'Process exited with code ' + data.code));
+});
+
+// Download retry notifications
+window.charon.onDownloadRetry((data) => {
+  showToast('error', `Download failed: ${data.title}. Retrying (${data.retryCount}/${data.maxRetries})...`);
+});
+
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.key === 'f') {
@@ -3043,9 +4061,448 @@ document.addEventListener('keydown', (e) => {
     switchView('search');
   }
   if (e.key === 'Escape') {
+    const overlay = document.getElementById('playlistOverlay');
+    if (overlay && overlay.style.display !== 'none') {
+      closePlaylistImport();
+      return;
+    }
     goBack();
   }
 });
+
+
+// ============ FAVORITES / WISHLIST ============
+function getFavorites() {
+  try {
+    return JSON.parse(localStorage.getItem('charon_favorites') || '[]');
+  } catch (e) { return []; }
+}
+
+function saveFavorites(favs) {
+  localStorage.setItem('charon_favorites', JSON.stringify(favs));
+  updateFavBadge();
+}
+
+function isFavorited(id) {
+  return getFavorites().some(f => f.id === String(id));
+}
+
+function toggleFavorite(item) {
+  let favs = getFavorites();
+  const id = String(item.id);
+  const idx = favs.findIndex(f => f.id === id);
+  if (idx >= 0) {
+    favs.splice(idx, 1);
+    showToast('info', 'Removed from favorites');
+  } else {
+    favs.push({
+      id: id,
+      title: item.title || item.name || 'Unknown',
+      artist: item.artist || '',
+      album: item.album || '',
+      type: item.type || 'track',
+      coverUrl: item.image_url || item.coverUrl || '',
+      addedDate: new Date().toISOString()
+    });
+    showToast('success', 'Added to favorites');
+  }
+  saveFavorites(favs);
+  // Re-render current view to update star states
+  if (currentView === 'search' && searchResults.length > 0) {
+    const container = document.getElementById('searchResults');
+    const type = document.getElementById('searchType').value;
+    container.innerHTML = '<div class="results-header">' + searchResults.length + ' ' + type.toUpperCase() + 'S FOUND</div>' + renderResultsGrid(searchResults, type);
+  }
+  if (currentView === 'favorites') renderFavoritesView();
+}
+
+function updateFavBadge() {
+  const badge = document.getElementById('favBadge');
+  if (!badge) return;
+  const count = getFavorites().length;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function favStarHtml(item, isCard) {
+  const faved = isFavorited(item.id);
+  const icon = faved ? ICONS.starFilled : ICONS.star;
+  const cls = isCard ? 'card-fav-star' : 'fav-star-btn';
+  const favedCls = faved ? ' favorited' : '';
+  const dataStr = escAttr(JSON.stringify({
+    id: String(item.id),
+    title: item.title || item.name || '',
+    artist: item.artist || '',
+    album: item.album || '',
+    type: item.type || 'track',
+    image_url: item.image_url || item.coverUrl || ''
+  }));
+  return '<button class="' + cls + favedCls + '" title="' + (faved ? 'Remove from favorites' : 'Add to favorites') + '" onclick="event.stopPropagation();toggleFavorite(JSON.parse(this.dataset.fav))" data-fav="' + dataStr + '">' + icon + '</button>';
+}
+
+let favFilterType = 'all';
+
+function setFavFilter(type) {
+  favFilterType = type;
+  renderFavoritesView();
+}
+
+function renderFavoritesView() {
+  const container = document.getElementById('favoritesContent');
+  const favs = getFavorites();
+
+  if (favs.length === 0) {
+    container.innerHTML = '<div class="empty-state">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' +
+      '<h3>NO FAVORITES YET</h3>' +
+      '<p>Star albums and tracks from search results to save them here.</p>' +
+      '</div>';
+    return;
+  }
+
+  const albums = favs.filter(f => f.type === 'album');
+  const tracks = favs.filter(f => f.type === 'track');
+  const filtered = favFilterType === 'album' ? albums : favFilterType === 'track' ? tracks : favs;
+
+  let html = '<div class="fav-header">' +
+    '<div class="fav-header-left">' +
+    '<h2>FAVORITES</h2>' +
+    '<span class="fav-count">' + favs.length + ' items</span>' +
+    '</div>' +
+    '<button class="btn btn-primary btn-sm" onclick="downloadAllFavorites()">' +
+    ICONS.download + ' Download All Favorites' +
+    '</button>' +
+    '</div>';
+
+  html += '<div class="fav-tabs">' +
+    '<button class="fav-tab ' + (favFilterType === 'all' ? 'active' : '') + '" onclick="setFavFilter(\'all\')">All (' + favs.length + ')</button>' +
+    '<button class="fav-tab ' + (favFilterType === 'album' ? 'active' : '') + '" onclick="setFavFilter(\'album\')">Albums (' + albums.length + ')</button>' +
+    '<button class="fav-tab ' + (favFilterType === 'track' ? 'active' : '') + '" onclick="setFavFilter(\'track\')">Tracks (' + tracks.length + ')</button>' +
+    '</div>';
+
+  // Render albums as grid
+  const gridItems = filtered.filter(f => f.type === 'album');
+  const listItems = filtered.filter(f => f.type === 'track');
+
+  if (favFilterType !== 'track' && gridItems.length > 0) {
+    html += '<div class="results-grid">';
+    for (const item of gridItems) {
+      const artHtml = item.coverUrl
+        ? '<img src="' + escHtml(item.coverUrl) + '" loading="lazy" alt="" onerror="imgErr(this)">'
+        : '<div class="card-art-placeholder">' + ICONS.disc + '</div>';
+      const addedDate = item.addedDate ? new Date(item.addedDate).toLocaleDateString() : '';
+      html += '<div class="card" onclick="loadAlbum(\'' + item.id + '\')">' +
+        '<div class="card-art">' + artHtml +
+        '<div class="card-type-badge">album</div>' +
+        '<div class="card-overlay"><button class="card-play-btn" onclick="event.stopPropagation();downloadAlbum(\'' + item.id + '\',\'' + escAttr(item.title) + '\')">' + ICONS.download + '</button></div>' +
+        '</div>' +
+        '<div class="card-info">' +
+        '<div class="card-title">' + escHtml(item.title) + '</div>' +
+        (item.artist ? '<div class="card-sub">' + escHtml(item.artist) + '</div>' : '') +
+        '<div class="fav-date">Added ' + addedDate + '</div>' +
+        '<div class="fav-item-actions">' +
+        '<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();downloadAlbum(\'' + item.id + '\',\'' + escAttr(item.title) + '\')" style="padding:4px 10px;font-size:10px">' + ICONS.download + ' DL</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();removeFavorite(\'' + item.id + '\')" style="padding:4px 10px;font-size:10px;color:var(--red-core)">' + ICONS.x + ' Remove</button>' +
+        '</div></div></div>';
+    }
+    html += '</div>';
+  }
+
+  if (favFilterType !== 'album' && listItems.length > 0) {
+    if (gridItems.length > 0 && favFilterType === 'all') {
+      html += '<div class="results-header" style="margin-top:20px">TRACKS</div>';
+    }
+    html += '<div class="track-list">';
+    for (let i = 0; i < listItems.length; i++) {
+      const t = listItems[i];
+      const artHtml = t.coverUrl ? '<img src="' + escHtml(t.coverUrl) + '" loading="lazy" alt="" onerror="imgErr(this)">' : '';
+      const addedDate = t.addedDate ? new Date(t.addedDate).toLocaleDateString() : '';
+      html += '<div class="track-row">' +
+        '<span class="track-num">' + (i + 1) + '</span>' +
+        '<div class="track-art-sm">' + artHtml + '</div>' +
+        '<div class="track-info-col">' +
+        '<div class="track-name">' + escHtml(t.title) + '</div>' +
+        '<div class="track-artist-name">' + escHtml(t.artist || '') + ' \u00b7 Added ' + addedDate + '</div>' +
+        '</div>' +
+        '<div class="track-actions" style="opacity:1">' +
+        '<button class="track-action-btn" title="Download" onclick="downloadTrack(\'' + t.id + '\',\'' + escAttr(t.title) + '\',\'' + escAttr(t.artist || '') + '\')">' + ICONS.download + '</button>' +
+        '<button class="track-action-btn" title="Remove" onclick="removeFavorite(\'' + t.id + '\')" style="color:var(--red-core)">' + ICONS.x + '</button>' +
+        '</div></div>';
+    }
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function removeFavorite(id) {
+  let favs = getFavorites();
+  favs = favs.filter(f => f.id !== String(id));
+  saveFavorites(favs);
+  showToast('info', 'Removed from favorites');
+  if (currentView === 'favorites') renderFavoritesView();
+}
+
+async function downloadAllFavorites() {
+  const favs = getFavorites();
+  if (favs.length === 0) { showToast('info', 'No favorites to download'); return; }
+  showToast('info', 'Queueing ' + favs.length + ' favorites for download...');
+  let queued = 0;
+  for (const fav of favs) {
+    try {
+      if (fav.type === 'album') {
+        await downloadAlbum(fav.id, fav.title);
+      } else {
+        await downloadTrack(fav.id, fav.title, fav.artist);
+      }
+      queued++;
+    } catch (e) {
+      console.error('Failed to queue favorite:', e);
+    }
+  }
+  showToast('success', 'Queued ' + queued + ' favorites for download');
+}
+
+// ============ DOWNLOAD STATISTICS ============
+function getDownloadStats() {
+  try {
+    return JSON.parse(localStorage.getItem('charon_download_stats') || '[]');
+  } catch (e) { return []; }
+}
+
+function saveDownloadStats(stats) {
+  localStorage.setItem('charon_download_stats', JSON.stringify(stats));
+}
+
+function recordDownloadStat(item) {
+  const stats = getDownloadStats();
+  stats.push({
+    trackId: item.id || '',
+    title: item.title || 'Unknown',
+    artist: item.artist || '',
+    album: item.album || '',
+    quality: item.quality || settings.quality || 'MAX',
+    fileSize: item.fileSize || 0,
+    date: new Date().toISOString(),
+    duration: item.duration || 0
+  });
+  saveDownloadStats(stats);
+}
+
+function formatBytes(bytes) {
+  if (!bytes || bytes <= 0) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return (bytes / Math.pow(1024, i)).toFixed(i > 1 ? 2 : 0) + ' ' + units[i];
+}
+
+function animateCountUp(element, target, duration) {
+  const start = 0;
+  const startTime = performance.now();
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    element.textContent = Math.floor(start + (target - start) * eased).toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function renderStatsView() {
+  const container = document.getElementById('statsContent');
+  const stats = getDownloadStats();
+
+  if (stats.length === 0) {
+    container.innerHTML = '<div class="empty-state">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
+      '<h3>NO DOWNLOAD DATA</h3>' +
+      '<p>Download some music to see statistics here.</p>' +
+      '</div>';
+    return;
+  }
+
+  const totalTracks = stats.length;
+  const totalBytes = stats.reduce((sum, s) => sum + (s.fileSize || 0), 0);
+
+  // Quality breakdown
+  const qualityCounts = {};
+  for (const s of stats) {
+    const q = s.quality || 'Unknown';
+    qualityCounts[q] = (qualityCounts[q] || 0) + 1;
+  }
+
+  // Top artists
+  const artistCounts = {};
+  for (const s of stats) {
+    if (s.artist) artistCounts[s.artist] = (artistCounts[s.artist] || 0) + 1;
+  }
+  const topArtists = Object.entries(artistCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+  // Downloads per day (last 30 days)
+  const now = new Date();
+  const daysData = [];
+  for (let i = 29; i >= 0; i--) {
+    const day = new Date(now);
+    day.setDate(day.getDate() - i);
+    const dayStr = day.toISOString().split('T')[0];
+    const count = stats.filter(s => s.date && s.date.startsWith(dayStr)).length;
+    daysData.push({ date: dayStr, count });
+  }
+
+  const totalDuration = stats.reduce((sum, s) => sum + (s.duration || 0), 0);
+  const avgSpeed = totalDuration > 0 ? totalBytes / totalDuration : 0;
+
+  let html = '';
+
+  // Summary cards
+  html += '<div class="stats-grid">' +
+    '<div class="stat-card"><div class="stat-value" id="statTotalTracks">0</div><div class="stat-label">Tracks Downloaded</div></div>' +
+    '<div class="stat-card"><div class="stat-value">' + formatBytes(totalBytes) + '</div><div class="stat-label">Total Data</div></div>' +
+    '<div class="stat-card"><div class="stat-value">' + Object.keys(artistCounts).length + '</div><div class="stat-label">Unique Artists</div></div>' +
+    '<div class="stat-card"><div class="stat-value">' + (avgSpeed > 0 ? formatBytes(avgSpeed) + '/s' : 'N/A') + '</div><div class="stat-label">Avg Speed</div></div>' +
+    '</div>';
+
+  // Quality breakdown pie chart
+  html += '<div class="stats-section">' +
+    '<div class="stats-section-title">Quality Breakdown</div>' +
+    '<div class="stats-chart-wrap"><canvas id="qualityPieChart" width="160" height="160"></canvas>' +
+    '<div class="stats-legend" id="qualityLegend"></div></div></div>';
+
+  // Top artists
+  if (topArtists.length > 0) {
+    const maxCount = topArtists[0][1];
+    html += '<div class="stats-section"><div class="stats-section-title">Top Artists</div><div class="stats-artist-list">';
+    for (let i = 0; i < topArtists.length; i++) {
+      const [name, count] = topArtists[i];
+      const pct = (count / maxCount * 100).toFixed(0);
+      html += '<div class="stats-artist-row">' +
+        '<span class="stats-artist-rank">' + (i + 1) + '</span>' +
+        '<span class="stats-artist-name">' + escHtml(name) + '</span>' +
+        '<span class="stats-artist-count">' + count + '</span>' +
+        '<div class="stats-artist-bar"><div class="stats-artist-bar-fill" style="width:' + pct + '%"></div></div></div>';
+    }
+    html += '</div></div>';
+  }
+
+  // Sparkline
+  html += '<div class="stats-section"><div class="stats-section-title">Downloads \u2014 Last 30 Days</div>' +
+    '<div class="stats-sparkline-wrap"><canvas id="sparklineChart"></canvas></div></div>';
+
+  // Clear button
+  html += '<div class="stats-footer"><button class="btn btn-ghost btn-sm" onclick="clearDownloadStats()" style="color:var(--red-core)">' +
+    ICONS.trash + ' Clear Stats</button></div>';
+
+  container.innerHTML = html;
+
+  // Animate count up
+  setTimeout(() => {
+    const el = document.getElementById('statTotalTracks');
+    if (el) animateCountUp(el, totalTracks, 1200);
+  }, 100);
+
+  // Draw pie chart
+  setTimeout(() => drawQualityPieChart(qualityCounts, totalTracks), 150);
+  // Draw sparkline
+  setTimeout(() => drawSparkline(daysData), 200);
+}
+
+function drawQualityPieChart(qualityCounts, total) {
+  const canvas = document.getElementById('qualityPieChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 80, cy = 80, r = 70;
+
+  const colors = { 'MAX': '#a78bfa', 'LOSSLESS': '#06B6D4', 'HIGH': '#22c55e', 'NORMAL': '#0E4D64', 'Unknown': '#374151' };
+  const defaultColors = ['#06B6D4', '#22D3EE', '#67E8F9', '#A5F3FC', '#0E4D64'];
+
+  const entries = Object.entries(qualityCounts);
+  let startAngle = -Math.PI / 2;
+  let legendHtml = '';
+  let colorIdx = 0;
+
+  for (const [quality, count] of entries) {
+    const sliceAngle = (count / total) * Math.PI * 2;
+    const color = colors[quality] || defaultColors[colorIdx % defaultColors.length];
+    colorIdx++;
+
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
+    ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
+    ctx.closePath(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke();
+
+    const pct = ((count / total) * 100).toFixed(0);
+    legendHtml += '<div class="stats-legend-item"><div class="stats-legend-dot" style="background:' + color + '"></div>' + escHtml(quality) + ' \u2014 ' + count + ' (' + pct + '%)</div>';
+    startAngle += sliceAngle;
+  }
+
+  ctx.beginPath(); ctx.arc(cx, cy, r * 0.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#060B0F'; ctx.fill();
+  ctx.fillStyle = '#67E8F9'; ctx.font = '700 18px Orbitron, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(total, cx, cy);
+
+  const legend = document.getElementById('qualityLegend');
+  if (legend) legend.innerHTML = legendHtml;
+}
+
+function drawSparkline(daysData) {
+  const canvas = document.getElementById('sparklineChart');
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width; canvas.height = 80;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const maxCount = Math.max(...daysData.map(d => d.count), 1);
+  const pad = { l: 4, r: 4, t: 8, b: 16 };
+  const cW = w - pad.l - pad.r, cH = h - pad.t - pad.b;
+
+  // Fill gradient
+  ctx.beginPath();
+  for (let i = 0; i < daysData.length; i++) {
+    const x = pad.l + (i / (daysData.length - 1)) * cW;
+    const y = pad.t + (1 - daysData[i].count / maxCount) * cH;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.lineTo(pad.l + cW, pad.t + cH); ctx.lineTo(pad.l, pad.t + cH); ctx.closePath();
+  const grad = ctx.createLinearGradient(0, pad.t, 0, h);
+  grad.addColorStop(0, 'rgba(6,182,212,0.25)');
+  grad.addColorStop(1, 'rgba(6,182,212,0.02)');
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  for (let i = 0; i < daysData.length; i++) {
+    const x = pad.l + (i / (daysData.length - 1)) * cW;
+    const y = pad.t + (1 - daysData[i].count / maxCount) * cH;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = '#06B6D4'; ctx.lineWidth = 2; ctx.stroke();
+
+  // Dots
+  for (let i = 0; i < daysData.length; i++) {
+    if (daysData[i].count > 0) {
+      const x = pad.l + (i / (daysData.length - 1)) * cW;
+      const y = pad.t + (1 - daysData[i].count / maxCount) * cH;
+      ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#22D3EE'; ctx.fill();
+    }
+  }
+}
+
+function clearDownloadStats() {
+  if (!confirm('Clear all download statistics? This cannot be undone.')) return;
+  localStorage.removeItem('charon_download_stats');
+  showToast('info', 'Download statistics cleared');
+  if (currentView === 'stats') renderStatsView();
+}
+
 
 // ============ INIT ============
 async function init() {
@@ -3059,6 +4516,8 @@ async function init() {
   } catch (e) {
     console.error('Failed to load queue:', e);
   }
+  // Initialize favorites badge
+  updateFavBadge();
 }
 
 // ============ TRON BACKGROUND ============

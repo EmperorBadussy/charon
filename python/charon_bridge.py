@@ -5,7 +5,7 @@
 ║                                                                    ║
 ║  Commands: search, get_artist, get_album, get_track,             ║
 ║            get_artist_albums, get_artist_top_tracks,             ║
-║            auth_status, auth_login, download                     ║
+║            get_playlist, auth_status, auth_login, download       ║
 ╚══════════════════════════════════════════════════════════════════╝
 """
 
@@ -121,12 +121,13 @@ def handle_search(params):
     query = params.get("query", "")
     search_type = params.get("type", "track")
     limit = params.get("limit", 50)
+    offset = params.get("offset", 0)
 
     if not query:
         return {"status": "error", "error": "No search query provided"}
 
     try:
-        results = session.search(query, limit=limit)
+        results = session.search(query, limit=limit, offset=offset)
         items = []
 
         # tidalapi 0.8+ returns a dict, older versions return an object
@@ -145,7 +146,7 @@ def handle_search(params):
             for artist in get_results("artists")[:limit]:
                 items.append(format_artist_summary(artist))
 
-        return {"status": "ok", "data": {"results": items, "type": search_type}}
+        return {"status": "ok", "data": {"results": items, "type": search_type, "offset": offset, "limit": limit}}
 
     except Exception as e:
         return {"status": "error", "error": str(e)}
@@ -242,6 +243,74 @@ def handle_get_artist_top_tracks(params):
         return {"status": "ok", "data": {"tracks": items}}
     except Exception as e:
         return {"status": "error", "error": str(e)}
+
+
+# ============ PLAYLIST ============
+def handle_get_playlist(params):
+    """Get playlist details with all tracks."""
+    session = get_session()
+    if not session or not is_authenticated():
+        return {"status": "error", "error": "Not authenticated with Tidal"}
+
+    playlist_id = params.get("playlist_id")
+    if not playlist_id:
+        return {"status": "error", "error": "No playlist_id provided"}
+
+    try:
+        playlist = session.playlist(playlist_id)
+
+        # Get playlist metadata
+        name = getattr(playlist, "name", "") or ""
+        description = getattr(playlist, "description", "") or ""
+        num_tracks = getattr(playlist, "num_tracks", 0) or 0
+        duration = getattr(playlist, "duration", 0) or 0
+
+        # Get creator info
+        creator_name = ""
+        try:
+            creator = getattr(playlist, "creator", None)
+            if creator:
+                creator_name = getattr(creator, "name", "") or ""
+        except Exception:
+            pass
+
+        # Get playlist image
+        image_url = ""
+        try:
+            image_url = get_image_url(playlist)
+        except Exception:
+            pass
+
+        # Fetch all tracks
+        tracks = []
+        try:
+            playlist_tracks = playlist.tracks()
+            for track in playlist_tracks:
+                tracks.append(format_track(track))
+        except Exception as e:
+            return {"status": "error", "error": f"Failed to fetch playlist tracks: {str(e)}"}
+
+        return {
+            "status": "ok",
+            "data": {
+                "id": str(playlist_id),
+                "name": name,
+                "description": description,
+                "num_tracks": num_tracks,
+                "duration": duration,
+                "creator": creator_name,
+                "image_url": image_url,
+                "tracks": tracks
+            }
+        }
+
+    except Exception as e:
+        error_msg = str(e).lower()
+        if "404" in error_msg or "not found" in error_msg:
+            return {"status": "error", "error": "Playlist not found. It may be private or deleted."}
+        elif "403" in error_msg or "forbidden" in error_msg or "private" in error_msg:
+            return {"status": "error", "error": "This playlist is private and cannot be accessed."}
+        return {"status": "error", "error": f"Failed to load playlist: {str(e)}"}
 
 
 # ============ AUTH ============
@@ -568,6 +637,7 @@ HANDLERS = {
     "get_track": handle_get_track,
     "get_artist_albums": handle_get_artist_albums,
     "get_artist_top_tracks": handle_get_artist_top_tracks,
+    "get_playlist": handle_get_playlist,
     "auth_status": handle_auth_status,
     "auth_login": handle_auth_login,
 }

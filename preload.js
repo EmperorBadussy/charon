@@ -21,8 +21,8 @@ contextBridge.exposeInMainWorld('charon', {
   bridge: (action, params) => ipcRenderer.invoke('bridge-command', action, params),
 
   // ── Search & Browse (via bridge) ──
-  search: (query, type = 'track', limit = 50) =>
-    ipcRenderer.invoke('bridge-command', 'search', { query, type, limit }),
+  search: (query, type = 'track', limit = 50, offset = 0) =>
+    ipcRenderer.invoke('bridge-command', 'search', { query, type, limit, offset }),
 
   getArtist: (artistId) =>
     ipcRenderer.invoke('bridge-command', 'get_artist', { artist_id: artistId }),
@@ -39,6 +39,9 @@ contextBridge.exposeInMainWorld('charon', {
   getArtistTopTracks: (artistId) =>
     ipcRenderer.invoke('bridge-command', 'get_artist_top_tracks', { artist_id: artistId }),
 
+  getPlaylist: (playlistId) =>
+    ipcRenderer.invoke('bridge-command', 'get_playlist', { playlist_id: playlistId }),
+
   // ── Auth ──
   authStatus: () =>
     ipcRenderer.invoke('bridge-command', 'auth_status'),
@@ -49,6 +52,7 @@ contextBridge.exposeInMainWorld('charon', {
   // ── Download queue ──
   queueAdd: (item) => ipcRenderer.invoke('queue-add', item),
   queueRemove: (itemId) => ipcRenderer.invoke('queue-remove', itemId),
+  queueRetry: (itemId) => ipcRenderer.invoke('queue-retry', itemId),
   queueGet: () => ipcRenderer.invoke('queue-get'),
   queueClearCompleted: () => ipcRenderer.invoke('queue-clear-completed'),
 
@@ -66,8 +70,12 @@ contextBridge.exposeInMainWorld('charon', {
   getSettings: () => ipcRenderer.invoke('settings-get'),
   setSettings: (settings) => ipcRenderer.invoke('settings-set', settings),
 
+  // ── Duplicate detection ──
+  checkDuplicate: (params) => ipcRenderer.invoke('check-duplicate', params),
+
   // ── System ──
   checkDeps: () => ipcRenderer.invoke('check-dependencies'),
+  restartBridge: () => ipcRenderer.invoke('restart-bridge'),
   openFolder: (folderPath) => ipcRenderer.invoke('open-folder', folderPath),
   openUrl: (url) => ipcRenderer.invoke('open-url', url),
 
@@ -100,5 +108,17 @@ contextBridge.exposeInMainWorld('charon', {
     const handler = (event, data) => callback(data);
     ipcRenderer.on('navidrome-install-progress', handler);
     return () => ipcRenderer.removeListener('navidrome-install-progress', handler);
+  },
+
+  onBridgeDisconnected: (callback) => {
+    const handler = (event, data) => callback(data);
+    ipcRenderer.on('bridge-disconnected', handler);
+    return () => ipcRenderer.removeListener('bridge-disconnected', handler);
+  },
+
+  onDownloadRetry: (callback) => {
+    const handler = (event, data) => callback(data);
+    ipcRenderer.on('download-retry', handler);
+    return () => ipcRenderer.removeListener('download-retry', handler);
   }
 });

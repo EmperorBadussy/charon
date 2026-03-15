@@ -50,9 +50,9 @@ function loadQueue() {
       const data = JSON.parse(fs.readFileSync(queuePath, 'utf-8'));
       downloadQueue = data.queue || [];
       downloadHistory = data.history || [];
-      // Reset any stale 'downloading' items to 'queued'
+      // Reset any stale 'downloading' or 'retrying' items to 'queued'
       downloadQueue.forEach(item => {
-        if (item.status === 'downloading') item.status = 'queued';
+        if (item.status === 'downloading' || item.status === 'retrying') item.status = 'queued';
       });
     }
   } catch (e) {
@@ -241,6 +241,8 @@ function startPythonBridge() {
       reject(new Error('Bridge process exited'));
     }
     pendingRequests.clear();
+    // Notify renderer of bridge disconnection
+    notifyRenderer('bridge-disconnected', { code, message: 'Python bridge process exited unexpectedly' });
   });
 
   console.log('Python bridge started, PID:', pythonBridge.pid);
@@ -282,6 +284,8 @@ let downloadQueue = [];
 let activeDownloads = 0;
 let maxConcurrent = 3;
 let downloadHistory = [];
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 5000;
 
 function processQueue() {
   // Read concurrency from settings
@@ -293,6 +297,7 @@ function processQueue() {
 
     const item = downloadQueue[nextIdx];
     item.status = 'downloading';
+    if (item.retryCount === undefined) item.retryCount = 0;
     activeDownloads++;
 
     notifyRenderer('queue-update', { queue: downloadQueue, history: downloadHistory });
@@ -311,6 +316,7 @@ function processQueue() {
       .then(result => {
         item.status = 'completed';
         item.completedAt = Date.now();
+        item.retryCount = 0; // Reset on success
         if (result.data) {
           item.filePath = result.data.file_path;
           item.fileSize = result.data.file_size;
@@ -328,12 +334,38 @@ function processQueue() {
         processQueue();
       })
       .catch(err => {
-        item.status = 'error';
-        item.error = err.message;
         activeDownloads--;
-        notifyRenderer('queue-update', { queue: downloadQueue, history: downloadHistory });
-        saveQueue();
-        processQueue();
+
+        // Auto-retry if under max retries
+        if (item.retryCount < MAX_RETRIES) {
+          item.retryCount++;
+          item.status = 'retrying';
+          item.error = err.message;
+          notifyRenderer('queue-update', { queue: downloadQueue, history: downloadHistory });
+          notifyRenderer('download-retry', {
+            id: item.id,
+            title: item.title,
+            retryCount: item.retryCount,
+            maxRetries: MAX_RETRIES,
+            error: err.message
+          });
+          saveQueue();
+
+          // Re-queue after delay
+          setTimeout(() => {
+            item.status = 'queued';
+            notifyRenderer('queue-update', { queue: downloadQueue, history: downloadHistory });
+            saveQueue();
+            processQueue();
+          }, RETRY_DELAY_MS);
+        } else {
+          // Permanently failed after max retries
+          item.status = 'error';
+          item.error = err.message;
+          notifyRenderer('queue-update', { queue: downloadQueue, history: downloadHistory });
+          saveQueue();
+          processQueue();
+        }
       });
   }
 }
@@ -468,6 +500,18 @@ ipcMain.handle('queue-get', () => {
   return { queue: downloadQueue, history: downloadHistory };
 });
 
+ipcMain.handle('queue-retry', (event, itemId) => {
+  const item = downloadQueue.find(q => q.id === itemId);
+  if (!item) return { success: false, error: 'Item not found in queue' };
+  item.retryCount = 0;
+  item.status = 'queued';
+  item.error = null;
+  notifyRenderer('queue-update', { queue: downloadQueue, history: downloadHistory });
+  saveQueue();
+  processQueue();
+  return { success: true };
+});
+
 ipcMain.handle('queue-clear-completed', () => {
   downloadHistory = [];
   notifyRenderer('queue-update', { queue: downloadQueue, history: downloadHistory });
@@ -513,6 +557,117 @@ ipcMain.handle('settings-set', (event, settings) => {
     return { success: false, error: e.message };
   }
   return { success: true };
+});
+
+// Duplicate detection — filesystem-based check
+ipcMain.handle('check-duplicate', async (event, { artist, album, title }) => {
+  const downloadDir = globalSettings.downloadDir || path.join(os.homedir(), 'Music', 'CHARON');
+
+  if (!fs.existsSync(downloadDir)) {
+    return { exists: false, path: null };
+  }
+
+  // Normalize strings for comparison: lowercase, strip special chars
+  const normalize = (str) => (str || '').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+
+  const normalArtist = normalize(artist);
+  const normalAlbum = normalize(album);
+  const normalTitle = normalize(title);
+
+  try {
+    const entries = fs.readdirSync(downloadDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const dirName = entry.name;
+      const normalDir = normalize(dirName);
+
+      // Check "Artist - Album" pattern (single-level)
+      if (normalArtist && normalAlbum) {
+        const combined = normalArtist + ' ' + normalAlbum;
+        const combinedDash = normalArtist + '  ' + normalAlbum; // after stripping " - "
+        if (normalDir === combined || normalDir === combinedDash ||
+            normalDir.includes(normalArtist) && normalDir.includes(normalAlbum)) {
+          return { exists: true, path: path.join(downloadDir, dirName) };
+        }
+      }
+
+      // Check "Artist/Album" pattern (two-level): entry is artist folder
+      if (normalArtist && normalize(dirName) === normalArtist) {
+        const artistPath = path.join(downloadDir, dirName);
+        const subEntries = fs.readdirSync(artistPath, { withFileTypes: true });
+
+        for (const sub of subEntries) {
+          if (!sub.isDirectory()) continue;
+          if (normalAlbum && normalize(sub.name) === normalAlbum) {
+            return { exists: true, path: path.join(artistPath, sub.name) };
+          }
+          // Fuzzy album match
+          if (normalAlbum && normalize(sub.name).includes(normalAlbum)) {
+            return { exists: true, path: path.join(artistPath, sub.name) };
+          }
+        }
+
+        // Check for individual track files inside artist folder (any depth)
+        if (normalTitle) {
+          const trackMatch = findTrackFile(artistPath, normalTitle);
+          if (trackMatch) return { exists: true, path: trackMatch };
+        }
+      }
+
+      // Check for track files inside "Artist - Album" style folders
+      if (normalTitle && normalDir.includes(normalArtist)) {
+        const trackMatch = findTrackFile(path.join(downloadDir, dirName), normalTitle);
+        if (trackMatch) return { exists: true, path: trackMatch };
+      }
+    }
+  } catch (e) {
+    console.error('Duplicate check error:', e);
+  }
+
+  return { exists: false, path: null };
+});
+
+// Helper: recursively find a track file matching the title (fuzzy)
+function findTrackFile(dir, normalTitle) {
+  const normalize = (str) => (str || '').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+  const audioExts = ['.flac', '.mp3', '.m4a', '.ogg', '.opus', '.wav', '.aac', '.wma'];
+
+  try {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        const result = findTrackFile(path.join(dir, entry.name), normalTitle);
+        if (result) return result;
+      } else {
+        const ext = path.extname(entry.name).toLowerCase();
+        if (audioExts.includes(ext)) {
+          const fileBase = normalize(path.basename(entry.name, ext));
+          // Match if filename contains the track title (ignoring track numbers, etc.)
+          if (fileBase.includes(normalTitle) || normalTitle.includes(fileBase)) {
+            return path.join(dir, entry.name);
+          }
+        }
+      }
+    }
+  } catch (e) {}
+  return null;
+}
+
+// Restart Python bridge
+ipcMain.handle('restart-bridge', async () => {
+  try {
+    if (pythonBridge && !pythonBridge.killed) {
+      pythonBridge.kill();
+      pythonBridge = null;
+    }
+    // Wait briefly for cleanup
+    await new Promise(r => setTimeout(r, 500));
+    startPythonBridge();
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
 });
 
 // Check if Python + tiddl are available

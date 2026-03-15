@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CHARON — The Ferryman of Music</title>
 <meta name="description" content="Catalog Harvester & Automated Ripper for Organized Navidrome. Rip from Tidal in Master/FLAC quality. The companion to AETHER.">
+<meta property="og:title" content="CHARON — The Ferryman of Music">
+<meta property="og:description" content="Catalog Harvester & Automated Ripper for Organized Navidrome. Rip Tidal in Master/FLAC quality.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://emperorbadussy.github.io/charon/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#06B6D4">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='15' width='100' height='100' fill='%23060B0F'/><text x='50' y='72' font-size='60' text-anchor='middle' fill='%2322D3EE' font-family='sans-serif' font-weight='bold'>C</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1413,10 +1420,214 @@ body {
   transition: opacity 0.3s;
 }
 
+/* ============ POLISH ENHANCEMENTS ============ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 99997;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan-core), var(--cyan-vivid), var(--cyan-hot));
+  box-shadow: 0 0 8px rgba(34,211,238,0.6), 0 0 20px rgba(6,182,212,0.3);
+  z-index: 10001;
+  width: 0%;
+  transition: width 0.05s linear;
+}
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, var(--cyan-dim) 20%, var(--cyan-bright) 50%, var(--cyan-dim) 80%, transparent 95%);
+  box-shadow: 0 0 10px rgba(34,211,238,0.2), 0 0 30px rgba(6,182,212,0.1);
+  opacity: 0.6;
+}
+.hero-title-glitch {
+  animation: titleGlitch 8s 2.5s infinite;
+}
+@keyframes titleGlitch {
+  0%, 100% { text-shadow: var(--glow-neon); }
+  2% { text-shadow: -3px 0 var(--cyan-core), 3px 0 var(--cyan-vivid); clip-path: inset(35% 0 25% 0); }
+  4% { text-shadow: var(--glow-neon); clip-path: none; }
+  42% { text-shadow: 2px 0 var(--cyan-bright), -2px 0 var(--cyan-core); clip-path: inset(15% 0 55% 0); }
+  44% { text-shadow: var(--glow-neon); clip-path: none; }
+}
+
+/* ============ LOADING SCREEN ============ */
+@keyframes loadGlitch {
+  0%, 100% { color: #22D3EE; text-shadow: 0 0 10px rgba(34,211,238,0.5); }
+  25% { color: #67E8F9; text-shadow: -2px 0 #06B6D4, 2px 0 #A5F3FC; }
+  50% { color: #06B6D4; text-shadow: 2px 0 #22D3EE, -2px 0 #67E8F9; }
+  75% { color: #A5F3FC; text-shadow: -1px 0 #67E8F9, 1px 0 #06B6D4; }
+}
+
+/* ============ DECLASSIFIED MODE ============ */
+.declassified-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--cyan-bright);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--cyan-bright);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  margin-left: 0.5rem;
+}
+.declassified-toggle:hover {
+  background: rgba(34,211,238,0.1);
+  box-shadow: var(--glow-subtle);
+}
+body.declassified {
+  font-family: 'JetBrains Mono', monospace !important;
+  background: #000 !important;
+}
+body.declassified * {
+  font-family: 'JetBrains Mono', monospace !important;
+  border-radius: 0 !important;
+}
+body.declassified h1, body.declassified h2, body.declassified h3,
+body.declassified h4, body.declassified h5, body.declassified h6,
+body.declassified .hero-title, body.declassified .section-title,
+body.declassified .download-title, body.declassified .nav-logo {
+  color: #0f0 !important;
+  text-shadow: 0 0 8px rgba(0,255,0,0.5) !important;
+}
+body.declassified p, body.declassified span, body.declassified a,
+body.declassified li, body.declassified div, body.declassified label {
+  color: #0a0 !important;
+}
+body.declassified canvas, body.declassified img {
+  filter: grayscale(1) !important;
+}
+body.declassified .section-divider,
+body.declassified .hero-badge,
+body.declassified .mockup-container,
+body.declassified .app-mockup {
+  border-color: #0a0 !important;
+}
+body.declassified .nav {
+  background: rgba(0,0,0,0.95) !important;
+  border-bottom-color: #0a0 !important;
+}
+body.declassified .btn-primary,
+body.declassified .btn-secondary,
+body.declassified .nav-cta,
+body.declassified .btn-download {
+  background: transparent !important;
+  border: 1px solid #0f0 !important;
+  color: #0f0 !important;
+  box-shadow: none !important;
+}
+body.declassified .declassified-toggle {
+  border-color: #0f0 !important;
+  color: #0f0 !important;
+}
+
+/* ============ COMMAND PALETTE ============ */
+.cmd-palette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90000;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20vh;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+.cmd-palette-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+.cmd-palette {
+  background: var(--bg-surface);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: var(--glow-intense), 0 20px 60px rgba(0,0,0,0.8);
+  overflow: hidden;
+}
+.cmd-palette input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--cyan-dim);
+  color: var(--cyan-white);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  outline: none;
+}
+.cmd-palette input::placeholder { color: var(--cyan-muted); }
+.cmd-results {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.4rem;
+}
+.cmd-item {
+  padding: 0.6rem 1rem;
+  color: var(--cyan-hot);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: background 0.15s, color 0.15s;
+}
+.cmd-item:hover, .cmd-item.active {
+  background: rgba(34,211,238,0.1);
+  color: var(--cyan-white);
+}
+.cmd-item .cmd-key {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--cyan-muted);
+  margin-left: auto;
+}
+.cmd-hint {
+  text-align: center;
+  padding: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--cyan-muted);
+  border-top: 1px solid var(--cyan-dim);
+}
+
+/* ============ PORTAL TRANSITION ============ */
+@keyframes portalWarp {
+  0% { transform: scale(1); filter: brightness(1) blur(0); opacity: 1; }
+  50% { transform: scale(0.95); filter: brightness(1.5) blur(2px); opacity: 0.8; }
+  100% { transform: scale(0.5) rotate(3deg); filter: brightness(3) blur(10px); opacity: 0; }
+}
+body.portal-out {
+  animation: portalWarp 0.6s var(--ease-smooth) forwards;
+}
+
 </style>
 </head>
 <body>
 
+<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#060F0F;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 0.5s,visibility 0.5s">
+  <div style="font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.5rem);color:#22D3EE;letter-spacing:0.3em;animation:loadGlitch 0.15s infinite">CHARON</div>
+  <div style="width:200px;height:2px;background:#0F1A1A;margin-top:1.5rem;border-radius:1px;overflow:hidden">
+    <div id="loadBar" style="width:0%;height:100%;background:linear-gradient(90deg,#22D3EE,#67E8F9);transition:width 0.3s"></div>
+  </div>
+</div>
+
+<div class="scroll-progress" id="scrollProgress"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- ============ NAVIGATION ============ -->
@@ -1430,6 +1641,7 @@ body {
     <li><a href="#features">Features</a></li>
     <li><a href="#tech">Tech</a></li>
     <li><a href="#download" class="nav-cta">DOWNLOAD</a></li>
+    <li><button class="declassified-toggle" id="declassifiedBtn" title="Toggle Declassified Mode">[CLASSIFIED]</button></li>
   </ul>
   <button class="menu-toggle" id="menuToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -1441,7 +1653,7 @@ body {
   <a href="#features" onclick="closeMobile()">FEATURES</a>
   <a href="#tech" onclick="closeMobile()">TECH</a>
   <a href="#download" onclick="closeMobile()">DOWNLOAD</a>
-  <a href="https://aether-player.netlify.app/" onclick="closeMobile()">AETHER</a>
+  <a href="https://emperorbadussy.github.io/aether/" onclick="closeMobile()">AETHER</a>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -1460,7 +1672,7 @@ body {
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>DOWNLOAD FOR WINDOWS</span>
       </a>
-      <a href="https://aether-player.netlify.app/" class="btn-secondary" target="_blank">
+      <a href="https://emperorbadussy.github.io/aether/" class="btn-secondary" target="_blank">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><polygon points="13 4 23 12 13 20 13 4" opacity="0.5"/></svg>
         <span>EXPLORE AETHER</span>
       </a>
@@ -1553,6 +1765,8 @@ body {
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- ============ HOW IT WORKS ============ -->
 <section class="section" id="how-it-works">
   <div class="section-inner">
@@ -1611,6 +1825,8 @@ body {
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- ============ FEATURES ============ -->
 <section class="section" id="features">
@@ -1674,7 +1890,7 @@ body {
         </div>
         <div class="feature-title">AETHER COMPANION</div>
         <div class="feature-text">Built as the supply chain for AETHER. Rip, Organize, Play. The complete pipeline.</div>
-        <a href="https://aether-player.netlify.app/" class="feature-link" target="_blank">
+        <a href="https://emperorbadussy.github.io/aether/" class="feature-link" target="_blank">
           Explore AETHER
           <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
@@ -1690,6 +1906,8 @@ body {
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- ============ TECH STACK ============ -->
 <section class="section tech-section" id="tech">
@@ -1734,6 +1952,8 @@ body {
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- ============ THE PIPELINE ============ -->
 <section class="section" id="pipeline">
   <div class="section-inner" style="text-align:center;">
@@ -1766,6 +1986,8 @@ body {
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- ============ DOWNLOAD CTA ============ -->
 <section class="section download-section" id="download">
@@ -1807,13 +2029,22 @@ body {
     </a>
 
     <div style="margin-top: 2rem;" class="reveal">
-      <a href="https://aether-player.netlify.app/" class="companion-link" target="_blank">
+      <a href="https://emperorbadussy.github.io/aether/" class="companion-link" target="_blank">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><polygon points="13 4 23 12 13 20 13 4" opacity="0.5"/></svg>
         Looking for the player? &rarr; AETHER
       </a>
     </div>
   </div>
 </section>
+
+<!-- ============ COMMAND PALETTE ============ -->
+<div class="cmd-palette-overlay" id="cmdPalette">
+  <div class="cmd-palette">
+    <input type="text" id="cmdInput" placeholder="Type a command..." autocomplete="off">
+    <div class="cmd-results" id="cmdResults"></div>
+    <div class="cmd-hint">&#8593;&#8595; Navigate &middot; Enter Select &middot; Esc Close</div>
+  </div>
+</div>
 
 <!-- ============ FOOTER ============ -->
 <footer class="footer">
@@ -1828,8 +2059,9 @@ body {
       <li><a href="#tech">Tech Stack</a></li>
       <li><a href="#download">Download</a></li>
       <li><a href="https://github.com/EmperorBadussy/charon" target="_blank">GitHub</a></li>
-      <li><a href="https://aether-player.netlify.app/" target="_blank">AETHER</a></li>
+      <li><a href="https://emperorbadussy.github.io/aether/" target="_blank">AETHER</a></li>
     </ul>
+    <div style="width:100%;text-align:center;margin-top:1rem;"><a href="https://emperorbadussy.github.io/suite/" style="font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.12em;color:var(--cyan-muted);text-decoration:none;border:1px solid var(--cyan-dim);padding:0.3rem 0.8rem;border-radius:4px;transition:all 0.3s;" onmouseover="this.style.color='var(--cyan-vivid)';this.style.borderColor='var(--cyan-bright)';this.style.boxShadow='0 0 12px rgba(34,211,238,0.3)'" onmouseout="this.style.color='';this.style.borderColor='';this.style.boxShadow=''">PART OF THE SUITE</a></div>
     <div class="footer-copy">&copy; 2077 CHARON. Free and open source software.</div>
     <div style="font-size:0.5rem;opacity:0.15;color:#0a0a0a;margin-top:4px;user-select:text;">ask The BadussyRipper2077 rip</div>
   </div>
@@ -2371,6 +2603,276 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a) {
     });
     card.addEventListener('mouseleave', function() {
       card.style.transform = '';
+    });
+  });
+})();
+
+// ============ SCROLL PROGRESS BAR ============
+(function(){var b=document.getElementById('scrollProgress');if(!b)return;window.addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-window.innerHeight;b.style.width=(h>0?(window.scrollY/h)*100:0)+'%';});})();
+
+// ============ GLITCH TITLE ============
+(function(){setTimeout(function(){var t=document.getElementById('heroTitle');if(t)t.classList.add('hero-title-glitch');},2500);})();
+
+// ============ TEXT SCRAMBLE REVEAL ============
+(function() {
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+  var scrambleEls = document.querySelectorAll('.section-title, .download-title');
+  var scrambled = new Set();
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !scrambled.has(entry.target)) {
+        scrambled.add(entry.target);
+        var el = entry.target;
+        var original = el.textContent;
+        var iterations = 0;
+        var interval = setInterval(function() {
+          el.textContent = original.split('').map(function(char, i) {
+            if (i < iterations / 3) return original[i];
+            if (char === ' ' || char === '\n') return char;
+            return chars[Math.floor(Math.random() * chars.length)];
+          }).join('');
+          iterations++;
+          if (iterations > original.length * 3) { el.textContent = original; clearInterval(interval); }
+        }, 30);
+      }
+    });
+  }, { threshold: 0.3 });
+  scrambleEls.forEach(function(el) { observer.observe(el); });
+})();
+
+// ============ 3D TILT CARDS ============
+(function() {
+  var cards = document.querySelectorAll('.feature-card, .step-card');
+  cards.forEach(function(card) {
+    card.addEventListener('mousemove', function(e) {
+      var rect = card.getBoundingClientRect();
+      var x = (e.clientX - rect.left) / rect.width - 0.5;
+      var y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = 'perspective(600px) rotateY(' + (x * 8) + 'deg) rotateX(' + (-y * 8) + 'deg) translateY(-4px)';
+      card.style.transition = 'transform 0.1s ease';
+    });
+    card.addEventListener('mouseleave', function() {
+      card.style.transform = '';
+      card.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    });
+  });
+})();
+
+// ============ MAGNETIC BUTTONS ============
+(function() {
+  var btns = document.querySelectorAll('.btn-primary, .btn-download');
+  btns.forEach(function(btn) {
+    btn.addEventListener('mousemove', function(e) {
+      var rect = btn.getBoundingClientRect();
+      var x = e.clientX - rect.left - rect.width / 2;
+      var y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = 'translate(' + (x * 0.15) + 'px, ' + (y * 0.15) + 'px) scale(1.03)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      btn.style.transform = '';
+      btn.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      setTimeout(function() { btn.style.transition = ''; }, 400);
+    });
+  });
+})();
+
+// ============ KONAMI CODE EASTER EGG ============
+(function() {
+  var code = [38,38,40,40,37,39,37,39,66,65];
+  var pos = 0;
+  document.addEventListener('keydown', function(e) {
+    if (e.keyCode === code[pos]) {
+      pos++;
+      if (pos === code.length) {
+        pos = 0;
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;pointer-events:none;background:rgba(255,0,0,0.08);animation:breachFlash 0.15s infinite;';
+        var style = document.createElement('style');
+        style.textContent = '@keyframes breachFlash{0%,100%{opacity:1}50%{opacity:0.3}} .breach-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100000;font-family:var(--font-display);font-size:clamp(2rem,8vw,5rem);color:#ff0033;text-shadow:0 0 20px #ff0033,0 0 60px #ff0033;letter-spacing:0.2em;pointer-events:none;animation:breachGlitch 0.1s infinite;}@keyframes breachGlitch{0%{transform:translate(-50%,-50%)}25%{transform:translate(-48%,-52%)}50%{transform:translate(-52%,-48%)}75%{transform:translate(-50%,-50%) skewX(2deg)}}';
+        document.head.appendChild(style);
+        document.body.appendChild(overlay);
+        var text = document.createElement('div');
+        text.className = 'breach-text';
+        text.textContent = '[ BREACH DETECTED ]';
+        document.body.appendChild(text);
+        document.documentElement.style.filter = 'hue-rotate(180deg) saturate(2)';
+        setTimeout(function() { overlay.remove(); text.remove(); style.remove(); document.documentElement.style.filter = ''; }, 3000);
+      }
+    } else { pos = 0; }
+  });
+})();
+
+// ============ MOUSE PARTICLE TRAIL ============
+(function() {
+  var particles = [];
+  document.addEventListener('mousemove', function(e) {
+    if (Math.random() > 0.6) return;
+    particles.push({ x: e.clientX, y: e.clientY, life: 1, size: Math.random() * 2 + 0.5 });
+  });
+  var trailCanvas = document.createElement('canvas');
+  trailCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99996;pointer-events:none;';
+  document.body.appendChild(trailCanvas);
+  var tctx = trailCanvas.getContext('2d');
+  function resizeTrail() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
+  resizeTrail();
+  window.addEventListener('resize', resizeTrail);
+  function drawTrail() {
+    tctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+    for (var i = particles.length - 1; i >= 0; i--) {
+      var p = particles[i];
+      p.life -= 0.025;
+      p.y -= 0.3;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      tctx.beginPath();
+      tctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      tctx.fillStyle = 'rgba(34, 211, 238, ' + (p.life * 0.5) + ')';
+      tctx.fill();
+    }
+    requestAnimationFrame(drawTrail);
+  }
+  drawTrail();
+})();
+
+// ============ LOADING SCREEN ============
+(function() {
+  var bar = document.getElementById('loadBar');
+  var screen = document.getElementById('loadingScreen');
+  var progress = 0;
+  var interval = setInterval(function() {
+    progress += Math.random() * 25 + 10;
+    if (progress > 100) progress = 100;
+    bar.style.width = progress + '%';
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(function() {
+        screen.style.opacity = '0';
+        screen.style.visibility = 'hidden';
+        setTimeout(function() { screen.remove(); }, 500);
+      }, 300);
+    }
+  }, 200);
+})();
+
+// ============ DECLASSIFIED MODE ============
+(function() {
+  var btn = document.getElementById('declassifiedBtn');
+  btn.addEventListener('click', function() {
+    document.body.classList.toggle('declassified');
+    btn.textContent = document.body.classList.contains('declassified') ? '[DECLASSIFIED]' : '[CLASSIFIED]';
+  });
+})();
+
+// ============ COMMAND PALETTE ============
+(function() {
+  var overlay = document.getElementById('cmdPalette');
+  var input = document.getElementById('cmdInput');
+  var results = document.getElementById('cmdResults');
+  var activeIdx = 0;
+  var commands = [
+    { label: 'Go to Top', action: function() { window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+    { label: 'Navigate to How It Works', action: function() { document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' }); } },
+    { label: 'Navigate to Features', action: function() { document.getElementById('features').scrollIntoView({ behavior: 'smooth' }); } },
+    { label: 'Navigate to Tech', action: function() { document.getElementById('tech').scrollIntoView({ behavior: 'smooth' }); } },
+    { label: 'Navigate to Pipeline', action: function() { document.getElementById('pipeline').scrollIntoView({ behavior: 'smooth' }); } },
+    { label: 'Navigate to Download', action: function() { document.getElementById('download').scrollIntoView({ behavior: 'smooth' }); } },
+    { label: 'Toggle Declassified Mode', action: function() { document.getElementById('declassifiedBtn').click(); } },
+    { label: 'Visit GitHub', action: function() { window.open('https://github.com/EmperorBadussy/charon', '_blank'); } },
+    { label: 'Visit AETHER', action: function() { portalNavigate('https://emperorbadussy.github.io/aether/'); }, portal: true },
+    { label: 'Visit HYDRA', action: function() { portalNavigate('https://emperorbadussy.github.io/hydra/'); }, portal: true },
+    { label: 'Visit THE SUITE Hub', action: function() { portalNavigate('https://emperorbadussy.github.io/suite/'); }, portal: true }
+  ];
+
+  function render(filter) {
+    var filtered = commands.filter(function(c) {
+      return !filter || c.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+    });
+    results.innerHTML = '';
+    activeIdx = Math.min(activeIdx, Math.max(0, filtered.length - 1));
+    filtered.forEach(function(cmd, i) {
+      var div = document.createElement('div');
+      div.className = 'cmd-item' + (i === activeIdx ? ' active' : '');
+      div.textContent = cmd.label;
+      if (cmd.portal) {
+        var key = document.createElement('span');
+        key.className = 'cmd-key';
+        key.textContent = 'PORTAL';
+        div.appendChild(key);
+      }
+      div.addEventListener('click', function() { execute(cmd); });
+      div.addEventListener('mouseenter', function() {
+        activeIdx = i;
+        render(input.value);
+      });
+      results.appendChild(div);
+    });
+    return filtered;
+  }
+
+  function execute(cmd) {
+    close();
+    cmd.action();
+  }
+
+  function open() {
+    overlay.classList.add('open');
+    input.value = '';
+    activeIdx = 0;
+    render('');
+    setTimeout(function() { input.focus(); }, 50);
+  }
+
+  function close() {
+    overlay.classList.remove('open');
+    input.value = '';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      if (overlay.classList.contains('open')) close(); else open();
+    }
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') { close(); return; }
+    var items = results.querySelectorAll('.cmd-item');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIdx = (activeIdx + 1) % items.length;
+      render(input.value);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIdx = (activeIdx - 1 + items.length) % items.length;
+      render(input.value);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      var filtered = commands.filter(function(c) {
+        return !input.value || c.label.toLowerCase().indexOf(input.value.toLowerCase()) !== -1;
+      });
+      if (filtered[activeIdx]) execute(filtered[activeIdx]);
+    }
+  });
+
+  input.addEventListener('input', function() {
+    activeIdx = 0;
+    render(input.value);
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) close();
+  });
+})();
+
+// ============ INTER-SITE PORTAL EFFECT ============
+function portalNavigate(url) {
+  document.body.classList.add('portal-out');
+  setTimeout(function() { window.location.href = url; }, 600);
+}
+
+(function() {
+  var suiteLinks = document.querySelectorAll('a[href*="emperorbadussy.github.io/aether"], a[href*="emperorbadussy.github.io/suite"], a[href*="emperorbadussy.github.io/hydra"]');
+  suiteLinks.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      portalNavigate(link.href);
     });
   });
 })();
